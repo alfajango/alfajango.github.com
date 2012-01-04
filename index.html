@@ -6,4 +6,10 @@ title: Open Source by Alfa Jango
 <div class='container'>
   <h1>Open Source by Alfa Jango</h1>
   <a href="http://www.alfajango.com/">visit alfajango.com</a>
+
+  <ul class="posts">
+    {% for post in site.posts %}
+      <li><span>{{ post.date | date_to_string }}</span> - <a href="{{ post.url }}">{{ post.title }}</a></li>
+    {% endfor %}
+  </ul>
 </div>
