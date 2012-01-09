@@ -1,13 +1,61 @@
----
-layout: default
----
+<html>
+  <head>
+    <title>{{ page.title }}</title>
+    <link rel="stylesheet" media="all" href="/css/application.css" />
+    <link rel="stylesheet" media="all" href="/css/pygments.css" />
+    <script type='text/javascript' src='/js/jquery-1.7.1.min.js'></script>
+    <script type='text/javascript' src='/js/jquery.scrollTo.js'></script>
+    <script type='text/javascript' src='/js/jquery.nav.min.js'></script>
 
-<div id="post">
-  {{ content }}
-</div>
 
-<ul class="posts">
-  {% for post in site.related_posts limit:3 %}
-    <li><span>{{ post.date | date_to_string }}</span> &raquo; <a href="{{ post.url }}">{{ post.title }}</a></li>
-  {% endfor %}
-</ul>
+    {% for css in stylesheets %}
+    <link rel="stylesheet" media="all" href="/css/{{ css }}" />
+    {% endfor %}
+    {% for js in javascripts %}
+    <script type='text/javascript' src='/js/{{ js }}'></script>
+    {% endfor %}
+
+    <script>
+      $(document).ready( function() {
+        $('#nav').onePageNav({
+          currentClass: 'current',
+          changeHash: true,
+          scrollSpeed: 750,
+          scrollOffset: 30,
+          begin: function() {
+          },
+          end: function() {
+          }
+        });
+      });
+    </script>
+  </head>
+  <body>
+    <div class='sidebar'>
+      <ul id='resources'>
+        <h2>Resources</h2>
+        {% for link in page.links %}
+        <li><a href="{{ link.href }}">{{ link.title }}</a></li>
+        {% endfor %}
+      </ul>
+
+      <ul id='nav'>
+        <h2>Contents</h2>
+        {% for anchor in page.anchors %}
+        <li><a href="{{ anchor.href }}">{{ anchor.title }}</a></li>
+        {% endfor %}
+      </ul>
+
+      <ul id='articles'>
+        <h2>Articles</h2>
+        {% for article in page.articles %}
+        <li><a href="{{ article.href }}">{{ article.title }}</a></li>
+        {% endfor %}
+      </ul>
+    </div>
+
+    <div id='post'>
+      {{ content }}
+    </div>
+  </body>
+</html>
