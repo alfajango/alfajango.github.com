@@ -37,6 +37,8 @@ pre::-webkit-scrollbar-thumb,
   -webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, .4);
 }
 
+/* easytabs */
+
 #full-container {
   height: 375px;
 }
@@ -52,3 +54,10 @@ pre::-webkit-scrollbar-thumb,
 .logged-event {
   display: block;
 }
+
+/* css-emoticons */
+
+#small { font-size: 8px; }
+#large { font-size: 72px; }
+#regular { font-size: 20px; }
+.wrapped { width: 350px; }

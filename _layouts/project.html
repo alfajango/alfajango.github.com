@@ -8,10 +8,10 @@
     <script type='text/javascript' src='/js/jquery.nav.min.js'></script>
 
 
-    {% for css in stylesheets %}
+    {% for css in page.stylesheets %}
     <link rel="stylesheet" media="all" href="/css/{{ css }}" />
     {% endfor %}
-    {% for js in javascripts %}
+    {% for js in page.javascripts %}
     <script type='text/javascript' src='/js/{{ js }}'></script>
     {% endfor %}
 
