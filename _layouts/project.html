@@ -34,12 +34,7 @@
     </script>
   </head>
   <body>
-    <div id='headbar'>
-      <div class='contained'>
-        <h3>built and supported by Alfa Jango</h3>
-        <h1><a href="#">{{ page.heading }}</a></h1>
-      </div>
-    </div>
+    {% include headbar.html %}
     <div id='content' class='contained'>
       <div id='sidebar'>
         <a class='btn success' id='download-button' href='{{ page.download.href }}'><img src='/images/wooden-box.png' /> {{page.download.title}}</a>
