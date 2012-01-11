@@ -1,6 +1,8 @@
 <html>
   <head>
     <title>{{ page.title }}</title>
+    <link rel="stylesheet" media="all" href="/css/reset.css" />
+    <link rel="stylesheet" media="all" href="/css/bootstrap.min.css" />
     <link rel="stylesheet" media="all" href="/css/application.css" />
     <link rel="stylesheet" media="all" href="/css/pygments.css" />
     <script type='text/javascript' src='/js/jquery-1.7.1.min.js'></script>
@@ -37,7 +39,7 @@
         <h1><a href="#">{{ page.heading }}</a></h1>
       </div>
     </div>
-    <div class='contained'>
+    <div id='content' class='contained'>
       <div id='sidebar'>
         <ul id='resources'>
           <h2>Resources</h2>

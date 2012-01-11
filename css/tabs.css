@@ -1,14 +1,14 @@
 /* Example Styles for Demo */
-.tabs { margin: 0; padding: 0; }
-.tab { display: inline-block; background: #ccc; border: solid 1px; border-bottom: none; }
-.tab a { display: block; padding: 5px; outline: none; }
+.etabs { margin: 0; padding: 0; }
+.tab { display: inline-block; background: #eee; border: solid 1px #999; border-bottom: none; -moz-border-radius: 4px 4px 0 0; -webkit-border-radius: 4px 4px 0 0; }
+.tab a { font-size: 14px; line-height: 2em; display: block; padding: 0 10px; outline: none; }
 .tab a:hover { text-decoration: underline; }
-.tab.active { background: #fff; padding-top: 6px; position: relative; top: 1px; }
+.tab.active { background: #fff; padding-top: 6px; position: relative; top: 1px; border-color: #666; }
 .tab a.active { font-weight: bold; }
-.tab-container .panel-container { background: #fff; border: solid #000 1px; padding: 0 10px; }
+.tab-container .panel-container { background: #fff; border: solid #666 1px; padding: 10px; -moz-border-radius: 0 4px 4px 4px; -webkit-border-radius: 0 4px 4px 4px; }
 
 /* Styles for alternate tabActiveClass */
-.tab.selected-tab { background: #fff; padding-top: 6px; position: relative; top: 1px; }
+.tab.selected-tab { background: #fff; padding-top: 6px; position: relative; top: 1px; border-color: #666; }
 .tab a.selected-tab { font-weight: bold; }
 
 /* Styles for Tabs on Side */
@@ -51,10 +51,17 @@
 #tab-disconnected-container ul li a.active { font-weight: bold; text-decoration: none; border: solid 1px; }
 #tab-disconnected-container .panel-container { background: #fff; padding: 10px; border: solid 1px; }
 
+/* Styles for Transition Options */
+#tab-transition-container .panel-container { padding: 5px; }
+#tab-transition-container .panel-container .active { padding: 0 5px; }
+
+/* Styles for Form Sections */
 .tab-container fieldset { background: #fff; }
+.tab-container .field-container fieldset { background: #fff; border: solid #666 1px; padding: 10px; -moz-border-radius: 0 4px 4px 4px; -webkit-border-radius: 0 4px 4px 4px; }
 
 /* Styles for Previous and Next buttons */
 .prev-tab, .next-tab { display: block; padding: 5px; background: #71af5a; border: solid 1px; width: 100px; text-align: center; color: #fff; margin-top: 10px; }
 span.prev-tab, span.next-tab { background: #ccc; }
 .prev-tab { float: left; }
 .next-tab { float: right; }
+
