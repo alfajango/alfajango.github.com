@@ -36,31 +36,34 @@
   <body>
     <div id='headbar'>
       <div class='contained'>
+        <h3>built and supported by Alfa Jango</h3>
         <h1><a href="#">{{ page.heading }}</a></h1>
       </div>
     </div>
     <div id='content' class='contained'>
       <div id='sidebar'>
-        <ul id='resources'>
-          <h2>Resources</h2>
-          {% for link in page.links %}
-          <li><a href="{{ link.href }}">{{ link.title }}</a></li>
-          {% endfor %}
-        </ul>
+        <a class='btn success' id='download-button' href='{{ page.download.href }}'>{{page.download.title}}</a>
+        <div class='bar'>
+          <ul id='resources'>
+            {% for link in page.links %}
+            <li><a href="{{ link.href }}">{{ link.title }}</a></li>
+            {% endfor %}
+          </ul>
 
-        <ul id='nav'>
-          <h2>Contents</h2>
-          {% for anchor in page.anchors %}
-          <li><a href="{{ anchor.href }}">{{ anchor.title }}</a></li>
-          {% endfor %}
-        </ul>
+          <ul id='nav'>
+            <h2>Contents</h2>
+            {% for anchor in page.anchors %}
+            <li><a href="{{ anchor.href }}">{{ anchor.title }}</a></li>
+            {% endfor %}
+          </ul>
 
-        <ul id='articles'>
-          <h2>Articles</h2>
-          {% for article in page.articles %}
-          <li><a href="{{ article.href }}">{{ article.title }}</a></li>
-          {% endfor %}
-        </ul>
+          <ul id='articles'>
+            <h2>Related Articles</h2>
+            {% for article in page.articles %}
+            <li><a href="{{ article.href }}">{{ article.title }}</a></li>
+            {% endfor %}
+          </ul>
+        </div>
       </div>
 
       <div id='post'>
