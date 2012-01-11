@@ -32,31 +32,38 @@
     </script>
   </head>
   <body>
-    <div class='sidebar'>
-      <ul id='resources'>
-        <h2>Resources</h2>
-        {% for link in page.links %}
-        <li><a href="{{ link.href }}">{{ link.title }}</a></li>
-        {% endfor %}
-      </ul>
-
-      <ul id='nav'>
-        <h2>Contents</h2>
-        {% for anchor in page.anchors %}
-        <li><a href="{{ anchor.href }}">{{ anchor.title }}</a></li>
-        {% endfor %}
-      </ul>
-
-      <ul id='articles'>
-        <h2>Articles</h2>
-        {% for article in page.articles %}
-        <li><a href="{{ article.href }}">{{ article.title }}</a></li>
-        {% endfor %}
-      </ul>
+    <div id='headbar'>
+      <div class='contained'>
+        <h1><a href="#">{{ page.heading }}</a></h1>
+      </div>
     </div>
+    <div class='contained'>
+      <div id='sidebar'>
+        <ul id='resources'>
+          <h2>Resources</h2>
+          {% for link in page.links %}
+          <li><a href="{{ link.href }}">{{ link.title }}</a></li>
+          {% endfor %}
+        </ul>
 
-    <div id='post'>
-      {{ content }}
+        <ul id='nav'>
+          <h2>Contents</h2>
+          {% for anchor in page.anchors %}
+          <li><a href="{{ anchor.href }}">{{ anchor.title }}</a></li>
+          {% endfor %}
+        </ul>
+
+        <ul id='articles'>
+          <h2>Articles</h2>
+          {% for article in page.articles %}
+          <li><a href="{{ article.href }}">{{ article.title }}</a></li>
+          {% endfor %}
+        </ul>
+      </div>
+
+      <div id='post'>
+        {{ content }}
+      </div>
     </div>
   </body>
 </html>
