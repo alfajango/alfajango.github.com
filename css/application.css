@@ -141,6 +141,12 @@ ul#articles li a {
   width: 60%;
 }
 
+.tagline {
+  display: block;
+  font-size: 40px;
+  padding: 25px 0 45px;
+}
+
 /* easytabs */
 
 #full-container {
