@@ -93,9 +93,9 @@ body {
   margin-right: 5%;
 }
 #download-button {
-  font-size: 20px;
+  font-size: 34px;
   font-weight: bold;
-  padding: 15px;
+  padding: 15px 25px;
   margin-bottom: 25px;
 }
 #sidebar .bar {
@@ -170,5 +170,3 @@ ul#articles li a {
 #large { font-size: 72px; }
 #regular { font-size: 20px; }
 .wrapped { width: 350px; }
-
-
