@@ -37,27 +37,35 @@
     {% include headbar.html %}
     <div id='content' class='contained'>
       <div id='sidebar'>
+        {% if page.download %}
         <a class='btn success' id='download-button' href='{{ page.download.href }}'><img src='/images/wooden-box.png' /> {{page.download.title}}</a>
+        {% endif %}
         <div class='bar'>
+          {% if page.links %}
           <ul id='resources'>
             {% for link in page.links %}
             <li><a href="{{ link.href }}">{{ link.title }}</a></li>
             {% endfor %}
           </ul>
+          {% endif %}
 
+          {% if page.anchors %}
           <ul id='nav'>
             <h2>Contents</h2>
             {% for anchor in page.anchors %}
             <li><a href="{{ anchor.href }}">{{ anchor.title }}</a></li>
             {% endfor %}
           </ul>
+          {% endif %}
 
+          {% if page.articles %}
           <ul id='articles'>
             <h2>Related Articles</h2>
             {% for article in page.articles %}
             <li><a href="{{ article.href }}">{{ article.title }}</a></li>
             {% endfor %}
           </ul>
+          {% endif %}
         </div>
       </div>
 

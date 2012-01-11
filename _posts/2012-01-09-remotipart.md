@@ -1,9 +1,11 @@
 ---
 layout: project
 title: Remotipart Rails Gem
+heading: Remotipart
+download:
+  title: Install
+  href: https://rubygems.org/gems/remotipart
 links:
-  - title: Install from RubyGems.org
-    href: https://rubygems.org/gems/remotipart
   - title: View Source or Fork on GitHub
     href: https://github.com/JangoSteve/remotipart
   - title: Report bug or request feature

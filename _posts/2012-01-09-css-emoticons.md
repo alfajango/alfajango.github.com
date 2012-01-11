@@ -1,13 +1,15 @@
 ---
 layout: project
 title: jQuery CSS Emoticons Plugin
+heading: CSS Emoticons
 stylesheets:
   - jquery.cssemoticons.css
 javascripts:
   - jquery.cssemoticons.min.js
+download:
+  title: Download
+  href: http://jspkg.com/packages/css-emoticons
 links:
-  - title: Download from JSPkg.com
-    href: http://jspkg.com/packages/css-emoticons
   - title: View Source or Fork on Github
     href: https://github.com/JangoSteve/jQuery-CSSEmoticons
   - title: View Live Demos
