@@ -61,7 +61,7 @@ body {
 }
 
 #headbar h1 {
-  padding: 100px 0 0 5%;
+  padding: 110px 0 0 5%;
 }
 #headbar h1 a {
   display: block;
@@ -73,18 +73,92 @@ body {
   text-shadow: 0 0px 1px #000, -6px 8px 5px rgba(0, 0, 0, 0.8);
 
 }
-#headbar h3 {
+#built-by {
   display: block;
   float: right;
+  padding: 20px;
+  margin-top: 60px;
+  width: 400px;
+  background: rgba(200,200,200,0.1);
+  border: solid 1px #1e1e1e;
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
+}
+#built-by h3 {
   color: #000;
   text-shadow: 0px 1px 2px #333;
-  font-size: 32px;
-  padding: 95px 5% 0 0;
-  width: 300px;
+  font-size: 22px;
+  margin-bottom: 35px;
+  line-height: 1.5em;
+}
+#built-by h3 span {
+  display: block;
+  font-size: 36px;
+}
+a.nav-links {
+  background: rgba(0,0,0,0.5);
+  padding: 7px 10px;
+  color: #00a50c;
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
+}
+a.nav-links:hover {
+  background: rgba(0,0,0,0.3);
+}
+#visit-site {
+  float: right;
+}
+#visit-os {
+  float: left;
+}
+#aj-logo {
+  float: left;
+  margin-right: 10px;
 }
 
 #content {
   margin-top: 35px;
+}
+
+.projects li {
+  vertical-align: top;
+  display: inline-block;
+  width: 30%;
+  margin: 0 3% 20px 0;
+}
+.project-tile {
+  width: 100%;
+  height: 100px;
+  margin-bottom: 15px;
+  -moz-border-radius: 5px;
+  -moz-box-shadow: 1px 1px 5px rgba(0,0,0,0.4);
+}
+.project-tile.js {
+  background: #34A0D2;
+  border: solid 1px #1A6D9E;
+}
+.project-tile.ruby {
+  background: #FFC900;
+  border: solid 1px #FE8900;
+}
+.project-tile a {
+  display: block;
+  padding: 40px 15px;
+  font-size: 24px;
+  font-weight: bold;
+}
+.project-tile.js a, li.js .homepage-tagline {
+  color: #1A6D9E;
+}
+.project-tile.ruby a, li.ruby .homepage-tagline {
+  color: #FE8900;
+}
+.homepage-tagline {
+  font-weight: bold;
+  font-style: italic;
+  display: block;
+  margin-bottom: 15px;
+  font-size: 16px;
 }
 
 #sidebar {
