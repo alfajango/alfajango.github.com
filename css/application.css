@@ -131,7 +131,10 @@ a.nav-links:hover {
   height: 100px;
   margin-bottom: 15px;
   -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
   -moz-box-shadow: 1px 1px 5px rgba(0,0,0,0.4);
+  -webkit-box-shadow: 1px 1px 5px rgba(0,0,0,0.4);
+  box-shadow: 1px 1px 5px rgba(0,0,0,0.4);
 }
 .project-tile.js {
   background: #34A0D2;
