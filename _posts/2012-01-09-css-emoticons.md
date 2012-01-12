@@ -130,7 +130,7 @@ I'd write more documentation, but really that's all there is to it. Enjoy!
  This is how emoticons stack up in a paragraph B)
 </p>
 <p class="text wrapped" id="regular">:O
- Here is an example of what emoticons look like in a paragraph :-) You can tell here that the emoticons don't break the line-height in paragraphs like most of the image-replacement methods.
+ Here is an example of what emoticons look like in a paragraph :-) You can tell here that the emoticons don't break the line-height (in most browsers) in paragraphs like most of the image-replacement methods.
  Also, here is a printed URL: http://www.alfajango.com. Notice the <code>:/</code> doesn't get styled. And one in a nested element
  <span>:-)</span>
 </p>
