@@ -137,12 +137,26 @@ a.nav-links:hover {
   box-shadow: 1px 1px 5px rgba(0,0,0,0.4);
 }
 .project-tile.js {
-  background: #34A0D2;
   border: solid 1px #1A6D9E;
+
+  background: #34A0D2; /* fallback for non-supporting browsers */
+  background-image: -webkit-gradient(radial, center center, 0, center center, 141, from(#2cb2f0), to(#2C8FC0), color-stop(250%, #329DCF), color-stop(500%, #2C8FC0)); /* old WebKit Syntax */
+  background-image: -webkit-radial-gradient(center center, circle contain, #2cb2f0 0%, #329DCF 250%, #2C8FC0 500%); /* New WebKit syntax */
+  background-image: -moz-radial-gradient(center center, circle contain, #2cb2f0 0%, #329DCF 250%, #2C8FC0 500%);
+  background-image: -ms-radial-gradient(center center, circle contain, #2cb2f0 0%, #329DCF 250%, #2C8FC0 500%); /* IE10+ */
+  background-image: -o-radial-gradient(center center, circle contain, #2cb2f0 0%, #329DCF 250%, #2C8FC0 500%); /* Opera (13?) */
+  background-image: radial-gradient(center center, circle contain, #2cb2f0 0%, #329DCF 250%, #2C8FC0 500%); /* standard syntax */
 }
 .project-tile.ruby {
-  background: #FFC900;
   border: solid 1px #FE8900;
+
+  background: #FFC900;
+  background-image: -webkit-gradient(radial, center center, 0, center center, 141, from(#FFD000), to(#FE9000), color-stop(250%, #FFC900), color-stop(500%, #FE9000)); /* old WebKit Syntax */
+  background-image: -webkit-radial-gradient(center center, circle contain, #FFD000 0%, #FFC900 250%, #FE9000 700%); /* New WebKit syntax */
+  background-image: -moz-radial-gradient(center center, circle contain, #FFD000 0%, #FFC900 250%, #FE9000 500%);
+  background-image: -ms-radial-gradient(center center, circle contain, #FFD000 0%, #FFC900 250%, #FE9000 500%); /* IE10+ */
+  background-image: -o-radial-gradient(center center, circle contain, #FFD000 0%, #FFC900 250%, #FE9000 500%); /* Opera (13?) */
+  background-image: radial-gradient(center center, circle contain, #FFD000 0%, #FFC900 250%, #FE9000 500%); /* standard syntax */
 }
 .project-tile a {
   display: block;
