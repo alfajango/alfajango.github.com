@@ -123,12 +123,15 @@ a.nav-links:hover {
 }
 
 .projects li {
+  background: transparent;
+  border: none;
+  border-bottom: solid 1px #c0c0c0;
   vertical-align: top;
   display: inline-block;
   width: 30%;
   margin: 0 3% 20px 0;
-  border-bottom: solid 1px #c0c0c0;
   padding-bottom: 20px;
+  zoom:1; *display:inline;
 }
 .project-tile {
   width: 100%;
@@ -174,12 +177,21 @@ a.nav-links:hover {
 .project-tile.ruby a, li.ruby .homepage-tagline {
   color: #FE8900;
 }
+
+.projects li a.btn {
+  color: #000;
+}
+.projects li a.btn.primary {
+  color: #fff;
+}
+
 .project-tile span {
   float: right;
   font-size: 40px;
-  margin-top: 35px;
+  padding-top: 35px;
   margin-right: 15px;
   font-weight: bold;
+  height: 75px;
 }
 .project-tile.js span {
   color: #298BBC;
