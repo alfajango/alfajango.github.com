@@ -12,10 +12,12 @@ pre {
   padding: 4px;
   background: #202020;
 }
-pre code {
+pre code, pre code.js {
   background: transparent;
   color: inherit;
   line-height: 1.3em;
+  outline: none;
+  border: none;
 }
 
 pre::-webkit-scrollbar,
@@ -260,7 +262,7 @@ ul#articles li a {
 /* easytabs */
 
 #full-container {
-  height: 375px;
+  height: 415px;
 }
 
 #tab-console {
@@ -268,7 +270,7 @@ ul#articles li a {
   -webkit-border-radius: 4px;
   -moz-border-radius: 4px;
   color: #71af5a;
-  height: 5em;
+  height: 6.5em;
 }
 .logged-event {
   display: block;
