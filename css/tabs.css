@@ -66,3 +66,5 @@ span.prev-tab, span.next-tab { background: #ccc; }
 .prev-tab { float: left; }
 .next-tab { float: right; }
 
+/* Styles for Twitter Boostrap */
+#twitter-bootstrap-container { background: #fff; padding: 10px; height: 75px; margin-bottom: 15px; }
