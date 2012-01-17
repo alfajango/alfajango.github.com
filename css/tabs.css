@@ -6,6 +6,7 @@
 .tab.active { background: #fff; padding-top: 6px; position: relative; top: 1px; border-color: #666; }
 .tab a.active { font-weight: bold; }
 .tab-container .panel-container { background: #fff; border: solid #666 1px; padding: 10px; -moz-border-radius: 0 4px 4px 4px; -webkit-border-radius: 0 4px 4px 4px; }
+.panel-container { margin-bottom: 10px; }
 
 /* Styles for alternate tabActiveClass */
 .tab.selected-tab { background: #fff; padding-top: 6px; position: relative; top: 1px; border-color: #666; }
@@ -30,7 +31,7 @@
 #tab-bottom-container ul li a:hover { text-decoration: underline; }
 #tab-bottom-container ul li.active { width: 198px; background: #fff; border: solid 1px; border-top: none; }
 #tab-bottom-container ul li a.active { font-weight: bold; text-decoration: none; }
-#tab-bottom-container .panel-container { background: #fff; border: solid 1px; border-bottom: none; padding: 10px; }
+#tab-bottom-container .panel-container { background: #fff; border: solid 1px; border-bottom: none; padding: 10px; margin-bottom: 0; }
 
 /* Styles for Collapsible */
 #tab-collapsible-container { background: #fff; padding: 5px; border: solid 1px; }
