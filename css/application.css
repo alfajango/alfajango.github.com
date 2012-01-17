@@ -272,6 +272,13 @@ ul#articles li a {
   padding: 25px 0 45px;
 }
 
+img.styled {
+  padding: 5px;
+  background: #fff;
+  border: solid 1px #ddd;
+  -webkit-box-shadow: 2px 2px 5px rgba(0,0,0,0.2);
+}
+
 /* easytabs */
 
 #full-container {
