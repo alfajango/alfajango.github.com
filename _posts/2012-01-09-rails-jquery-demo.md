@@ -2,9 +2,9 @@
 layout: project
 title: jQuery Rails Demo
 heading: Rails 3 jQuery-UJS Demo
-links:
-  - title: View Source or Fork on Github
-    href: https://github.com/JangoSteve/Rails-jQuery-Demo
+github:
+  title: Fork on Github
+  href: https://github.com/JangoSteve/Rails-jQuery-Demo
 ---
 
 Demo Rails 3.1 App with jQuery UJS (AJAX) and Remotipart

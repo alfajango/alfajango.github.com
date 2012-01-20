@@ -39,8 +39,13 @@
     <div id='content' class='contained'>
       <div id='sidebar'>
         {% if page.download %}
-        <a class='btn success' id='download-button' href='{{ page.download.href }}'><img src='/images/wooden-box.png' /> {{page.download.title}}</a>
+        <a class='btn success large-button' id='download-button' href='{{ page.download.href }}'><img src='/images/wooden-box.png' /> {{page.download.title}}</a>
         {% endif %}
+        {% if page.github %}
+        <a class='btn large-button' id='github-button' href='{{ page.github.href }}'><img src='/images/github-icon.png' /> {{page.github.title}}</a>
+        {% endif %}
+
+        {% if page.links || page.anchors || page.articles %}
         <div class='bar'>
           {% if page.links %}
           <ul id='resources'>
@@ -68,6 +73,7 @@
           </ul>
           {% endif %}
         </div>
+        {% endif %}
       </div>
 
       <div id='post'>

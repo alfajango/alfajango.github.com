@@ -3,11 +3,12 @@ layout: project
 title: jQuery Dynatable Plugin
 heading: Dynatable
 download:
-  title: Download from JSPkg.com
+  title: Download
   href: http://jspkg.com/packages/dynatable
+github:
+  title: Fork on Github
+  href: https://github.com/JangoSteve/jquery-dynatable
 links:
-  - title: View Source or Fork on Github
-    href: https://github.com/JangoSteve/jquery-dynatable
   - title: Report bug or request feature
     href: https://github.com/JangoSteve/jquery-dynatable/issues
 ---

@@ -217,11 +217,18 @@ a.nav-links:hover {
   width: 25%;
   margin-right: 5%;
 }
-#download-button {
-  font-size: 34px;
+.large-button {
+  width: 235px;
+  font-size: 24px;
   font-weight: bold;
-  padding: 15px 25px;
-  margin-bottom: 25px;
+  padding: 15px 15px;
+  margin-bottom: 15px;
+  line-height: 24px;
+}
+.large-button img {
+  vertical-align: middle;
+  position: relative;
+  bottom: 2px;
 }
 #sidebar .bar {
   background: #fff;

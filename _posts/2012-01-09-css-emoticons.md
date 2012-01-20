@@ -9,9 +9,10 @@ javascripts:
 download:
   title: Download
   href: http://jspkg.com/packages/css-emoticons
+github:
+  title: Fork on Github
+  href: https://github.com/JangoSteve/jQuery-CSSEmoticons
 links:
-  - title: View Source or Fork on Github
-    href: https://github.com/JangoSteve/jQuery-CSSEmoticons
   - title: View Live Demos
     href: http://jspkg.com/packages/css-emoticons/demos
   - title: Report bug or request feature

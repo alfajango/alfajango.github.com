@@ -5,9 +5,10 @@ heading: Remotipart
 download:
   title: Install
   href: https://rubygems.org/gems/remotipart
+github:
+  title: Fork on GitHub
+  href: https://github.com/JangoSteve/remotipart
 links:
-  - title: View Source or Fork on GitHub
-    href: https://github.com/JangoSteve/remotipart
   - title: Report bug or request feature
     href: https://github.com/JangoSteve/remotipart/issues
 anchors:
