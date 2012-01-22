@@ -51,6 +51,7 @@
 #tab-disconnected-container ul li.active { background: #fff; position: relative; left: 1px; }
 #tab-disconnected-container ul li a.active { font-weight: bold; text-decoration: none; border: solid 1px; }
 #tab-disconnected-container .panel-container { background: #fff; padding: 10px; border: solid 1px; }
+#disconnected-tab3 { background: #fff; padding: 10px 15px; border: solid 1px #999; -moz-border-radius: 5px; -webkit-border-radius: 5px; margin: 15px 0; }
 
 /* Styles for Transition Options */
 #tab-transition-container .panel-container { padding: 5px; }

@@ -1,5 +1,5 @@
 /*
- * jQuery EasyTabs plugin 3.0
+ * jQuery EasyTabs plugin 3.1
  *
  * Copyright (c) 2010-2011 Steve Schwartz (JangoSteve)
  *
@@ -7,13 +7,18 @@
  *   http://www.opensource.org/licenses/mit-license.php
  *   http://www.gnu.org/licenses/gpl.html
  *
- * Date: Tue Jan 19 01:30:00 2012 -0500
+ * Date: Tue Jan 21 23:00:00 2012 -0500
  */
 ( function($) {
 
   $.easytabs = function(container, options) {
 
-    var defaults = {
+        // Attach to plugin anything that should be available via
+        // the $container.data('easytabs') object
+    var plugin = this,
+        $container = $(container),
+
+        defaults = {
           animate: true,
           panelActiveClass: "active",
           tabActiveClass: "active",
@@ -38,13 +43,9 @@
           tabsClass: "",
           tabClass: "",
           panelClass: "",
-          cache: true
+          cache: true,
+          panelContext: $container
         },
-
-        // Attach to plugin anything that should be available via
-        // the $container.data('easytabs') object
-        plugin = this,
-        $container = $(container),
 
         // Internal instance variables
         // (not available via easytabs object)
@@ -170,7 +171,7 @@
         }
         targetId = targetId.match(/#([^\?]+)/)[0].substr(1);
 
-        $matchingPanel = $container.find("#" + targetId);
+        $matchingPanel = settings.panelContext.find("#" + targetId);
 
         // If tab has a matching panel, add it to panels
         if ( $matchingPanel.length ) {
