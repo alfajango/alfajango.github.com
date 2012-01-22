@@ -50,6 +50,17 @@ body {
   background: #ececec;
 }
 
+#post h2 {
+  margin: 20px 0 10px;
+}
+#post h3 {
+  margin: 15px 0 5px;
+}
+#post .panel-container h2,
+#post .panel-container h3 {
+  margin: 0;
+}
+
 .contained {
   width: 1060px;
   margin: auto;
@@ -230,6 +241,11 @@ a.nav-links:hover {
   position: relative;
   bottom: 2px;
 }
+
+#resources {
+  padding-bottom: 20px;
+}
+
 #sidebar .bar {
   background: #fff;
   padding-bottom: 10px;
@@ -240,13 +256,13 @@ a.nav-links:hover {
   box-shadow: 0 0 10px #888;
 }
 
-#sidebar ul {
+.sidebar-list {
   list-style: none;
   margin: 0;
   padding: 0;
   border: solid 1px #ececec;
 }
-#sidebar ul li a {
+.sidebar-list li a {
   display: block;
   padding: 5px 10px;
   color: #00a50c;
@@ -260,7 +276,7 @@ ul#articles li a {
   font-size: 12px;
   line-height: 1.5em;
 }
-#sidebar ul li a:hover {
+.sidebar-list li a:hover {
   background: #dcdcdc;
 }
 #sidebar h2 {

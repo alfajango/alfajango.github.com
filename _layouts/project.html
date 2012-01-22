@@ -45,18 +45,18 @@
         <a class='btn large-button' id='github-button' href='{{ page.github.href }}'><img src='/images/github-icon.png' /> {{page.github.title}}</a>
         {% endif %}
 
-        {% if page.links || page.anchors || page.articles %}
-        <div class='bar'>
-          {% if page.links %}
-          <ul id='resources'>
+        {% if page.links %}
+          <ul class='sidebar-list' id='resources'>
             {% for link in page.links %}
             <li><a href="{{ link.href }}">{{ link.title }}</a></li>
             {% endfor %}
           </ul>
-          {% endif %}
+        {% endif %}
 
+        {% if page.anchors || page.articles %}
+        <div class='bar'>
           {% if page.anchors %}
-          <ul id='nav'>
+          <ul class='sidebar-list' id='nav'>
             <h2>Contents</h2>
             {% for anchor in page.anchors %}
             <li><a href="{{ anchor.href }}">{{ anchor.title }}</a></li>
@@ -65,7 +65,7 @@
           {% endif %}
 
           {% if page.articles %}
-          <ul id='articles'>
+          <ul class='sidebar-list' id='articles'>
             <h2>Related Articles</h2>
             {% for article in page.articles %}
             <li><a href="{{ article.href }}">{{ article.title }}</a></li>
