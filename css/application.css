@@ -68,6 +68,7 @@ body {
 
 #headbar {
   width: 100%;
+  min-width: 1060px;
   height: 300px;
   background: url('/images/header_bg.png') no-repeat #000;
   border-bottom: solid 13px #00a50c;
@@ -108,6 +109,16 @@ body {
   display: block;
   font-size: 36px;
 }
+
+#splash h2 {
+  font-size: 40px;
+  margin-bottom: 20px;
+}
+#splash p {
+  font-size: 20px;
+  line-height: 26px;
+}
+
 a.nav-links {
   background: rgba(0,0,0,0.5);
   padding: 7px 10px;
@@ -131,6 +142,10 @@ a.nav-links:hover {
 
 #content {
   margin-top: 35px;
+}
+
+.projects {
+  margin: 45px 0;
 }
 
 .projects li {
