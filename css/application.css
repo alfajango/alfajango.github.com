@@ -74,9 +74,10 @@ body {
   border-bottom: solid 13px #00a50c;
 }
 
-#headbar h1 {
-  padding: 110px 0 0 5%;
+#title-and-share {
+  padding: 90px 0 0 5%;  
 }
+
 #headbar h1 {
   display: block;
   text-decoration: none;
@@ -85,7 +86,7 @@ body {
   letter-spacing: -2px;
   color: #fff;
   text-shadow: 0 0px 1px #000, -6px 8px 5px rgba(0, 0, 0, 0.8);
-
+  margin-bottom: 0;
 }
 #built-by {
   display: block;

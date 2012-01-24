@@ -1,7 +1,7 @@
 ---
 layout: project
-title: jQuery Rails Demo
-heading: Rails 3 jQuery-UJS Demo
+title: Rails 3 jQuery-UJS AJAX Demo
+heading: jQuery-Rails Demo
 github:
   title: Fork on Github
   href: https://github.com/JangoSteve/Rails-jQuery-Demo

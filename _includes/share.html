@@ -1,0 +1,35 @@
+<script type='text/javascript'>
+  $(document).ready( function() {
+    $('#shareme').sharrre({
+      share: {
+        googlePlus: true,
+        facebook: true,
+        twitter: true,
+        linkedin: true
+      },
+      urlCurl: '',
+      enableTracking: true,
+      buttons: {
+        googlePlus: {size: 'tall'},
+        facebook: {layout: 'box_count'},
+        twitter: {count: 'vertical'},
+        linkedin: {counter: 'top'}
+      },
+      hover: function(api, options){
+        $(api.element).find('.buttons').show();
+      },
+      hide: function(api, options){
+        $(api.element).find('.buttons').hide();
+      },
+      render: function() {
+        var $count = $('#shareme .count'),
+            count = parseFloat($count.text());
+
+        if (count < 10) {
+          $count.hide();
+          $('#shareme .share').width('200');
+        }
+      }
+    });
+  });
+</script>

@@ -6,6 +6,11 @@
       <a class='nav-links' id='visit-site' href="http://www.alfajango.com">visit alfajango.com &raquo;</a>
       <a class='nav-links' id='visit-os' href="/">&laquo; view all open source projects</a>
     </div>
-    <h1>{{ page.heading }}</h1>
+    <div id='title-and-share'>
+      <h1>{{ page.heading }}</h1>
+      <div id='share-container'>
+        <div id="shareme" data-url="http://os.alfajango.com{{ page.url }}" data-text="{{ page.title }}" data-title="share this page <img src='/images/share.png' />"></div>
+      </div>
+    </div>
   </div>
 </div>
