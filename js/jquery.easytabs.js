@@ -1,5 +1,5 @@
 /*
- * jQuery EasyTabs plugin 3.1
+ * jQuery EasyTabs plugin 3.1.1
  *
  * Copyright (c) 2010-2011 Steve Schwartz (JangoSteve)
  *
@@ -7,7 +7,7 @@
  *   http://www.opensource.org/licenses/mit-license.php
  *   http://www.gnu.org/licenses/gpl.html
  *
- * Date: Tue Jan 21 23:00:00 2012 -0500
+ * Date: Tue Jan 26 16:30:00 2012 -0500
  */
 ( function($) {
 
@@ -182,7 +182,10 @@
             visibility: $matchingPanel.css('visibility')
           });
 
-          plugin.panels = plugin.panels.add($matchingPanel.hide());
+          // Don't hide panel if it's active (allows `getTabs` to be called manually to re-instantiate tab collection)
+          $matchingPanel.not(settings.panelActiveClass).hide();
+
+          plugin.panels = plugin.panels.add($matchingPanel);
 
           $tab.data('easytabs').panel = $matchingPanel;
 
@@ -206,6 +209,10 @@
 
       // Tab is not active and panel is not active => select tab
       } else if( ! $clicked.hasClass(settings.tabActiveClass) || ! $targetPanel.hasClass(settings.panelActiveClass) ){
+        activateTab($clicked, $targetPanel, ajaxUrl, callback);
+
+      // Cache is disabled => reload (e.g reload an ajax tab).
+      } else if ( ! settings.cache ){
         activateTab($clicked, $targetPanel, ajaxUrl, callback);
       }
 
@@ -340,7 +347,12 @@
 
               // Find direct tab link that matches data-target (lik 'a[data-target="#panel-1"]')
               if ( ($tab = plugin.tabs.find("[data-target='" + tabSelector + "']")).length === 0 ) {
-                $.error('Tab \'' + tabSelector + '\' does not exist in tab set');
+
+                // Find direct tab link that ends in the matching href (like 'a[href$="#panel-1"]', which would also match http://example.com/currentpage/#panel-1)
+                if ( ($tab = plugin.tabs.find("a[href$='" + tabSelector + "']")).length === 0 ) {
+
+                  $.error('Tab \'' + tabSelector + '\' does not exist in tab set');
+                }
               }
             }
           }
