@@ -2,6 +2,9 @@
 layout: project
 title: Heroku Sinatra MVC
 heading: Sinatra MVC
+tagline: Sinatra with an MVC Tune
+description: A boilerplate Sinatra app with models and views separated
+  from the main app, and ready to deploy to Heroku.
 github:
   title: Fork on Github
   href: https://github.com/JangoSteve/heroku-sinatra-app

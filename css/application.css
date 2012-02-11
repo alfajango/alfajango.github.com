@@ -135,6 +135,8 @@ body {
   margin: 15px 5% 20px;
 }
 #tagbar p {
+  margin-left: 5%;
+  width: 60%;
 }
 
 a.nav-links {
@@ -323,11 +325,11 @@ ul#articles li a {
 }
 
 .tagline {
+  display: block;
   font-size: 32px;
-  padding: 25px;
+  padding: 25px 0;
   margin-left: 5%;
   color: #00a50c;
-  border-left-color: #c4ffc8;
 }
 .description {
   margin-left: 5%;
@@ -361,6 +363,11 @@ img.styled {
 
 /* css-emoticons */
 
+#css-emoticons-heading { font-size: 72px; }
 #small { font-size: 8px; }
 #large { font-size: 72px; }
 #regular { font-size: 20px; }
+
+/* jquery-rails-demo */
+
+#jquery-rails-demo-heading { font-size: 62px; }

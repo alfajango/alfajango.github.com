@@ -2,6 +2,10 @@
 layout: project
 title: Remotipart Rails Gem
 heading: Remotipart
+tagline: AJAX File Uploads in Rails 3
+description: The Remotipart gem enables AJAX file-upload capability to remote forms
+  in Rails 3 apps by extending the native jquery-ujs functionality.
+
 download:
   title: Install
   href: https://rubygems.org/gems/remotipart
@@ -29,7 +33,6 @@ articles:
     href: http://www.alfajango.com/blog/rails-3-ajax-file-uploads-with-remotipart/
 ---
 
-The Remotipart gem enables AJAX file-upload capability to remote forms in Rails 3 apps by extending the native jquery-ujs functionality.
 
 For an introduction explaining how and why Remotipart works, check out [AJAX File Uploads with the iFrame Method](http://www.alfajango.com/blog/ajax-file-uploads-with-the-iframe-method/) and [Rails 3 AJAX File Uploads with Remotipart](http://www.alfajango.com/blog/rails-3-ajax-file-uploads-with-remotipart/).
 
