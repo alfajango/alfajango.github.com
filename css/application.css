@@ -276,6 +276,9 @@ a.nav-links:hover {
   position: relative;
   bottom: 2px;
 }
+#twitter-button {
+  font-weight: normal;
+}
 
 #resources {
   padding-bottom: 20px;

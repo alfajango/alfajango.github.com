@@ -23,6 +23,9 @@
         {% if page.github %}
         <a class='btn large-button' id='github-button' href='{{ page.github.href }}'><img src='/images/github-icon.png' /> {{page.github.title}}</a>
         {% endif %}
+        {% if page.twitter %}
+        <a class='btn primary large-button' id='twitter-button' href='{{ page.twitter.href }}'><img src='/images/twitter-icon.png' /> {{page.twitter.title}}</a>
+        {% endif %}
     </div>
     {% if page.tagline %}
       <span class="tagline">{{ page.tagline }}</span>
