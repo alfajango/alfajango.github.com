@@ -25,11 +25,13 @@
   float:left;
   margin-left:10px;
   font-size:20px;
-  width:100px;
+  width:200px;
+  position: relative;
+  top: -2px;
 }
 #shareme .share img {
   position: relative;
-  top: 2px;
+  top: 4px;
 }
 #shareme .buttons {
   position: absolute;

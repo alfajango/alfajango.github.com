@@ -9,8 +9,26 @@
     <div id='title-and-share'>
       <h1>{{ page.heading }}</h1>
       <div id='share-container'>
-        <div id="shareme" data-url="http://os.alfajango.com{{ page.url }}" data-text="{{ page.title }}" data-title="share this page <img src='/images/share.png' />"></div>
+        <div id="shareme" data-url="http://os.alfajango.com{{ page.url }}" data-text="{{ page.title }}" data-title="share this page <img src='/images/share-buttons.png' />"></div>
       </div>
     </div>
+  </div>
+</div>
+<div id='tagbar'>
+  <div class='contained'>
+    <div id="download-and-share">
+        {% if page.download %}
+        <a class='btn success large-button' id='download-button' href='{{ page.download.href }}'><img src='/images/wooden-box.png' /> {{page.download.title}}</a>
+        {% endif %}
+        {% if page.github %}
+        <a class='btn large-button' id='github-button' href='{{ page.github.href }}'><img src='/images/github-icon.png' /> {{page.github.title}}</a>
+        {% endif %}
+    </div>
+    {% if page.tagline %}
+      <blockquote class="tagline">{{ page.tagline }}</blockquote>
+    {% endif %}
+    {% if page.description %}
+      <p class="description">{{ page.description }}</p>
+    {% endif %}
   </div>
 </div>

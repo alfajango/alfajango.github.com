@@ -71,11 +71,30 @@ body {
   min-width: 1060px;
   height: 300px;
   background: url('/images/header_bg.png') no-repeat #000;
-  border-bottom: solid 13px #00a50c;
+  border-bottom: solid 2px #00a50c;
+}
+
+#tagbar {
+  width: 100%;
+  min-width: 1060px;
+  background: #fff;
+  padding: 10px 0 15px;
+  color: #333;
+  border-top: solid 1px #007b09;
+  border-bottom: solid 1px #ccc;
 }
 
 #title-and-share {
-  padding: 90px 0 0 5%;  
+  padding: 90px 0 0 5%;
+}
+
+#download-and-share {
+  float: right;
+  margin-top: 12px;
+  margin-right: 5%;
+}
+#download-and-share a {
+  display: block;
 }
 
 #headbar h1 {
@@ -306,9 +325,16 @@ ul#articles li a {
 }
 
 .tagline {
-  display: block;
-  font-size: 40px;
-  padding: 25px 0 45px;
+  font-size: 32px;
+  padding: 25px;
+  margin-left: 5%;
+  color: #00a50c;
+  border-left-color: #c4ffc8;
+}
+.description {
+  margin-left: 5%;
+  font-size: 24px;
+  line-height: 30px;
 }
 
 img.styled {

@@ -41,12 +41,6 @@
     {% include headbar.html %}
     <div id='content' class='contained'>
       <div id='sidebar'>
-        {% if page.download %}
-        <a class='btn success large-button' id='download-button' href='{{ page.download.href }}'><img src='/images/wooden-box.png' /> {{page.download.title}}</a>
-        {% endif %}
-        {% if page.github %}
-        <a class='btn large-button' id='github-button' href='{{ page.github.href }}'><img src='/images/github-icon.png' /> {{page.github.title}}</a>
-        {% endif %}
 
         {% if page.links %}
           <ul class='sidebar-list' id='resources'>

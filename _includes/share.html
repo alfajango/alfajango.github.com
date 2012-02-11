@@ -2,18 +2,18 @@
   $(document).ready( function() {
     $('#shareme').sharrre({
       share: {
-        googlePlus: true,
-        facebook: true,
         twitter: true,
-        linkedin: true
+        facebook: true,
+        linkedin: true,
+        googlePlus: true
       },
       urlCurl: '',
       enableTracking: true,
       buttons: {
-        googlePlus: {size: 'tall'},
-        facebook: {layout: 'box_count'},
         twitter: {count: 'vertical', via: 'alfajango'},
-        linkedin: {counter: 'top'}
+        facebook: {layout: 'box_count'},
+        linkedin: {counter: 'top'},
+        googlePlus: {size: 'tall'}
       },
       hover: function(api, options){
         $(api.element).find('.buttons').show();
