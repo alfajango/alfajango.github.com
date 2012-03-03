@@ -9,6 +9,7 @@
     <script type='text/javascript' src='/js/jquery-1.7.1.min.js'></script>
     <script type='text/javascript' src='/js/jquery.scrollTo.js'></script>
     <script type='text/javascript' src='/js/jquery.nav.min.js'></script>
+    <script type='text/javascript' src='/js/jquery.toc.min.js'></script>
     <script type='text/javascript' src='/js/jquery.sharrre-1.2.0.min.js'></script>
 
 
@@ -32,12 +33,18 @@
           end: function() {
           }
         });
+        $('#toc').toc({
+          selectors: '#post > h2, #post > h3'
+        });
       });
     </script>
     {% include analytics.html %}
     {% include share.html %}
   </head>
   <body>
+    <div id='toc'>
+      Contents
+    </div>
     {% include headbar.html %}
     <div id='content' class='contained'>
       <div id='sidebar'>
@@ -52,15 +59,6 @@
 
         {% if page.anchors || page.articles %}
         <div class='bar'>
-          {% if page.anchors %}
-          <ul class='sidebar-list' id='nav'>
-            <h2>Contents</h2>
-            {% for anchor in page.anchors %}
-            <li><a href="{{ anchor.href }}">{{ anchor.title }}</a></li>
-            {% endfor %}
-          </ul>
-          {% endif %}
-
           {% if page.articles %}
           <ul class='sidebar-list' id='articles'>
             <h2>Related Articles</h2>
