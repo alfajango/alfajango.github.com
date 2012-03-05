@@ -62,7 +62,7 @@
 .tab-container .field-container { background: #fff; border: solid #666 1px; padding: 10px; -moz-border-radius: 0 4px 4px 4px; -webkit-border-radius: 0 4px 4px 4px; }
 
 /* Styles for Previous and Next buttons */
-.prev-tab, .next-tab { display: block; padding: 5px; background: #71af5a; border: solid 1px; width: 100px; text-align: center; color: #fff; margin-top: 10px; }
+.prev-tab, .next-tab { display: block; width: 100px; text-align: center; margin-top: 10px; }
 span.prev-tab, span.next-tab { background: #ccc; }
 .prev-tab { float: left; }
 .next-tab { float: right; }
