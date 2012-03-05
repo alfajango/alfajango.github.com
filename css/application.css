@@ -74,7 +74,7 @@ body {
   background: url('/images/header_bg.png') repeat-x #000;
   border-bottom: solid 2px #00a50c;
   padding-bottom: 60px;
-  min-width: 930px;
+  min-width: 485px;
 }
 
 #tagbar {
@@ -84,7 +84,7 @@ body {
   color: #333;
   border-top: solid 1px #007b09;
   border-bottom: solid 1px #ccc;
-  min-width: 930px;
+  min-width: 485px;
 }
 
 #title-and-share {
@@ -110,6 +110,10 @@ body {
   text-shadow: 0 0px 1px #000, -6px 8px 5px rgba(0, 0, 0, 0.8);
   margin-bottom: 0;
 }
+#headbar h1 span {
+  text-shadow: 0 0px -1px #000, -1px -1px -4px rgba(0, 0, 0, 0.8);
+  color: #007b09;
+}
 #built-by {
   display: block;
   float: right;
@@ -133,7 +137,6 @@ body {
   display: block;
   font-size: 36px;
 }
-
 #tagbar h2 {
   font-size: 40px;
   margin: 15px 5% 20px;
@@ -164,9 +167,31 @@ a.nav-links:hover {
   margin-right: 10px;
 }
 
+@media only screen and (max-width: 1250px) {
+  #built-by {
+    width: 100px;
+  }
+  #built-by h3 {
+    display: none;
+  }
+  .nav-links span {
+    display: none;
+  }
+  #aj-logo {
+    clear: bottom;
+  }
+  #visit-site, #visit-os {
+    margin-top: 5px;
+    float: none;
+    width: 80px;
+    display: block;
+    text-align: center;
+  }
+}
+
 #content {
   margin-top: 35px;
-  min-width: 600px;
+  min-width: 500px;
 }
 
 .projects {
@@ -393,6 +418,47 @@ img.styled {
 #toc .toc-active {
     background: #336699;
     box-shadow: inset -5px 0px 10px -5px #000;
+}
+
+@media only screen and (max-width: 950px) {
+  #toc {
+    width: 200px;
+  }
+  .contained {
+    margin-left: 200px;
+  }
+}
+@media only screen and (max-width: 850px) {
+  #toc {
+    display: none;
+  }
+  .contained {
+    margin-left: auto;
+  }
+}
+@media only screen and (max-width: 650px) {
+  #built-by {
+    display: none;
+  }
+  #tagbar p {
+    width: 90%;
+  }
+  #sidebar {
+    float: none;
+    margin-left: 5%;
+    margin-right: 5%;
+    width: 90%;
+  }
+  #download-and-share {
+    float: none;
+    margin-left: 5%;
+  }
+  #post {
+    width: 90%;
+  }
+  #post img {
+    max-width: 100%;
+  }
 }
 
 /* easytabs */
