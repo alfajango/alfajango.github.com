@@ -37,14 +37,20 @@
           selectors: '#post > h2, #post > h3'
         });
       });
+      $(window).scroll(function(e){ 
+        $el = $('#toc-container'); 
+        if ($(this).scrollTop() > $el.offset().top && $el.css('position') != 'fixed'){ 
+          $el.css({'position': 'fixed', 'top': '0px'}); 
+        } 
+        if ($(this).scrollTop() < $('#content').offset().top && $el.css('position') != 'absolute'){ 
+          $el.css({'position': 'absolute', 'top': 'auto'}); 
+        } 
+      });
     </script>
     {% include analytics.html %}
     {% include share.html %}
   </head>
   <body>
-    <div id='toc'>
-      Contents
-    </div>
     {% include headbar.html %}
     <div id='content' class='contained'>
       <div id='sidebar'>
@@ -69,6 +75,11 @@
           {% endif %}
         </div>
         {% endif %}
+      </div>
+
+      <div id='toc-container'>
+        <div id='toc'>
+        </div>
       </div>
 
       <div id='post'>
