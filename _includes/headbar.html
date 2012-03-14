@@ -16,7 +16,7 @@
   </div>
   <br class='clear' />
 </div>
-<div id='tagbar'>
+<div id='tagbar' {% if page.url == '/index.html' %} class='homepage' {% endif %}>
   <div class='contained'>
     {% if page.tagline %}
       <span class="tagline">{{ page.tagline }}</span>

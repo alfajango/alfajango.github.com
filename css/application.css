@@ -150,6 +150,9 @@ body {
   margin-left: 5%;
   width: 60%;
 }
+#tagbar.homepage p {
+  width: 90%;
+}
 
 a.nav-links {
   background: rgba(0,0,0,0.5);
