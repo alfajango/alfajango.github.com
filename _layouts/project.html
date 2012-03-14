@@ -11,6 +11,7 @@
     <script type='text/javascript' src='/js/jquery.nav.min.js'></script>
     <script type='text/javascript' src='/js/jquery.toc.min.js'></script>
     <script type='text/javascript' src='/js/jquery.sharrre-1.2.0.min.js'></script>
+    <script type='text/javascript' src='/js/jquery.scrollorama.js'></script>
 
 
     <!-- resources for project demos //-->
@@ -22,7 +23,27 @@
     {% endfor %}
 
     <script>
+      var $toc,
+          $tagbar,
+          $content,
+          tocWidth,
+          tocTop,
+          tagbarHeight,
+          tagbarTop,
+          contentTop,
+          scrollRatio;
+
       $(document).ready( function() {
+        $toc = $('#toc-container'),
+        $tagbar = $('#tagbar'),
+        $content = $('#content'),
+        tocWidth = $toc.outerWidth(),
+        tocTop = $toc.offset().top,
+        tagbarHeight = $tagbar.outerHeight(),
+        tagbarTop = $tagbar.offset().top,
+        contentTop = $content.offset().top,
+        scrollRatio = tocWidth / tagbarHeight;
+
         $('#nav').onePageNav({
           currentClass: 'current',
           changeHash: true,
@@ -40,14 +61,26 @@
           }
         });
       });
-      $(window).scroll(function(e){ 
-        $el = $('#toc-container'); 
-        if ($(this).scrollTop() > $el.offset().top && $el.css('position') != 'fixed'){ 
-          $el.css({'position': 'fixed', 'top': '0px'}); 
-        } 
-        if ($(this).scrollTop() < $('#content').offset().top && $el.css('position') != 'absolute'){ 
-          $el.css({'position': 'absolute', 'top': 'auto'}); 
-        } 
+
+
+      $(window).scroll(function(e){
+        var scrollTop = $(this).scrollTop();
+        if (scrollTop > tocTop && $toc.css('position') != 'fixed'){
+          $toc.css({'position': 'fixed', 'top': '0px'});
+        }
+        if (scrollTop < contentTop && $toc.css('position') != 'absolute'){
+          $toc.css({'position': 'absolute', 'top': 'auto'});
+        }
+        if (scrollTop > tagbarTop) {
+          var leftOffset = tocWidth - (scrollTop - tagbarTop) * scrollRatio;
+          if (scrollTop < (tagbarTop + tagbarHeight)) {
+            $toc.offset({'left': -(leftOffset)});
+          } else if ($toc.offset().left < 0) {
+            $toc.offset({'left': 0});
+          }
+        } else if (scrollTop < tagbarTop) {
+          $toc.offset({'left': -tocWidth});
+        }
       });
     </script>
     {% include analytics.html %}
