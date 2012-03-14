@@ -287,12 +287,17 @@ a.nav-links:hover {
   font-size: 16px;
 }
 
-#sidebar {
-  float: right;
-  width: 25%;
-  margin-right: 5%;
-  padding-top: 20px;
+#footer {
+  padding: 40px 0;
+  border-top: solid 1px #CCC;
+  margin-top: 50px;
 }
+#footer p {
+  font-size: 18px;
+  line-height: 24px;
+  margin-bottom: 25px;
+}
+
 .large-button {
   width: 235px;
   font-size: 24px;
@@ -311,27 +316,9 @@ a.nav-links:hover {
   font-weight: normal;
 }
 
-#resources {
-  padding-bottom: 20px;
+.footer-list {
 }
-
-#sidebar .bar {
-  background: #fff;
-  padding-bottom: 10px;
-  -webkit-border-radius: 5px;
-  -moz-border-radius: 5px;
-  -webkit-box-shadow: 0 0 10px #888;
-  -moz-box-shadow: 0 0 10px #888;
-  box-shadow: 0 0 10px #888;
-}
-
-.sidebar-list {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  border: solid 1px #ececec;
-}
-.sidebar-list li a {
+.footer-list li a {
   display: block;
   padding: 5px 10px;
   color: #00a50c;
@@ -340,17 +327,6 @@ a.nav-links:hover {
 }
 ul#nav li a {
   line-height: 1.5em;
-}
-ul#articles li a {
-  font-size: 12px;
-  line-height: 1.5em;
-}
-.sidebar-list li a:hover {
-  background: #dcdcdc;
-}
-#sidebar h2 {
-  font-weight: normal;
-  padding: 0 10px;
 }
 
 #post {
@@ -386,13 +362,13 @@ img.styled {
     background: url(/images/linen-bg-dark.png) #333;
     box-shadow: inset -5px 5px 15px 0px rgba(0,0,0,0.9);
     width: 250px;
-    padding-top: 40px;
     color: #fff;
     z-index: 100;
+    overflow: auto;
 }
 
 #toc ul {
-    margin: 0;
+    margin: 30px 0;
     padding: 0;
     list-style: none;
 }
@@ -445,12 +421,6 @@ img.styled {
     display: none;
   }
   #tagbar p {
-    width: 90%;
-  }
-  #sidebar {
-    float: none;
-    margin-left: 5%;
-    margin-right: 5%;
     width: 90%;
   }
   #download-and-share {

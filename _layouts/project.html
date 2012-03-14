@@ -55,7 +55,7 @@
           }
         });
         $('#toc').toc({
-          selectors: '#post > h2, #post > h3',
+          selectors: '#post > h2, #post > h3, #footer > h2',
           anchorName: function(i, heading, prefix) {
             return $(heading).text().replace(/^\s+|\s+$/g, "").replace(/\s+/g, "-").replace(/([A-Z])/g, function($1){return $1.toLowerCase();});
           }
@@ -89,29 +89,6 @@
   <body>
     {% include headbar.html %}
     <div id='content' class='contained'>
-      <div id='sidebar'>
-
-        {% if page.links %}
-          <ul class='sidebar-list' id='resources'>
-            {% for link in page.links %}
-            <li><a href="{{ link.href }}">{{ link.title }}</a></li>
-            {% endfor %}
-          </ul>
-        {% endif %}
-
-        {% if page.anchors || page.articles %}
-        <div class='bar'>
-          {% if page.articles %}
-          <ul class='sidebar-list' id='articles'>
-            <h2>Related Articles</h2>
-            {% for article in page.articles %}
-            <li><a href="{{ article.href }}">{{ article.title }}</a></li>
-            {% endfor %}
-          </ul>
-          {% endif %}
-        </div>
-        {% endif %}
-      </div>
 
       <div id='toc-container'>
         <div id='toc'>
@@ -120,7 +97,36 @@
 
       <div id='post'>
         {{ content }}
+
+        <div id='footer'>
+          <p>
+          Congratulations, you've reached the end of the documentation!
+          </p>
+          <p>
+          You are now certified in {{ page.heading }} development.
+          Take these links. They will help you in your journey:
+          </p>
+
+          {% if page.links %}
+            <h2> Project Resources</h2>
+            <ul class='footer-list' id='resources'>
+              {% for link in page.links %}
+              <li><a href="{{ link.href }}">{{ link.title }}</a></li>
+              {% endfor %}
+            </ul>
+          {% endif %}
+
+          {% if page.articles %}
+          <h2>Related Articles</h2>
+          <ul class='footer-list' id='articles'>
+            {% for article in page.articles %}
+            <li><a href="{{ article.href }}">{{ article.title }}</a></li>
+            {% endfor %}
+          </ul>
+          {% endif %}
+        </div>
       </div>
+
     </div>
   </body>
 </html>
