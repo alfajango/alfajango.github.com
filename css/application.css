@@ -83,21 +83,26 @@ body {
   padding: 10px 0 15px;
   color: #333;
   border-top: solid 1px #007b09;
-  border-bottom: solid 1px #ccc;
   min-width: 485px;
+  border-bottom: solid 1px #ccc;
 }
 
 #title-and-share {
   padding: 90px 0 0 5%;
 }
-
+#download-and-share-placeholder {
+  /*height: 90px;*/
+}
+#download-and-share-container {
+  background: #fff;
+  z-index: 100;
+  width: 100%;
+}
 #download-and-share {
-  float: right;
-  margin-top: 12px;
-  margin-right: 5%;
+  padding: 0 5% 15px;
 }
 #download-and-share a {
-  display: block;
+  margin: 15px 15px 0 0;
 }
 
 #headbar h1 {

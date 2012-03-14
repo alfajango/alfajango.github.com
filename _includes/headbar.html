@@ -18,17 +18,6 @@
 </div>
 <div id='tagbar'>
   <div class='contained'>
-    <div id="download-and-share">
-        {% if page.download %}
-        <a class='btn success large-button' id='download-button' href='{{ page.download.href }}'><img src='/images/wooden-box.png' /> {{page.download.title}}</a>
-        {% endif %}
-        {% if page.github %}
-        <a class='btn large-button' id='github-button' href='{{ page.github.href }}'><img src='/images/github-icon.png' /> {{page.github.title}}</a>
-        {% endif %}
-        {% if page.twitter %}
-        <a class='btn primary large-button' id='twitter-button' href='{{ page.twitter.href }}'><img src='/images/twitter-icon.png' /> {{page.twitter.title}}</a>
-        {% endif %}
-    </div>
     {% if page.tagline %}
       <span class="tagline">{{ page.tagline }}</span>
     {% endif %}
@@ -39,5 +28,21 @@
       <p class="description">{{ page.description }}</p>
     {% endif %}
   </div>
-  <br class='clear' />
+  <div id="download-and-share-placeholder">
+    <div id="download-and-share-container">
+      <div class='contained'>
+        <div id="download-and-share">
+          {% if page.download %}
+          <a class='btn success large-button' id='download-button' href='{{ page.download.href }}'><img src='/images/wooden-box.png' /> {{page.download.title}}</a>
+          {% endif %}
+          {% if page.github %}
+          <a class='btn large-button' id='github-button' href='{{ page.github.href }}'><img src='/images/github-icon.png' /> {{page.github.title}}</a>
+          {% endif %}
+          {% if page.twitter %}
+          <a class='btn primary large-button' id='twitter-button' href='{{ page.twitter.href }}'><img src='/images/twitter-icon.png' /> {{page.twitter.title}}</a>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
