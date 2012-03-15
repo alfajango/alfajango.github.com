@@ -50,6 +50,10 @@ body {
   background: #ececec;
 }
 
+a {
+  color: #2ea900;
+}
+
 #post h2 {
   margin: 20px 0 10px;
 }
@@ -126,8 +130,8 @@ body {
   margin-top: 60px;
   margin-right: 5%;
   width: 400px;
-  background: rgba(500,500,500,0.1);
-  border: solid 1px #1e1e1e;
+  background: rgba(500,500,500,0.2);
+  border: inset 1px #000;
   -moz-border-radius: 5px;
   -webkit-border-radius: 5px;
 }
@@ -158,6 +162,7 @@ a.nav-links {
   background: rgba(0,0,0,0.5);
   padding: 7px 10px;
   color: #00a50c;
+  font-weight: bold;
   -moz-border-radius: 5px;
   -webkit-border-radius: 5px;
 }
@@ -318,9 +323,6 @@ a.nav-links:hover {
   vertical-align: middle;
   position: relative;
   bottom: 2px;
-}
-#twitter-button {
-  font-weight: normal;
 }
 
 .footer-list {

@@ -39,7 +39,7 @@
           <a class='btn large-button' id='github-button' href='{{ page.github.href }}'><img src='/images/github-icon.png' /> {{page.github.title}}</a>
           {% endif %}
           {% if page.twitter %}
-          <a class='btn primary large-button' id='twitter-button' href='{{ page.twitter.href }}'><img src='/images/twitter-icon.png' /> {{page.twitter.title}}</a>
+          <a id="twitter-button" href="https://twitter.com/{{ page.twitter.user }}" class="twitter-follow-button" data-show-count="false" data-size="large">{{ twitter.title }}</a>
           {% endif %}
         </div>
       </div>
