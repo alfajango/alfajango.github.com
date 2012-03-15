@@ -211,7 +211,7 @@ a.nav-links:hover {
   border-bottom: solid 1px #c0c0c0;
   vertical-align: top;
   display: inline-block;
-  width: 30%;
+  width: 44%;
   margin: 0 3% 20px 0;
   padding-bottom: 20px;
   zoom:1; *display:inline;
@@ -227,27 +227,26 @@ a.nav-links:hover {
   box-shadow: 1px 1px 5px rgba(0,0,0,0.4);
 }
 .project-tile.js {
-  border: solid 1px #00ff13;
+  border: solid 1px #fbed22;
 
-  background: #34A0D2; /* fallback for non-supporting browsers */
-  background-image: -webkit-gradient(radial, center center, 0, center center, 141, from(#00ff13), to(#00a50c), color-stop(250%, #00d50f), color-stop(500%, #00a50c)); /* old WebKit Syntax */
-  background-image: -webkit-radial-gradient(center center, circle contain, #00ff13 0%, #00d50f 250%, #00a50c 500%); /* New WebKit syntax */
-  background-image: -moz-radial-gradient(center center, circle contain, #00ff13 0%, #00d50f 250%, #00a50c 500%);
-  background-image: -ms-radial-gradient(center center, circle contain, #00ff13 0%, #00d50f 250%, #00a50c 500%); /* IE10+ */
-  background-image: -o-radial-gradient(center center, circle contain, #00ff13 0%, #00d50f 250%, #00a50c 500%); /* Opera (13?) */
-  background-image: radial-gradient(center center, circle contain, #00ff13 0%, #00d50f 250%, #00a50c 500%); /* standard syntax */
+  background: #ede020; /* fallback for non-supporting browsers */
+  background-image: -webkit-gradient(radial, center center, 0, center center, 141, from(#fbed22), to(#e4d71f), color-stop(250%, #ede020), color-stop(500%, #e4d71f)); [> old WebKit Syntax <]
+  background-image: -webkit-radial-gradient(center center, circle contain, #fbed22 0%, #ede020 250%, #e4d71f 500%); [> New WebKit syntax <]
+  background-image: -moz-radial-gradient(center center, circle contain, #fbed22 0%, #ede020 250%, #e4d71f 500%);
+  background-image: -ms-radial-gradient(center center, circle contain, #fbed22 0%, #ede020 250%, #e4d71f 500%); [> IE10+ <]
+  background-image: -o-radial-gradient(center center, circle contain, #fbed22 0%, #ede020 250%, #e4d71f 500%); [> Opera (13?) <]
+  background-image: radial-gradient(center center, circle contain, #fbed22 0%, #ede020 250%, #e4d71f 500%); [> standard syntax <]
 }
 .project-tile.ruby {
-  border: solid 1px #00a50c;
+  border: solid 1px #ff373f;
 
-  background: #008d0a;
-  background-image: -webkit-gradient(radial, center center, 0, center center, 141, from(#00a50c), to(#007308), color-stop(250%, #008d0a), color-stop(500%, #007308)); /* old WebKit Syntax */
-  background-image: -webkit-radial-gradient(center center, circle contain, #00a50c 0%, #008d0a 250%, #007308 700%); /* New WebKit syntax */
-  background-image: -moz-radial-gradient(center center, circle contain, #00a50c 0%, #008d0a 250%, #007308 500%);
-  background-image: -moz-radial-gradient(center center, circle contain, #00a50c 0%, #008d0a 250%, #007308 500%);
-  background-image: -ms-radial-gradient(center center, circle contain, #00a50c 0%, #008d0a 250%, #007308 500%); /* IE10+ */
-  background-image: -o-radial-gradient(center center, circle contain, #00a50c 0%, #008d0a 250%, #007308 500%); /* Opera (13?) */
-  background-image: radial-gradient(center center, circle contain, #00a50c 0%, #008d0a 250%, #007308 500%); /* standard syntax */
+  background: #da2f36;
+  background-image: -webkit-gradient(radial, center center, 0, center center, 141, from(#ff373f), to(#ca2c32), color-stop(250%, #da2f36), color-stop(500%, #ca2c32)); [> old WebKit Syntax <]
+  background-image: -webkit-radial-gradient(center center, circle contain, #ff373f 0%, #da2f36 250%, #ca2c32 700%); [> New WebKit syntax <]
+  background-image: -moz-radial-gradient(center center, circle contain, #ff373f 0%, #da2f36 250%, #a42329 500%);
+  background-image: -ms-radial-gradient(center center, circle contain, #ff373f 0%, #da2f36 250%, #a42329 500%); [> IE10+ <]
+  background-image: -o-radial-gradient(center center, circle contain, #ff373f 0%, #da2f36 250%, #a42329 500%); [> Opera (13?) <]
+  background-image: radial-gradient(center center, circle contain, #ff373f 0%, #da2f36 250%, #ca2c32 500%); [> standard syntax <]
 }
 .project-tile a {
   display: block;
@@ -256,10 +255,10 @@ a.nav-links:hover {
   font-weight: bold;
 }
 .project-tile.js a, li.js .homepage-tagline {
-  color: #009a0b;
+  color: #ada417;
 }
 .project-tile.ruby a, li.ruby .homepage-tagline {
-  color: #006407;
+  color: #891d22;
 }
 
 .projects li a.btn {
@@ -278,10 +277,10 @@ a.nav-links:hover {
   height: 75px;
 }
 .project-tile.js span {
-  color: #00b30d;
+  color: #d1c61c;
 }
 .project-tile.ruby span {
-  color: #007308;
+  color: #a42329;
 }
 .project-info {
   height: 200px;
