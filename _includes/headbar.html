@@ -18,6 +18,11 @@
 </div>
 <div id='tagbar' {% if page.url == '/index.html' %} class='homepage' {% endif %}>
   <div class='contained'>
+          {% if page.twitter %}
+          <div id='twitter-button-container'>
+            <a id="twitter-button" href="https://twitter.com/{{ page.twitter.user }}" class="twitter-follow-button" data-show-count="false" data-size="large">{{ twitter.title }}</a>
+          </div>
+          {% endif %}
     {% if page.tagline %}
       <span class="tagline">{{ page.tagline }}</span>
     {% endif %}
@@ -37,9 +42,6 @@
           {% endif %}
           {% if page.github %}
           <a class='btn large-button' id='github-button' href='{{ page.github.href }}'><img src='/images/github-icon.png' /> {{page.github.title}}</a>
-          {% endif %}
-          {% if page.twitter %}
-          <a id="twitter-button" href="https://twitter.com/{{ page.twitter.user }}" class="twitter-follow-button" data-show-count="false" data-size="large">{{ twitter.title }}</a>
           {% endif %}
         </div>
       </div>

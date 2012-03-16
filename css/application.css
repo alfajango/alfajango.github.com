@@ -164,6 +164,10 @@ p {
 #tagbar.homepage p {
   width: 90%;
 }
+#twitter-button-container {
+  float: right;
+  margin-right: 5%;
+}
 
 a.nav-links {
   background: rgba(0,0,0,0.5);
