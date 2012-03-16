@@ -213,7 +213,7 @@ a.nav-links:hover {
 }
 
 .projects {
-  margin: 40px 0;
+  margin: 40px 5% !important;
 }
 
 .projects li {
