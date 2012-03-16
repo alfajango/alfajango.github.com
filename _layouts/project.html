@@ -8,10 +8,8 @@
     <link rel="stylesheet" media="all" href="/css/share.css" />
     <script type='text/javascript' src='/js/jquery-1.7.1.min.js'></script>
     <script type='text/javascript' src='/js/jquery.scrollTo.js'></script>
-    <script type='text/javascript' src='/js/jquery.nav.min.js'></script>
     <script type='text/javascript' src='/js/jquery.toc.min.js'></script>
     <script type='text/javascript' src='/js/jquery.sharrre-1.2.0.min.js'></script>
-    <script type='text/javascript' src='/js/jquery.scrollorama.js'></script>
 
 
     <!-- resources for project demos //-->
@@ -48,16 +46,6 @@
         downloadBarTop = $downloadBar.offset().top,
         scrollRatio = tocWidth / tagbarHeight;
 
-        $('#nav').onePageNav({
-          currentClass: 'current',
-          changeHash: true,
-          scrollSpeed: 750,
-          scrollOffset: 30,
-          begin: function() {
-          },
-          end: function() {
-          }
-        });
         $('#toc').toc({
           selectors: '#post > h2, #post > h3, #footer > h2',
           anchorName: function(i, heading, prefix) {
