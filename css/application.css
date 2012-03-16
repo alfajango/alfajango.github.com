@@ -53,6 +53,9 @@ body {
 a {
   color: #2ea900;
 }
+a:hover {
+  color: #227d00;
+}
 
 p {
   font-size: 16px;
@@ -292,12 +295,6 @@ a.nav-links:hover {
   font-size: 30px;
   font-weight: bold;
 }
-.project-tile.js a, li.js .homepage-tagline {
-  color: #ada417;
-}
-.project-tile.ruby a, li.ruby .homepage-tagline {
-  color: #891d22;
-}
 
 .projects li a.btn {
   color: #000;
@@ -308,11 +305,8 @@ a.nav-links:hover {
 
 .project-tile span {
   float: right;
-  font-size: 30px;
-  padding-top: 20px;
   margin-right: 15px;
-  font-weight: bold;
-  color: #ccc;
+  margin-top: 10px;
 }
 .project-tile.js span {
   /*color: #d1c61c;*/
