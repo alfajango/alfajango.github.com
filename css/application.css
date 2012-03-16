@@ -113,6 +113,7 @@ p {
 }
 #download-and-share a {
   margin: 15px 15px 0 0;
+  text-align: center;
 }
 
 #headbar h1 {
@@ -497,6 +498,7 @@ img.styled {
     max-width: 100%;
   }
 }
+.btn.primary{color:#ffffff;background-color:#00a636;background-repeat:repeat-x;background-image:-khtml-gradient(linear, left top, left bottom, from(#00bd3e), to(#00a636));background-image:-moz-linear-gradient(top, #00bd3e, #00a636);background-image:-ms-linear-gradient(top, #00bd3e, #00a636);background-image:-webkit-gradient(linear, left top, left bottom, color-stop(0%, #00bd3e), color-stop(100%, #00a636));background-image:-webkit-linear-gradient(top, #00bd3e, #00a636);background-image:-o-linear-gradient(top, #00bd3e, #00a636);background-image:linear-gradient(top, #00bd3e, #00a636);filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#00a636', endColorstr='#00bd3e', GradientType=0);text-shadow:0 -1px 0 rgba(0, 0, 0, 0.25);border-color:#00bd3e #00a636 #00a135;border-color:rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);}
 
 /* easytabs */
 
