@@ -54,6 +54,12 @@ a {
   color: #2ea900;
 }
 
+p {
+  font-size: 16px;
+  line-height: 22px;
+  margin-bottom: 14px;
+}
+
 #post h2 {
   margin: 20px 0 10px;
 }
@@ -389,6 +395,7 @@ ul#nav li a {
   padding-top: 20px;
   margin-left: 5%;
   width: 60%;
+  min-height: 100%;
 }
 
 .tagline {
@@ -510,11 +517,6 @@ img.styled {
 
 /* css-emoticons */
 
-#css-emoticons-heading { font-size: 72px; }
 #small { font-size: 8px; }
 #large { font-size: 72px; }
 #regular { font-size: 20px; }
-
-/* jquery-rails-demo */
-
-#jquery-rails-demo-heading { font-size: 62px; }

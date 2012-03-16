@@ -117,8 +117,9 @@
           Congratulations, you've reached the end of the documentation!
           </p>
           <p>
-          You are now certified in {{ page.heading }} development.
+          {% if page.links || page.articles %}
           Take these links. They will help you in your journey:
+          {% endif %}
           </p>
 
           {% if page.links %}

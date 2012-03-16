@@ -1,7 +1,7 @@
 ---
 layout: project
 title: Rails 3 jQuery-UJS AJAX Demo
-heading: <span id="jquery-rails-demo-heading">jQuery-Rails Demo</span>
+heading: jQuery-Rails Demo
 tagline: A Rails 3 AJAX Demo App
 description: The simplest example of using AJAX CRUD operations in a
   Rails 3 app using the built-in jQuery-UJS funcitonality.

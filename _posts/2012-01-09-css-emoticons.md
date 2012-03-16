@@ -1,7 +1,7 @@
 ---
 layout: project
 title: jQuery CSS Emoticons Plugin
-heading: <span id="css-emoticons-heading">CSS Emoticons</span>
+heading: CSS Emoticons
 tagline: Pure CSS/JS Emoticons
 description: An emoticon implementation in pure CSS and JavaScript,
   using no images whatsoever.
