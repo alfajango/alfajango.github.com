@@ -91,7 +91,7 @@ Your remote forms are now able to upload files via ajax.
 
 In previous versions, it was required to wrap js.erb responses in a remotipart_response block. This is no longer required in v1.0.
 
-Was the form was submitted with Remotipart?
+Was the form submitted with Remotipart?
 
 In your controllers, views, or helpers, you may want to know if the form was submitted with Remotipart (using the iframe-transport) or submitted with the native rails jquery-ujs, for whatever reason. Remotipart makes a method available called remotipart_submitted?
 
