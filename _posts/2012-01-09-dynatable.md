@@ -22,11 +22,7 @@ stylesheets:
 
 ## Demo
 
-<cite>
-<i>
-(List of countries by GDP per capita from <a target="_blank" href="http://en.wikipedia.org/wiki/List_of_countries_by_GDP_(nominal)_per_capita">Wikipedia</a>)
-</i>
-</cite>
+<div class="dynatable-demo">
 
 <table id="example-table" class="wikitable sortable" style="margin-left:auto;margin-right:auto;text-align: right">
 <thead>
@@ -1154,6 +1150,14 @@ stylesheets:
 <td>2011</td>
 </tr>
 </table>
+
+</div>
+
+<cite>
+<i>
+* List of countries by GDP per capita from <a target="_blank" href="http://en.wikipedia.org/wiki/List_of_countries_by_GDP_(nominal)_per_capita">Wikipedia</a>
+</i>
+</cite>
 
 <script type="text/javascript">
   $('#example-table').dynatable({
