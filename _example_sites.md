@@ -3,6 +3,7 @@ Company OS pages:
   - **<http://metafizzy.co/>**
   - **<http://thoughtbot.com/community/>**
   - **<http://code.bocoup.com/>**
+  - **<http://teamtreehouse.com/>**
 
 Project pages:
 
