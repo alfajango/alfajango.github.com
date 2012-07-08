@@ -1,4 +1,12 @@
 <script type='text/javascript'>
+  var domain = location,
+      url = location.host == 'os.alfajango.com' ? 'https://s3.alfajango.com/os-projects-downloads.json' : '/output.json',
+      resultJSON;
+
+  var requestJSON = $.getJSON(url, function(json) {
+    resultJSON = json;
+  });
+
   function addCommas(nStr) {
     nStr += '';
     x = nStr.split('.');
@@ -12,67 +20,37 @@
   }
 
   $(document).ready( function() {
-    $('[data-rubygems]').each( function() {
-      var $this = $(this),
-          gem = $this.data('rubygems');
+    requestJSON.done( function() {
+      $.each( ['rubygems', 'github', 'jspkg'], function(i, service) {
+        $('[data-' + service + ']').each( function() {
+          var $this = $(this),
+              project = $this.data(service),
+              number, label;
 
-      $.ajax({
-        url: 'http://rubygems.org/api/v1/downloads/' + gem + '.json',
-        type: 'GET',
-        success: function(res) {
-          var result = $(res.responseText).filter('p').text(),
-              resultJSON = $.parseJSON(result);
+          switch (service) {
+            case 'rubygems':
+              number = 'total_downloads';
+              label = 'downloads';
+              break;
+            case 'github':
+              number = 'watchers';
+              label = 'watchers';
+              break;
+            case 'jspkg':
+              number = 'total_downloads';
+              label = 'downloads';
+          };
 
           $this
             .tooltip({
-              title: addCommas(resultJSON.total_downloads) + ' downloads',
+              title: addCommas(resultJSON[project][service][number]) + ' ' + label,
               placement: 'left',
               trigger: 'manual'
             })
             .tooltip('show');
-        }
-      });
-    });
-
-    $('[data-github]').each( function() {
-      var $this = $(this),
-          github = $this.data('github'),
-          split = github.split('/'),
-          user = split[0],
-          repo = split[1],
-          repoInfo = gh.repo(user, repo);
-
-      repoInfo.show(function (data) {
-        $this
-          .tooltip({
-            title: addCommas(data.repository.watchers) + ' watchers',
-            placement: 'left',
-            trigger: 'manual'
-          })
-          .tooltip('show');
+        });
       });
 
-    });
-    $('[data-jspkg]').each( function() {
-      var $this = $(this),
-          pkg = $this.data('jspkg');
-
-      $.ajax({
-        url: 'http://jspkg.com/packages/' + pkg + '/downloads.json',
-        type: 'GET',
-        success: function(res) {
-          var result = $(res.responseText).filter('p').text(),
-              resultJSON = $.parseJSON(result);
-
-          $this
-            .tooltip({
-              title: addCommas(resultJSON.total_downloads) + ' downloads',
-              placement: 'left',
-              trigger: 'manual'
-            })
-            .tooltip('show');
-        }
-      });
     });
   });
 </script>
