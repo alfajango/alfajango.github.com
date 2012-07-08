@@ -1,11 +1,11 @@
 <script type='text/javascript'>
   var domain = location,
       url = location.host == 'os.alfajango.com' ? 'http://s3.alfajango.com/os-projects-downloads.json' : '/output.json',
-      resultJSON;
-
-  var requestJSON = $.getJSON(url, function(json) {
-    resultJSON = json;
-  });
+      resultJSON,
+      setJSON = function(data) {
+        resultJSON = data;
+      },
+      requestJSON = $.ajax(url, {dataType: 'jsonp', jsonp: false, jsonpCallback: 'setJSON'});
 
   function addCommas(nStr) {
     nStr += '';
