@@ -1,6 +1,6 @@
 <script type='text/javascript'>
   var domain = location,
-      url = location.host == 'os.alfajango.com' ? 'https://s3.alfajango.com/os-projects-downloads.json' : '/output.json',
+      url = location.host == 'os.alfajango.com' ? 'http://s3.alfajango.com/os-projects-downloads.json' : '/output.json',
       resultJSON;
 
   var requestJSON = $.getJSON(url, function(json) {
