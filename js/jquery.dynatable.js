@@ -66,13 +66,20 @@
             multisort: ['ctrlKey', 'shiftKey', 'metaKey'],
             page: null,
             queryEvent: 'blur change',
+            recordCountTarget: null,
             recordCountPlacement: 'after',
+            paginationLinkTarget: null,
             paginationLinkPlacement: 'after',
             paginationPrev: 'Previous',
             paginationNext: 'Next',
             paginationGap: [1,2,2,1],
+            searchTarget: null,
             searchPlacement: 'before',
-            perPagePlacement: 'before'
+            perPageTarget: null,
+            perPagePlacement: 'before',
+            perPageText: 'Show: ',
+            recordCountText: 'Showing ',
+            processingText: 'Processing...'
           },
           dataset: {
             ajax: false,
@@ -219,6 +226,8 @@
     plugin.process = function(skipPushState) {
       var data = {};
 
+      $element.trigger('dynatable:beforeProcess', data);
+
       if (!$.isEmptyObject(settings.dataset.queries)) { data[settings.params.queries] = settings.dataset.queries; }
       // TODO: Wrap this in a try/rescue block to hide the processing indicator and indicate something went wrong if error
       plugin.processingIndicator.show();
@@ -239,6 +248,7 @@
           dataType: settings.dataset.ajaxDataType,
           data: data,
           success: function(response) {
+            $element.trigger('dynatable:ajax:success', response);
             // Merge ajax results and meta-data into dynatables cached data
             plugin.records.updateFromJson(response);
             // update table with new records
@@ -282,6 +292,7 @@
           plugin.state.push(data);
         }
       }
+      $element.trigger('dynatable:afterProcess', data);
     };
 
     plugin.state = {
@@ -309,6 +320,12 @@
         // Also, Firefox's limit can be changed in about:config as browser.history.maxStateObjectSize
         // Since we don't know what the actual limit will be in any given situation, we'll just try caching and rescue
         // any exceptions by retrying pushState without caching the records.
+        //
+        // I have aboslutely no idea why perPageOptions suddenly becomes an array-like object instead of an array,
+        // but just recently, this started throwing an error if I don't convert it:
+        // 'Uncaught Error: DATA_CLONE_ERR: DOM Exception 25'
+        cache.dynatable.dataset.perPageOptions = $.makeArray(cache.dynatable.dataset.perPageOptions);
+
         try {
           window.history.pushState(cache, "Dynatable state", '?' + params);
         } catch(error) {
@@ -338,6 +355,8 @@
             columns = settings.table.columns,
             rowFilter = settings.table.rowFilter,
             cellFilter = settings.table.cellFilter;
+
+        $element.trigger('dynatable:beforeUpdate', $rows);
 
         // loop through records
         $.each(settings.dataset.records, function(rowIndex, record){
@@ -386,6 +405,8 @@
         }
         $element.find(settings.table.bodyRowSelector).remove();
         $element.append($rows);
+
+        $element.trigger('dynatable:afterUpdate', $rows);
       }
     };
 
@@ -713,9 +734,9 @@
 
         // only bind page handler to non-active pages
         var selector = '.' + pageLinkClass + ':not(.' + activePageClass + ')';
-        // kill any existing live-bindings so they don't stack up
-        $(selector).die('click.dynatable');
-        $(selector).live('click.dynatable', function(e) {
+        // kill any existing delegated-bindings so they don't stack up
+        $(document).undelegate(selector, 'click.dynatable');
+        $(document).delegate(selector, 'click.dynatable', function(e) {
           $this = $(this);
           $('#dynatable-pagination-links').find('.' + activePageClass).removeClass(activePageClass);
           $this.addClass(activePageClass);
@@ -728,9 +749,10 @@
         return $pageLinks;
       },
       attach: function() {
-        // append page liks *after* live-event-binding so it doesn't need to
+        // append page liks *after* delegate-event-binding so it doesn't need to
         // find and select all page links to bind event
-        $element[settings.inputs.paginationLinkPlacement](plugin.paginationLinks.create());
+        var $target = settings.inputs.paginationLinkTarget ? $(settings.inputs.paginationLinkTarget) : $element;
+        $target[settings.inputs.paginationLinkPlacement](plugin.paginationLinks.create());
       }
     };
 
@@ -760,7 +782,8 @@
         return $searchSpan;
       },
       attach: function() {
-        $element[settings.inputs.searchPlacement](plugin.search.create());
+        var $target = settings.inputs.searchTarget ? $(settings.inputs.searchTarget) : $element;
+        $target[settings.inputs.searchPlacement](plugin.search.create());
       }
     };
 
@@ -768,7 +791,7 @@
       create: function() {
         var $select = $('<select>', {
               id: 'dynatable-per-page-' + element.id,
-              'class': 'dynatable-per-page'
+              'class': 'dynatable-per-page-select'
             });
 
         $.each(settings.dataset.perPageOptions, function(index, number) {
@@ -781,10 +804,14 @@
           plugin.process();
         });
 
-        return $select.before("<span>Show: </span>");
+        return $('<span />', {
+          html: $select.before("<span class='dynatable-per-page-label'>" + settings.inputs.perPageText + "</span>"),
+          'class': 'dynatable-per-page'
+        });
       },
       attach: function() {
-        $element[settings.inputs.perPagePlacement](plugin.perPage.create());
+        var $target = settings.inputs.perPageTarget ? $(settings.inputs.perPageTarget) : $element;
+        $target[settings.inputs.perPagePlacement](plugin.perPage.create());
       },
       set: function(number) {
         plugin.page.set(1);
@@ -797,12 +824,12 @@
         var recordsShown = settings.dataset.records.length,
             recordsQueryCount = settings.dataset.queryRecordCount,
             recordsTotal = settings.dataset.totalRecordCount,
-            text = "Showing ",
+            text = settings.inputs.recordCountText,
             collection_name = settings.params.records;
 
         if (recordsShown < recordsQueryCount && settings.features.paginate) {
           var bounds = plugin.records.pageBounds();
-          text += (bounds[0] + 1) + " to " + bounds[1] + " of ";
+          text += "<span class='dynatable-record-bounds'>" + (bounds[0] + 1) + " to " + bounds[1] + "</span> of ";
         } else if (recordsShown === recordsQueryCount && settings.features.paginate) {
           text += recordsShown + " of ";
         }
@@ -814,18 +841,19 @@
         return $('<span></span>', {
                   id: 'dynatable-record-count-' + element.id,
                   'class': 'dynatable-record-count',
-                  text: text
+                  html: text
                 });
       },
       attach: function() {
-        $element[settings.inputs.recordCountPlacement](plugin.recordCount.create());
+        var $target = settings.inputs.recordCountTarget ? $(settings.inputs.recordCountTarget) : $element;
+        $target[settings.inputs.recordCountPlacement](plugin.recordCount.create());
       }
     };
 
     plugin.processingIndicator = {
       create: function() {
         var $processing = $('<div></div>', {
-              html: '<span>Processing...</span>',
+              html: '<span>' + settings.inputs.processingText + '</span>',
               id: 'dynatable-processing-' + element.id,
               'class': 'dynatable-processing',
               style: 'position: absolute; display: none;'
@@ -925,7 +953,7 @@
       pageBounds: function() {
         var page = settings.dataset.page || 1,
             first = (page - 1) * settings.dataset.perPage,
-            last = first + Math.min(settings.dataset.perPage, settings.dataset.queryRecordCount);
+            last = Math.min(first + settings.dataset.perPage, settings.dataset.queryRecordCount);
         return [first,last];
       },
       // get initial recordset to populate table
@@ -1157,15 +1185,23 @@
             var origV = v;
             k = m[1];
             v = {};
-            v[m[2]] = origV;
+
+            // If nested param ends in '][', then the regex above erroneously included half of a trailing '[]',
+            // which indicates the end-value is part of an array
+            if (m[2].substr(m[2].length-2) == '][') { // must use substr for IE to understand it
+              v[m[2].substr(0,m[2].length-2)] = [origV];
+            } else {
+              v[m[2]] = origV;
+            }
           }
 
           // If it is the first entry with this name
           if (typeof hash[k] === "undefined") {
-            if (k.substr(k.length-2) != '[]')  // not end with []. cannot use negative index as IE doesn't understand it
+            if (k.substr(k.length-2) != '[]') { // not end with []. cannot use negative index as IE doesn't understand it
               hash[k] = v;
-            else
+            } else {
               hash[k] = [v];
+            }
           // If subsequent entry with this name and not array
           } else if (typeof hash[k] === "string") {
             hash[k] = v;  // replace it
@@ -1186,22 +1222,40 @@
 
         urlOptions = plugin.utility.deserialize(urlString);
 
+        // Loop through each dynatable param and update the URL with it
         $.each(settings.params, function(attr, label) {
-          // Skip over parameters matching attributes for disabled features (i.e. leave them untouched)
+          // Skip over parameters matching attributes for disabled features (i.e. leave them untouched),
+          // because if the feature is turned off, then parameter name is a coincidence and it's unrelated to dynatable.
           if (
-            (!settings.features.search && attr == "queries") ||
-              (!settings.features.sort && attr == "sorts") ||
-                (!settings.features.paginate && plugin.utility.anyMatch(attr, ["page", "perPage", "offset"], function(attr, param) { return attr == param; }))
+            (!settings.features.sort && attr == "sorts") ||
+              (!settings.features.paginate && plugin.utility.anyMatch(attr, ["page", "perPage", "offset"], function(attr, param) { return attr == param; }))
           ) {
             return true;
           }
+
+          // For queries, we're going to handle each possible query parameter individually here instead of
+          // handling the entire queries object below, since we need to make sure that this is a query controlled by dynatable.
+          if (attr == "queries" && data[label]) {
+            var inputQueries = $.makeArray(settings.inputs.queries.map(function() { return $(this).attr('name') }));
+            $.each(inputQueries, function(i, attr) {
+              if (data[label][attr]) {
+                if (typeof urlOptions[label] === 'undefined') { urlOptions[label] = {}; }
+                urlOptions[label][attr] = data[label][attr];
+              } else {
+                delete urlOptions[label][attr];
+              }
+            });
+            return true;
+          }
+
+          // If we havne't returned true by now, then we actually want to update the parameter in the URL
           if (data[label]) {
             urlOptions[label] = data[label];
           } else {
             delete urlOptions[label];
           }
         });
-        return unescape($.param(urlOptions));
+        return decodeURI($.param(urlOptions));
       },
       // Get array of keys from object
       // see http://stackoverflow.com/questions/208016/how-to-list-the-properties-of-a-javascript-object/208020#208020
