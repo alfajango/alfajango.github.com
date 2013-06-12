@@ -1,0 +1,3 @@
+[submodule "websockets-slides"]
+	path = websockets-slides
+	url = git@github.com:JangoSteve/websockets-presentation.git
