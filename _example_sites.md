@@ -29,6 +29,8 @@ Project pages:
   - http://www.lullabot.com/files/bt/bt-latest/DEMO/index.html
   - http://yeoman.io/
   - http://gruntjs.com/
+  - http://fredhq.com/projects/roundabout/
+  - http://ricostacruz.com/jquery.transit/
 
 Blogs:
 
