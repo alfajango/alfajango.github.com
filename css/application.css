@@ -542,3 +542,10 @@ cite {
   color: #999;
   padding-left: 15px;
 }
+
+th a {
+  color: #fff;
+  font-weight: normal;
+  font-style: italic;
+  font-size: 0.9em;
+}
