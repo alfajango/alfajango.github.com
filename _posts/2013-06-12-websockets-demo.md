@@ -149,6 +149,18 @@ For example, the targeted click event looks like this:
 }
 {% endhighlight %}
 
+The server forwards these events back to the connected clients (or just
+the target client), appending a `sender` attribute to tell the client
+who sent the event.
+
+{% highlight js %}
+{
+  type: 'click',
+  target: 2,
+  sender: 1
+}
+{% endhighlight %}
+
 ### Event log
 
 A common client-side interaction for this demo is to output to the Event
@@ -243,7 +255,52 @@ receive the events (technically all clients would receive the events
 already; they need to include the module in their own page for their
 page to do anything as a result of receiving the event).
 
+To create your own module, just add a file to the `client_modules`
+folder. For example, let's say you were to have created the click
+module. You would first create a new file in `client_modules` called
+`click.js`.
+
+In that file, we need to do three things:
+
+1) Register the module with the client:
+
+{% highlight js %}
+msg.install("click.js", "#");
+{% endhighlight %}
+
+The first argument above is the name of the module. The second argument is an
+optional URL to link to the homepage for your module.
+
+2) Send our event payload to the server. In this case, we
+only want to send it when the client clicks a square that is not their
+own.
+
+{% highlight js %}
+$(document).delegate('.client[data-id]', 'click', function (e) {
+  var target = $(this).data('id'),
+      message = JSON.stringify({type: 'click', target: target});
+  if (target !== connection.id) { // don't send clicks to ourselves
+    connection.send(message);
+    msg.log('Click sent to client ' + target + '.');
+  }
+});
+{% endhighlight %}
+
+3) And finally, we need to define how the client reacts when our payload is
+received from the server.
+
+We do this by defining a function on the
+global `msg` object, whose name matches the `type` attribute from our
+payload (by convention, this should match the name of your module).
+
+{% highlight js %}
+msg.click = function(data) {
+  msg.log('Click received from client ' + data.sender + '.');
+}
+{% endhighlight %}
+
+That's it, a working module!
+
 If you have an idea for a module, create a <a
 href="https://github.com/JangoSteve/websockets-demo/issues">Pull
-Request</a> and we'll pull
-it in!
+Request</a> and we'll pull it in.
