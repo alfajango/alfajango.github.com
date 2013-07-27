@@ -22,6 +22,10 @@ stylesheets:
 
 ## Demo
 
+{% highlight js %}
+$('#my-table').dynatable();
+{% endhighlight %}
+
 <div class="dynatable-demo">
 
 <table id="example-table" class="wikitable sortable" style="margin-left:auto;margin-right:auto;text-align: right">
@@ -1180,7 +1184,7 @@ stylesheets:
 
 Dynatable does three things:
 
-1. Translation: It translates an HTML table into an array of JSON
+1. Normalize: It normalizes an HTML table into an array of JSON
 objects, where each JSON object (or record) corresponds to a row in the
 table.
 
@@ -1198,13 +1202,13 @@ interactions quick and efficient.
 * Once data has been normalized into JSON, sorting, filtering, and
   paginating become easy to do in JavaScript.
 
-* Since the translation and rendering modules are separated, they can
-  easily be configured or replaced with custom translation and rendering
+* Since the normalization and rendering modules are separated, they can
+  easily be configured or replaced with custom normalization and rendering
 modules.
 
-## Translation
+## Normalization
 
-The first module translates an HTML table into a JSON collection.
+The first module normalizes an HTML table into a JSON collection.
 Dynatable names the attributes of each record according to the table
 heading, so that the JSON collection is human-readable and easy to work with.
 
@@ -1267,7 +1271,7 @@ dynamic. But we're not limited to reading tables.
 ### Existing JSON
 
 Perhaps we already have our data in JSON format. We can
-skip the initial record translation by directly passing our data into
+skip the initial record normalization by directly passing our data into
 dynatable:
 
 {% highlight js %}
@@ -1303,7 +1307,7 @@ $('#my-final-table').dynatable({
 
 ### Lists and non-Tables
 
-Or maybe we do need the translation step, but we want to translate the
+Or maybe we do need the normalization step, but we want to read the
 data from an unordered list instead of a table:
 
 {% highlight html %}
@@ -1328,15 +1332,25 @@ as record rows instead of the default `tr` elements, and we'll use the
 `table.rowFilter` setting to tell dynatable how to process each `li`
 into a JSON record object.
 
-Dynatable will call the `table.rowFilter`
+Dynatable will call the `table.rowUnFilter`
 function once for each record in the `table.bodyRowSelector` collection,
 and pass it the current count index, the DOM element, and the JSON
 record. This allows full control over which data in the DOM maps to
 which data in the JSON:
 
-*NOTE: We'll also need a <code>table.rowFilter</code> function to tell
+*NOTE: We'll also need a <code>table.rowUnFilter</code> function to tell
 dynatable how to write the JSON records back to the page, but we'll get
 to that in the Render section.*
+
+<div class="alert-message block-message">
+In the parlance of dynatable, "filtering" refers to the transformation
+of data during the rendering step. I.e. the JSON data is filtered into
+DOM text. The initial normalization step from the DOM into JSON data is
+therefore called "unfiltering". This may be confusing, as the
+terminology depends on our perspective. We may change these functions in
+a future version to "normalizations" vs. "renderers" instead of
+"unfilters" vs. "filters".
+</div>
 
 {% highlight js %}
 $('#my-list').dynatable({
@@ -1375,13 +1389,501 @@ Once we have our JSON dataset, we can perform all our interactive and
 dynamic logic directly on the JSON using JavaScript. By default,
 dynatable comes with functions for sorting, filtering (aka searching), and paginating.
 
+By default, dynatable performs all operations on the JSON record
+collection in the page. However, if `dataset.ajax` is enabled, dynatable
+simply passes the operations (pagination, queries, and sort
+columns) as parameters to the AJAX URL, thereby delegating the logic to
+your server-side code.
 
-<div class="alert-message block-message">
-  <strong>Documentation and more demos coming soon.</strong>
+The parameter names for pushState and AJAX requests can be customized in
+the `params` configuration settings for dynatable.
+
+### Sorting
+
+Dynatable allows for single or multi-column, smart sorting out of the
+box.
+
+Dynatable can be made aware of the value types of each column, or record
+property, so that e.g. dates and numbers are sorted properly (plain-text
+sorting would cause February to come before January, and 10 to come
+before 2). By default, if dynatable detects HTML code within the value
+of a record (such as an `img` tag, it will automatically sort and search
+based on the text-equivalent value of the cell, so sorting won't be
+affected by HTML tags or attributes). 
+
+Click the header rows below to sort by each column. Click a header once
+for ascending, again for descending, and again to stop sorting by that
+column.
+
+Hold shift and click a second row to add secondary sorting, and so on.
+
+<table id="sorting-example">
+  <thead>
+    <tr>
+      <th>Make</th>
+      <th>Model</th>
+      <th>Year</th>
+      <th>Price</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><img alt="B won't affect sorting" src="/images/vw-icon.png" /> Volkswagen</td>
+      <td>Jetta Wolfsburg</td>
+      <td>2008</td>
+      <td>11,000</td>
+    </tr>
+    <tr>
+      <td><img alt="C won't affect sorting" src="/images/ford-icon.png" /> Ford</td>
+      <td>Focus</td>
+      <td>2013</td>
+      <td>20,000</td>
+    </tr>
+    <tr>
+      <td><img src="/images/ford-icon.png" /> Ford</td>
+      <td>Escape</td>
+      <td>2001</td>
+      <td>4,000</td>
+    </tr>
+    <tr>
+      <td><img alt="A won't affect sorting" src="/images/mini-icon.png" /> Mini</td>
+      <td>Cooper</td>
+      <td>2001</td>
+      <td>8,500</td>
+    </tr>
+    <tr>
+      <td><img src="/images/ford-icon.png" /> Ford</td>
+      <td>Focus SVT</td>
+      <td>2003</td>
+      <td>9,000</td>
+    </tr>
+  </tbody>
+</table>
+
+<script>
+  $('#sorting-example').dynatable({
+    features: {
+      paginate: false,
+      search: false,
+      recordCount: false
+    },
+    unfilters: {
+      'price': function(el, record) {
+        return Number(el.innerHTML.replace(/,/g, ''));
+      }
+    },
+    filters: {
+      'price': function(record) {
+        return record.price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+      }
+    }
+});
+</script>
+
+In the example above, we run the "Price" column values through an
+"unfilter" function which returns a JavaScript `Number` and parses out
+the comma seperator. Likewise, we then run it through a rendering filter
+which re-inserts the comma when rendering the number back to the DOM.
+
+### Querying (aka Filtering or Searching)
+
+In addition to sorting, we can also query the data by some
+term or value. By default, dynatable includes a search box which
+matches from the plain-text values (case-insensitive) across all attributes of the records.
+Try it in the demo at the top of this page, by typing in the search box
+above the table and hitting "Enter" or "Tab".
+
+Queries can also be added programmatically via JavaScript to be
+processed by dynatable. We simply add a query key-value to the
+`dataset.queries` array, where the key matches the JSON record attribute
+you'd like to match, and the value is what we're matching.
+
+Below, we'll include the default text search, and
+additionally include our own "Year" filter.
+
+{% highlight html %}
+<select id="search-year" name="year">
+  <option></option>
+  <option>2001</option>
+  <option>2003</option>
+  <option>2008</option>
+  <option>2013</option>
+</select>
+{% endhighlight %}
+
+{% highlight js %}
+var dynatable = $('#search-example').dynatable({
+  features: {
+    paginate: false,
+    recordCount: false,
+    sorting: false
+  }
+});
+
+$('#search-year').change( function() {
+  dynatable.dataset.queries = {year: $(this).val()};
+  dynatable.process();
+});
+{% endhighlight %}
+
+<div id="search-example-year-filter" style="float: left;">
+  Year:
+  <select id="search-year" name="year">
+    <option></option>
+    <option>2001</option>
+    <option>2003</option>
+    <option>2008</option>
+    <option>2013</option>
+  </select>
 </div>
+
+<table id="search-example">
+  <thead>
+    <tr>
+      <th>Make</th>
+      <th>Model</th>
+      <th>Year</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><img alt="B won't affect sorting" src="/images/vw-icon.png" /> Volkswagen</td>
+      <td>Jetta Wolfsburg</td>
+      <td>2008</td>
+    </tr>
+    <tr>
+      <td><img alt="C won't affect sorting" src="/images/ford-icon.png" /> Ford</td>
+      <td>Focus</td>
+      <td>2013</td>
+    </tr>
+    <tr>
+      <td><img src="/images/ford-icon.png" /> Ford</td>
+      <td>Escape</td>
+      <td>2001</td>
+    </tr>
+    <tr>
+      <td><img alt="A won't affect sorting" src="/images/mini-icon.png" /> Mini</td>
+      <td>Cooper</td>
+      <td>2001</td>
+    </tr>
+    <tr>
+      <td><img src="/images/ford-icon.png" /> Ford</td>
+      <td>Focus SVT</td>
+      <td>2003</td>
+    </tr>
+  </tbody>
+</table>
+
+<script>
+  var dynatable = $('#search-example').dynatable({
+    features: {
+      paginate: false,
+      recordCount: false,
+      sorting: false
+    }
+  }).data('dynatable');
+
+  $('#search-year').change( function() {
+    dynatable.queries.add("year",$(this).val());
+    dynatable.process();
+  });
+</script>
+
+There's a shortcut to the above code; to hook up our own search filters,
+we can just pass an array of jQuery selectors which point to our filter
+inputs. Instead of binding to our input's change event, adding the
+input's value to the queries array and calling the `dynatable.process()`
+function, we could have just done this:
+
+{% highlight js %}
+$('#search-example').dynatable({
+  features: {
+    paginate: false,
+    recordCount: false,
+    sorting: false
+  },
+  inputs: {
+    queries: $('#search-year')
+  }
+});
+{% endhighlight %}
+
+Doing it this way also hooks the query into the pushState
+functionality to update the page URL parameters and cache the query
+result for the browser's forward- and back-buttons, and sets the query
+event (the JS event that processes the query) to the `inputs.queryEvent`
+setting (which can also be customized per-input via the
+`data-dynatable-query-event` attribute). The key-name for the query will
+be set to the `data-dynatable-query` attribute, the `name` attribute, or
+the `id` for the input.
+
+Using our own query filters, we may also need something other than
+text-matching. Perhaps we want a filter which sets a price range. We can
+add our query input with the `inputs.queries` setting as above, and then
+define our own query function for that key.
+
+*When using our own query function, the query key must match the name of
+the query function, rather than the name of a column or record
+attribute.*
+
+{% highlight js %}
+var dynatable = $('#search-function-example').dynatable({
+  features: {
+    paginate: false,
+    recordCount: false,
+    sorting: false,
+    search: false
+  },
+  inputs: {
+    queries: $('#max-price')
+  }
+}).data('dynatable');
+
+dynatable.queries.functions['max-price'] = function(record, queryValue) {
+  return parseFloat(record.price.replace(/,/,'')) <= parseFloat(queryValue);
+};
+{% endhighlight %}
+
+By default, when a query is added, dynatable will first look in the
+`queries.functions` object to find the query function matching the
+query's key-name. If none is found, it will fall-back to doing a
+plain-text search on the record attribute matching the query key-name.
+If that attribute doesn't exist either, then dynatable will throw and
+error alerting us to add the function.
+
+The query function is called once for each record and should return
+either `true` or `false`, letting dynatable know if that record matches
+the query or not.
+
+<div id="search-function-example-price-filter" style="float: left; margin-bottom: 1em;">
+  Max Price:
+  <input id="max-price" type=number />
+</div>
+<table id="search-function-example">
+  <thead>
+    <tr>
+      <th>Make</th>
+      <th>Model</th>
+      <th>Year</th>
+      <th>Price</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Volkswagen</td>
+      <td>Jetta Wolfsburg</td>
+      <td>2008</td>
+      <td>11,000</td>
+    </tr>
+    <tr>
+      <td>Ford</td>
+      <td>Focus</td>
+      <td>2013</td>
+      <td>20,000</td>
+    </tr>
+    <tr>
+      <td>Ford</td>
+      <td>Escape</td>
+      <td>2001</td>
+      <td>4,000</td>
+    </tr>
+    <tr>
+      <td>Mini</td>
+      <td>Cooper</td>
+      <td>2001</td>
+      <td>8,500</td>
+    </tr>
+    <tr>
+      <td>Ford</td>
+      <td>Focus SVT</td>
+      <td>2003</td>
+      <td>9,000</td>
+    </tr>
+  </tbody>
+</table>
+
+<script>
+  var dynatable = $('#search-function-example').dynatable({
+    features: {
+      paginate: false,
+      recordCount: false,
+      sorting: false,
+      search: false
+    },
+    inputs: {
+      queries: $('#max-price')
+    }
+  }).data('dynatable');
+
+  dynatable.queries.functions['max-price'] = function(record, queryValue) {
+    return parseFloat(record.price.replace(/,/,'')) <= parseFloat(queryValue);
+  };
+</script>
+
+### Paginating
+
+Dynatable also provides pagination by default, by selecting a specific
+slice of the JSON record collection to render to the page, and adding
+page selection links to the table, as well as a drop-down allowing the
+user to select how many records are shown per page.
+
+In other words, dynatable is aware
+that the currently rendered records in the DOM may only be a subset of
+the total records.
+
+We can customize the default number of records displayed per page via
+the `dataset.perPage` configuration setting. And we can customize the
+per-page options via the `dataset.perPageOptions` configuration setting.
+
+If `dataset.ajax` is enabled, then the page and per-page parameters are
+simply passed to the server. 
+
+### Additional Features
+
+#### Record Count
+
+When pagination is enabled, dynatable will also show the currently
+displayed records and the total number of records in the form of,
+"Showing [x] to [y] out of [z] records".
+
+When `dataset.ajax` is enabled, in order for dynatable to display this
+message, our server must return
+the number of total records in addition to the sliced record set for the
+current page. By default, dynatable looks for the total number of
+records in the `responseJSON.totalRecordCount` attribute.
+
+#### PushState
+
+Dynatable uses HTML5's pushState to store operation results (sorting,
+querying and paginating) and update the browser's URL, so that we may
+hit the browser's back- and forward-buttons to step through our
+interactions with the table.
+
+If the resulting data can be stored in the browser's
+pushState cache, then it will be, and dynatable will simply render the
+cached data for that step rather than re-running the (potentially
+complex) operations. If `dataset.ajax` is enabled, then dynatable will
+render the pushState-cached results rather than re-submitting the AJAX
+request to the server.
+
+If the resulting dataset for a given operation is too large for the
+pushState cache, then dynatable will automatically fallback to
+re-running the operations or re-sending the AJAX request to the server.
 
 ## Rendering
 
+When rendering JSON data to the page, dynatable passes data through
+filters (you may notice that this is the opposite of the tranlation step
+which runs the DOM elements through "unfilters").
+
 <div class="alert-message block-message">
   <strong>Documentation and more demos coming soon.</strong>
 </div>
+
+<i id="dynatable-api"></i>
+## Interacting with the Dynatable API
+
+<div class="alert-message block-message">
+  <strong>Documentation and more demos coming soon.</strong>
+</div>
+
+## Configuration
+
+The confiuration options (with default values) for dynatable are:
+
+{% highlight js %}
+{
+  features: {
+    paginate: true,
+    sort: true,
+    pushState: true,
+    search: true,
+    recordCount: true,
+    perPageSelect: true
+  },
+  table: {
+    defaultColumnIdStyle: 'camelCase',
+    columns: null,
+    headRowSelector: 'thead tr', // or e.g. tr:first-child
+    bodyRowSelector: 'tbody tr',
+    headRowClass: null,
+    rowFilter: function(rowIndex, record, columns, cellFilter) {
+      var $tr = $('<tr></tr>');
+
+      // grab the record's attribute for each column
+      $.each(columns, function(colIndex, column) {
+        var html = column.dataFilter(record),
+        $td = cellFilter(html);
+
+        if (column.hidden) {
+          $td.hide();
+        }
+        if (column.textAlign) {
+          $td.css('text-align', column.textAlign);
+        }
+        $tr.append($td);
+      });
+
+      return $tr;
+    },
+    cellFilter: function(html) {
+      return $('<td></td>', {
+        html: html
+      });
+    }
+  },
+  inputs: {
+    queries: null,
+    sorts: null,
+    multisort: ['ctrlKey', 'shiftKey', 'metaKey'],
+    page: null,
+    queryEvent: 'blur change',
+    recordCountTarget: null,
+    recordCountPlacement: 'after',
+    paginationLinkTarget: null,
+    paginationLinkPlacement: 'after',
+    paginationPrev: 'Previous',
+    paginationNext: 'Next',
+    paginationGap: [1,2,2,1],
+    searchTarget: null,
+    searchPlacement: 'before',
+    perPageTarget: null,
+    perPagePlacement: 'before',
+    perPageText: 'Show: ',
+    recordCountText: 'Showing ',
+    processingText: 'Processing...'
+  },
+  dataset: {
+    ajax: false,
+    ajaxUrl: null,
+    ajaxCache: null,
+    ajaxOnLoad: false,
+    ajaxMethod: 'GET',
+    ajaxDataType: 'json',
+    totalRecordCount: null,
+    queries: null,
+    queryRecordCount: null,
+    page: null,
+    perPage: 10,
+    perPageOptions: [10,20,50,100],
+    sorts: null,
+    sortsKeys: null,
+    sortTypes: {},
+    records: null
+  },
+  filters: {},
+  unfilters: {},
+  params: {
+    dynatable: 'dynatable',
+    queries: 'queries',
+    sorts: 'sorts',
+    page: 'page',
+    perPage: 'perPage',
+    offset: 'offset',
+    records: 'records',
+    record: null,
+    queryRecordCount: 'queryRecordCount',
+    totalRecordCount: 'totalRecordCount'
+  }
+}
+{% endhighlight %}
