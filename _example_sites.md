@@ -31,6 +31,7 @@ Project pages:
   - http://gruntjs.com/
   - http://fredhq.com/projects/roundabout/
   - http://ricostacruz.com/jquery.transit/
+  - http://sailsjs.org/
 
 Blogs:
 
@@ -47,3 +48,4 @@ Other Sites:
   - http://benthebodyguard.com/index.php#utmxpreview=0
   - http://www.bignerdranch.com/app-development/process
   - http://www.awesomecontroller.com/
+  - http://balderdash.co/
