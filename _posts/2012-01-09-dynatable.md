@@ -1176,6 +1176,212 @@ stylesheets:
 
 <hr />
 
+## How it works
+
+Dynatable does three things:
+
+1. Translation: It translates an HTML table into an array of JSON
+objects, where each JSON object (or record) corresponds to a row in the
+table.
+
+2. Operations: It sorts, filters, and paginates the JSON collection.
+
+3. Rendering: It renders the resulting collection from the operations back
+to the table.
+
+This 3-step approach has several advantages:
+
+* Since the logic and operations occur on the JSON collection, we group
+  DOM operations (reading and writing/drawing) together, making
+interactions quick and efficient.
+
+* Once data has been normalized into JSON, sorting, filtering, and
+  paginating become easy to do in JavaScript.
+
+* Since the translation and rendering modules are separated, they can
+  easily be configured or replaced with custom translation and rendering
+modules.
+
+## Translation
+
+The first module translates an HTML table into a JSON collection.
+Dynatable names the attributes of each record according to the table
+heading, so that the JSON collection is human-readable and easy to work with.
+
+The following table:
+
+{% highlight html %}
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Hobby</th>
+      <th>Favorite Music</th>
+    </tr>
+  </thread>
+  <tbody>
+    <tr>
+      <td>Fred</td>
+      <td>Roller Skating</td>
+      <td>Disco</td>
+    </tr>
+    <tr>
+      <td>Helen</td>
+      <td>Rock Climbing</td>
+      <td>Alternative</td>
+    </tr>
+    <tr>
+      <td>Glen</td>
+      <td>Traveling</td>
+      <td>Classical</td>
+    </tr>
+  </tbody>
+</table>
+{% endhighlight %}
+
+Results in this JSON collection:
+
+{% highlight js %}
+[
+  {
+    "name": "Fred",
+    "hobby": "Roller Skating",
+    "favorite_music": "Disco"
+  },
+  {
+    "name": "Helen",
+    "hobby": "Rock Climbing",
+    "favorite_music": "Alternative"
+  },
+  {
+    "name": "Glen",
+    "hobby": "Traveling",
+    "favorite_music": "Classical"
+  }
+]
+{% endhighlight %}
+
+The default behavior makes it easy to make an existing HTML table
+dynamic. But we're not limited to reading tables.
+
+### Existing JSON
+
+Perhaps we already have our data in JSON format. We can
+skip the initial record translation by directly passing our data into
+dynatable:
+
+{% highlight js %}
+var myRecords = [
+  {
+    "band": "Weezer",
+    "song": "El Scorcho"
+  },
+  {
+    "band": "Chevelle",
+    "song": "Family System"
+  }
+];
+$('#my-final-table').dynatable({
+  dataset: {
+    records: myRecords
+  }
+});
+{% endhighlight %}
+
+### JSON from AJAX
+
+Or maybe, we want to fetch the data via AJAX:
+
+{% highlight js %}
+$('#my-final-table').dynatable({
+  dataset: {
+    ajax: true,
+    ajaxUrl: '/my_data.json'
+  }
+});
+{% endhighlight %}
+
+### Lists and non-Tables
+
+Or maybe we do need the translation step, but we want to translate the
+data from an unordered list instead of a table:
+
+{% highlight html %}
+<ul id="my-list">
+  <li>
+    <span class="name">Fender Custom Esquire GT</span>
+    <span class="type">Guitar</span>
+    $<span class="price">450.00</span>
+  </li>
+  <li>
+    <span class="name">ESP LTD B4-E</span>
+    <span class="type">Bass</span>
+    $<span class="price">400.00</span>
+  </li>
+</ul>
+{% endhighlight %}
+
+We can use the `table`
+settings to configure such awesomeness. We'll use the
+`table.bodyRowSelector` setting to tell dynatable to use `li` elements
+as record rows instead of the default `tr` elements, and we'll use the
+`table.rowFilter` setting to tell dynatable how to process each `li`
+into a JSON record object.
+
+Dynatable will call the `table.rowFilter`
+function once for each record in the `table.bodyRowSelector` collection,
+and pass it the current count index, the DOM element, and the JSON
+record. This allows full control over which data in the DOM maps to
+which data in the JSON:
+
+*NOTE: We'll also need a <code>table.rowFilter</code> function to tell
+dynatable how to write the JSON records back to the page, but we'll get
+to that in the Render section.*
+
+{% highlight js %}
+$('#my-list').dynatable({
+  table: {
+    bodyRowSelector: 'li',
+    rowUnFilter: function(index, li, record) {
+      var $li = $(li);
+      record.name = $li.find('.name').text();
+      record.type = $li.find('.type').text();
+      record.price = parseFloat($li.find('.price').text());
+    }
+  }
+});
+{% endhighlight %}
+
+This will result in the following JSON:
+
+{% highlight js %}
+[
+  {
+    "name": "Fender Custom Esquire GT",
+    "type": "Guitar",
+    "price": 450.0
+  },
+  {
+    "name": "ESP LTD B4-E",
+    "type": "Bass",
+    "price": 400.0
+  }
+]
+{% endhighlight %}
+
+## Operations
+
+Once we have our JSON dataset, we can perform all our interactive and
+dynamic logic directly on the JSON using JavaScript. By default,
+dynatable comes with functions for sorting, filtering (aka searching), and paginating.
+
+
+<div class="alert-message block-message">
+  <strong>Documentation and more demos coming soon.</strong>
+</div>
+
+## Rendering
+
 <div class="alert-message block-message">
   <strong>Documentation and more demos coming soon.</strong>
 </div>
