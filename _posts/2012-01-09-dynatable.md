@@ -1485,6 +1485,105 @@ In the example above, we run the "Price" column values through an
 the comma seperator. Likewise, we then run it through a rendering filter
 which re-inserts the comma when rendering the number back to the DOM.
 
+We can also use our own custom sort function. We just need to add our
+sort function to the `sorts.functions` object. For example, let's say we
+want to sort our table records by red, then green, then blue:
+
+{% highlight js %}
+var dynatable = $('#sorting-function-example').dynatable({
+  // Turn off the features we don't need
+  features: {
+    paginate: false,
+    search: false,
+    recordCount: false
+  },
+  // Tell dynatable to use the 'rgb' sort function for the 'color' column
+  dataset: {
+    sortTypes: {
+      color: 'rgb'
+    }
+  },
+  // Just a little extra flair for styling the table
+  table: {
+    cellFilter: function(html) {
+      return $('<td></td>', {
+        html: html,
+        style: "background: " + html
+      });
+    }
+  }
+}).data('dynatable');
+
+dynatable.sorts.functions["rgb"] = function(a, b, attr, direction) {
+  var colors = { Red: 1, Green: 2, Blue: 3},
+      aColorValue = colors[a[attr]],
+      bColorValue = colors[b[attr]];
+  return direction > 0 ? aColorValue - bColorValue : bColorValue - aColorValue;
+  };
+{% endhighlight %}
+
+<table id="sorting-function-example" style="color: white;">
+  <thead>
+    <tr>
+      <th>Color</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="background: blue;">Blue</td>
+    </tr>
+    <tr>
+      <td style="background: green">Green</td>
+    </tr>
+    <tr>
+      <td style="background: blue;">Blue</td>
+    </tr>
+    <tr>
+      <td style="background: red;">Red</td>
+    </tr>
+    <tr>
+      <td style="background: green;">Green</td>
+    </tr>
+    <tr>
+      <td style="background: red;">Red</td>
+    </tr>
+  </tbody>
+</table>
+
+<script>
+(function() {
+  var dynatable = $('#sorting-function-example').dynatable({
+    features: {
+      paginate: false,
+      search: false,
+      recordCount: false
+    },
+    dataset: {
+      sortTypes: {
+        color: 'rgb'
+      }
+    },
+    table: {
+      cellFilter: function(html) {
+        return $('<td></td>', {
+          html: html,
+          style: "background: " + html
+        });
+      }
+    }
+  }).data('dynatable');
+
+  dynatable.sorts.functions["rgb"] = function(a, b, attr, direction) {
+    var colors = { Red: 1, Green: 2, Blue: 3},
+        aColorValue = colors[a[attr]],
+        bColorValue = colors[b[attr]];
+    return direction > 0 ? aColorValue - bColorValue : bColorValue - aColorValue;
+  };
+})();
+</script>
+
+We may also sort programmatically with the dynatable API...
+
 ### Querying (aka Filtering or Searching)
 
 In addition to sorting, we can also query the data by some
@@ -1575,6 +1674,7 @@ $('#search-year').change( function() {
 </table>
 
 <script>
+(function() {
   var dynatable = $('#search-example').dynatable({
     features: {
       paginate: false,
@@ -1587,6 +1687,7 @@ $('#search-year').change( function() {
     dynatable.queries.add("year",$(this).val());
     dynatable.process();
   });
+})();
 </script>
 
 There's a shortcut to the above code; to hook up our own search filters,
@@ -1703,6 +1804,7 @@ the query or not.
 </table>
 
 <script>
+(function() {
   var dynatable = $('#search-function-example').dynatable({
     features: {
       paginate: false,
@@ -1718,6 +1820,7 @@ the query or not.
   dynatable.queries.functions['max-price'] = function(record, queryValue) {
     return parseFloat(record.price.replace(/,/,'')) <= parseFloat(queryValue);
   };
+})();
 </script>
 
 ### Paginating
@@ -1769,6 +1872,8 @@ request to the server.
 If the resulting dataset for a given operation is too large for the
 pushState cache, then dynatable will automatically fallback to
 re-running the operations or re-sending the AJAX request to the server.
+
+#### Processing Indicator
 
 ## Rendering
 
