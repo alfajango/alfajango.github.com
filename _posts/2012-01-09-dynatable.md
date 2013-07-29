@@ -1868,7 +1868,7 @@ the query or not.
 <div class="dynatable-demo">
 <div id="search-function-example-price-filter" style="float: left; margin-bottom: 1em;">
   Max Price:
-  <input id="max-price" type=number />
+  $<input id="max-price" type=number step=1000 />
 </div>
 <table id="search-function-example">
   <thead>
@@ -1951,6 +1951,15 @@ We can customize the default number of records displayed per page via
 the `dataset.perPageDefault` configuration setting. And we can customize the
 per-page options via the `dataset.perPageOptions` configuration setting.
 
+We can also set the page and perPage values via the dynatable API:
+
+{% highlight js %}
+var dynatable = $('#my-table').data('dynatable');
+dynatable.perPage.set(20); // Show 20 records per page
+dynatable.page.set(5); // Go to page 5
+dynatable.process();
+{% endhighlight %}
+
 If `dataset.ajax` is enabled, then the page and per-page parameters are
 simply passed to the server. 
 
@@ -1958,12 +1967,31 @@ simply passed to the server.
 
 When pagination is enabled, dynatable will also show the currently
 displayed records and the total number of records in the form:
-"Showing [x] to [y] out of [z] records".
+
+{% highlight smarty %}
+Showing {x} to {y} out of {z} records
+{% endhighlight %}
 
 This message can be customized via the `dataset.recordCountText`
 configuration, and the `params.records` configuration. The text
 displayed on the table is of the form: 
-"[dataset.recordCountText] [x] to [y] out of [z] [params.records]".
+
+{% highlight smarty %}
+{dataset.recordCountText} {x} to {y} out of {z} {params.records}
+{% endhighlight %}
+
+Dynatable will also show the queried and total record counts when
+querying data, in the form:
+
+{% highlight smarty %}
+Showing {x} of {y} records (filtered from {z} total records)
+{% endhighlight %}
+
+Or more accurately:
+
+{% highlight smarty %}
+{dataset.recordCountText} {x} of {y} {params.records} (filtered from {z} total {params.records})
+{% endhighlight %}
 
 When `dataset.ajax` is enabled, in order for dynatable to display this
 message, our server must return

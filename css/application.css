@@ -11,6 +11,7 @@ pre {
   overflow: auto;
   padding: 4px;
   background: #202020;
+  color: #d0d0d0;
 }
 pre code, pre code.js {
   background: transparent;
