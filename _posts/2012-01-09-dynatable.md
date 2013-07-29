@@ -1312,16 +1312,19 @@ attribute, the associated record attribute will be named by that value:
 </table>
 {% endhighlight %}
 
-{% highlight js %}
 Would result in:
-{
-  "name": ...,
-  "song": ...
-},
-{
-  "name": ...,
-  "song": ...
-}
+
+{% highlight js %}
+[
+  {
+    "name": ...,
+    "song": ...
+  },
+  {
+    "name": ...,
+    "song": ...
+  }
+]
 {% endhighlight %}
 
 
