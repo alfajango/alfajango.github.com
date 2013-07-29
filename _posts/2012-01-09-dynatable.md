@@ -1948,7 +1948,7 @@ that the currently rendered records in the DOM may only be a subset of
 the total records.
 
 We can customize the default number of records displayed per page via
-the `dataset.perPage` configuration setting. And we can customize the
+the `dataset.perPageDefault` configuration setting. And we can customize the
 per-page options via the `dataset.perPageOptions` configuration setting.
 
 If `dataset.ajax` is enabled, then the page and per-page parameters are
@@ -2205,7 +2205,7 @@ $('#ul-example').dynatable({
     }
   },
   dataset: {
-    perPage: 5,
+    perPageDefault: 5,
     perPageOptions: [1, 5, 10]
   }
 });
@@ -2251,7 +2251,7 @@ to skip it entirely and to just do everything in the `table.rowFilter`.
       }
     },
     dataset: {
-      perPage: 5,
+      perPageDefault: 5,
       perPageOptions: [1, 5, 10]
     }
   });
@@ -2335,7 +2335,7 @@ The confiuration options (with default values) for dynatable are:
     queries: null,
     queryRecordCount: null,
     page: null,
-    perPage: 10,
+    perPageDefault: 10,
     perPageOptions: [10,20,50,100],
     sorts: null,
     sortsKeys: null,
