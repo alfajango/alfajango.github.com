@@ -1592,7 +1592,7 @@ column header to let dynatable know.
       <td>Two Thousand and Thirteen</td>
       <td>2013</td>
     </tr>
-  </tbody
+  </tbody>
 </table>
 {% endhighlight %}
 
