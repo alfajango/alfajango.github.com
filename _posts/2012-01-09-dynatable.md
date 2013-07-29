@@ -1296,6 +1296,34 @@ $('#my-table')
   });
 {% endhighlight %}
 
+Sometimes, we need columns with labels different than the record
+attribute name. If a column heading contains the `data-dynatable-column`
+attribute, the associated record attribute will be named by that value:
+
+{% highlight html %}
+<table id="my-final-table">
+  <thead>
+    <th data-dynatable-column="name">Band</th>
+    <th>Hit</th>
+  </thead>
+  <tbody>
+    ...
+  </tbody>
+</table>
+{% endhighlight %}
+
+{% highlight js %}
+Would result in:
+{
+  "name": ...,
+  "song": ...
+},
+{
+  "name": ...,
+  "song": ...
+}
+{% endhighlight %}
+
 
 The default behavior makes it easy to make an existing HTML table
 dynamic. But we're not limited to reading tables.
@@ -1303,8 +1331,19 @@ dynamic. But we're not limited to reading tables.
 ### Existing JSON
 
 Perhaps we already have our data in JSON format. We can
-skip the initial record normalization by directly passing our data into
-dynatable:
+skip the initial record normalization by setting up an empty table for
+rendering and directly passing our data into dynatable:
+
+{% highlight html %}
+<table id="my-final-table">
+  <thead>
+    <th>Band</th>
+    <th>Song</th>
+  </thead>
+  <tbody>
+  </tbody>
+</table>
+{% endhighlight %}
 
 {% highlight js %}
 var myRecords = [
@@ -1327,6 +1366,17 @@ $('#my-final-table').dynatable({
 ### JSON from AJAX
 
 Or maybe, we want to fetch the data via AJAX:
+
+{% highlight html %}
+<table id="my-final-table">
+  <thead>
+    <th>Some Attribute</th>
+    <th>Some Other Attribute</th>
+  </thead>
+  <tbody>
+  </tbody>
+</table>
+{% endhighlight %}
 
 {% highlight js %}
 $('#my-final-table').dynatable({
@@ -1518,6 +1568,37 @@ In the example above, we run the "Price" column values through an
 "unfilter" function which returns a JavaScript `Number` and parses out
 the comma seperator. Likewise, we then run it through a rendering filter
 which re-inserts the comma when rendering the number back to the DOM.
+
+Sometimes, we need one column to sort based on some other attribute.
+For example, maybe we have a column which needs to sort on another
+hidden column. We can use the `data-dynatable-sorts` attribute on the
+column header to let dynatable know.
+
+{% highlight html %}
+<table id="sorting-example">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th data-dynatable-sorts="computerYear">Year</th>
+      <th style="display: none">Computer Year</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Steve</td>
+      <td>Two Thousand and Thirteen</td>
+      <td>2013</td>
+    </tr>
+  </tbody
+</table>
+{% endhighlight %}
+
+In the above example, dynatable will detect that the last column heading
+is hidden, and will hide all cells under that column, and it will sort
+the "Year" column based on the attribute in the last column.
+
+If we have a column we don't want to be sortable, we just add the
+`data-dynatable-no-sort` attribute.
 
 We can also use our own custom sort function. We just need to add our
 sort function to the `sorts.functions` object. For example, let's say we
