@@ -1712,7 +1712,7 @@ var dynatable = $('#search-example').dynatable({
     recordCount: false,
     sorting: false
   }
-});
+}).data('dynatable');
 
 $('#search-year').change( function() {
   var value = $(this).val();
