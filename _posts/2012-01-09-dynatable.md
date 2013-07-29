@@ -1636,7 +1636,7 @@ $('#sorting-function-example')
       cellFilter: function(html) {
         return $('<td></td>', {
           html: html,
-          style: "background: " + html
+          style: "color: " + html
         });
       }
     }
@@ -1652,22 +1652,22 @@ $('#sorting-function-example')
   </thead>
   <tbody>
     <tr>
-      <td style="background: blue;">Blue</td>
+      <td style="color: blue;">Blue</td>
     </tr>
     <tr>
-      <td style="background: green">Green</td>
+      <td style="color: green">Green</td>
     </tr>
     <tr>
-      <td style="background: blue;">Blue</td>
+      <td style="color: blue;">Blue</td>
     </tr>
     <tr>
-      <td style="background: red;">Red</td>
+      <td style="color: red;">Red</td>
     </tr>
     <tr>
-      <td style="background: green;">Green</td>
+      <td style="color: green;">Green</td>
     </tr>
     <tr>
-      <td style="background: red;">Red</td>
+      <td style="color: red;">Red</td>
     </tr>
   </tbody>
 </table>
@@ -1699,7 +1699,7 @@ $('#sorting-function-example')
         cellFilter: function(html) {
           return $('<td></td>', {
             html: html,
-            style: "background: " + html
+            style: "color: " + html
           });
         }
       }
