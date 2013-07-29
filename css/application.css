@@ -539,6 +539,9 @@ img.styled {
 .dynatable-demo table {
   margin-bottom: 0;
 }
+.dynatable-demo ul {
+  margin-top: 18px;
+}
 .dynatable-demo .dynatable-record-count,
 .dynatable-demo .dynatable-pagination-links {
   margin-top: 9px;

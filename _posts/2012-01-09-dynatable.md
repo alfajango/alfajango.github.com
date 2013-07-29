@@ -1332,13 +1332,13 @@ as record rows instead of the default `tr` elements, and we'll use the
 `table.rowFilter` setting to tell dynatable how to process each `li`
 into a JSON record object.
 
-Dynatable will call the `table.rowUnFilter`
+Dynatable will call the `table.rowUnfilter`
 function once for each record in the `table.bodyRowSelector` collection,
 and pass it the current count index, the DOM element, and the JSON
 record. This allows full control over which data in the DOM maps to
 which data in the JSON:
 
-*NOTE: We'll also need a <code>table.rowUnFilter</code> function to tell
+*NOTE: We'll also need a `table.rowUnfilter` function to tell
 dynatable how to write the JSON records back to the page, but we'll get
 to that in the Render section.*
 
@@ -1356,7 +1356,7 @@ a future version to "normalizations" vs. "renderers" instead of
 $('#my-list').dynatable({
   table: {
     bodyRowSelector: 'li',
-    rowUnFilter: function(index, li, record) {
+    rowUnfilter: function(index, li, record) {
       var $li = $(li);
       record.name = $li.find('.name').text();
       record.type = $li.find('.type').text();
@@ -1954,13 +1954,16 @@ per-page options via the `dataset.perPageOptions` configuration setting.
 If `dataset.ajax` is enabled, then the page and per-page parameters are
 simply passed to the server. 
 
-### Additional Features
-
-#### Record Count
+### Record Count
 
 When pagination is enabled, dynatable will also show the currently
-displayed records and the total number of records in the form of,
+displayed records and the total number of records in the form:
 "Showing [x] to [y] out of [z] records".
+
+This message can be customized via the `dataset.recordCountText`
+configuration, and the `params.records` configuration. The text
+displayed on the table is of the form: 
+"[dataset.recordCountText] [x] to [y] out of [z] [params.records]".
 
 When `dataset.ajax` is enabled, in order for dynatable to display this
 message, our server must return
@@ -1968,7 +1971,7 @@ the number of total records in addition to the sliced record set for the
 current page. By default, dynatable looks for the total number of
 records in the `responseJSON.totalRecordCount` attribute.
 
-#### PushState
+### PushState
 
 Dynatable uses HTML5's pushState to store operation results (sorting,
 querying and paginating) and update the browser's URL, so that we may
@@ -1994,7 +1997,7 @@ browsers (IE9 or earlier), a pushState polyfill such as
 may be used.
 </div>
 
-#### Processing Indicator
+### Processing Indicator
 
 For long-running operations (and for AJAX tables which must request data
 form the server), dynatable automatically appends a "processing"
@@ -2158,9 +2161,102 @@ When rendering JSON data to the page, dynatable passes data through
 filters (you may notice that this is the opposite of the normalization step
 which runs the DOM elements through "unfilters").
 
-<div class="alert-message block-message">
-  <strong>Documentation and more demos coming soon.</strong>
+When rendering (and normalizing), dynatable assumes that our container element (on which
+we called dynatable) contains elements matching
+`table.bodyRowSelector`, each mapping to one record. By default,
+dynatable assumes we're rendering to an HTML table, so our
+`table.bodyRowSelector` is `'tbody tr'`.
+
+To render our records, dynatable will loop through our records, running
+`table.rowFilter` on each record to create a collection of DOM elements.
+The default `table.rowFilter` creates a table `tr` element and loops
+through the element attributes (matching our columns) to call
+`table.cellFilter` on each.
+
+If our container element is a `ul`, we could customize our rowFilter as
+follows:
+
+{% highlight html %}
+<ul id="ul-example">
+  <li><span>First thing: </span><a href="#thing1">click 1</a></li>
+  <li><span>Second thing: </span><a href="#thing2">click 2</a></li>
+  <li><span>Third thing: </span><a href="#thing3">click 3</a></li>
+  ...
+</ul>
+{% endhighlight %}
+
+{% highlight js %}
+$('#ul-example').dynatable({
+  table: {
+    bodyRowSelector: 'li',
+    // Function that renders the list items from our records
+    rowFilter: function(rowIndex, record, columns, cellFilter) {
+      var $li = $('<li></li>');
+      $li.addClass('my-row').html('<span>' + record.name + '</span><a href="' + record.url + '">' + record.label + '</a>');
+      return $li;
+    },
+    // Function that creates our records from the DOM when the page is loaded
+    rowUnfilter: function(index, li, record) {
+      var $li = $(li),
+          $a = $li.find('a');
+      record.name = $li.find('span').text();
+      record.label = $a.text();
+      record.url = $a.attr('href');
+    }
+  },
+  dataset: {
+    perPage: 5,
+    perPageOptions: [1, 5, 10]
+  }
+});
+{% endhighlight %}
+
+We could have defined our own `table.cellFilter` as well, defining a
+custom function for rendering each attribute within the row, but we opted
+to skip it entirely and to just do everything in the `table.rowFilter`.
+
+<div class="dynatable-demo">
+<ul id="ul-example">
+  <li><span>First thing: </span><a href="#thing1">click 1</a></li>
+  <li><span>Second thing: </span><a href="#thing2">click 2</a></li>
+  <li><span>Third thing: </span><a href="#thing3">click 3</a></li>
+  <li><span>Fourth thing: </span><a href="#thing4">click 4</a></li>
+  <li><span>Fifth thing: </span><a href="#thing5">click 5</a></li>
+  <li><span>Sixth thing: </span><a href="#thing6">click 6</a></li>
+  <li><span>Seventh thing: </span><a href="#thing7">click 7</a></li>
+  <li><span>Eighth thing: </span><a href="#thing8">click 8</a></li>
+  <li><span>Ninth thing: </span><a href="#thing9">click 9</a></li>
+  <li><span>Tenth thing: </span><a href="#thing10">click 10</a></li>
+</ul>
 </div>
+
+<script>
+(function() {
+  $('#ul-example').dynatable({
+    table: {
+      bodyRowSelector: 'li',
+      // Function that renders the list items from our records
+      rowFilter: function(rowIndex, record, columns, cellFilter) {
+        var $li = $('<li></li>');
+        $li.addClass('my-row').html('<span>' + record.name + '</span><a href="' + record.url + '">' + record.label + '</a>');
+        return $li;
+      },
+      // Function that creates our records from the DOM when the page is loaded
+      rowUnfilter: function(index, li, record) {
+        var $li = $(li),
+            $a = $li.find('a');
+        record.name = $li.find('span').text();
+        record.label = $a.text();
+        record.url = $a.attr('href');
+      }
+    },
+    dataset: {
+      perPage: 5,
+      perPageOptions: [1, 5, 10]
+    }
+  });
+})();
+</script>
 
 ## Configuration
 
