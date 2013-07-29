@@ -1250,20 +1250,52 @@ Results in this JSON collection:
   {
     "name": "Fred",
     "hobby": "Roller Skating",
-    "favorite_music": "Disco"
+    "favoriteMusic": "Disco"
   },
   {
     "name": "Helen",
     "hobby": "Rock Climbing",
-    "favorite_music": "Alternative"
+    "favoriteMusic": "Alternative"
   },
   {
     "name": "Glen",
     "hobby": "Traveling",
-    "favorite_music": "Classical"
+    "favoriteMusic": "Classical"
   }
 ]
 {% endhighlight %}
+
+By default, dynatable converts headings to `camelCase` for the JSON
+record attributes, as is common in JavaScript. However, we can configure
+it to convert to `trimDash` (`Favorite-Music`), `dashed`
+(`favorite-music`), `underscore` (`favorite_music`), or `lowercase`
+(`favorite music`).
+
+{% highlight js %}
+$('#my-table').dynatable({
+  table: {
+    defaultColumnIdStyle: 'underscore'
+  }
+});
+{% endhighlight %}
+
+We could also define our own column-name transformation function:
+
+{% highlight js %}
+$('#my-table')
+  .bind('dynatable:init', function(e, dynatable) {
+    dynatable.utility.textTransform.myNewStyle = function(text) {
+      var newText = doSomethingTo(text);
+      return newText;
+    };
+  })
+  .dynatable({
+    table: {
+      defaultColumnIdStyle: 'myNewStyle'
+    }
+  });
+{% endhighlight %}
+
 
 The default behavior makes it easy to make an existing HTML table
 dynamic. But we're not limited to reading tables.
