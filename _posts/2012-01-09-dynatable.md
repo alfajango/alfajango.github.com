@@ -1417,6 +1417,7 @@ column.
 
 Hold shift and click a second row to add secondary sorting, and so on.
 
+<div class="dynatable-demo">
 <table id="sorting-example">
   <thead>
     <tr>
@@ -1459,6 +1460,7 @@ Hold shift and click a second row to add secondary sorting, and so on.
     </tr>
   </tbody>
 </table>
+</div>
 
 <script>
   $('#sorting-example').dynatable({
@@ -1490,38 +1492,42 @@ sort function to the `sorts.functions` object. For example, let's say we
 want to sort our table records by red, then green, then blue:
 
 {% highlight js %}
-var dynatable = $('#sorting-function-example').dynatable({
-  // Turn off the features we don't need
-  features: {
-    paginate: false,
-    search: false,
-    recordCount: false
-  },
-  // Tell dynatable to use the 'rgb' sort function for the 'color' column
-  dataset: {
-    sortTypes: {
-      color: 'rgb'
+$('#sorting-function-example')
+  .bind('dynatable:init', function(e, dynatable) {
+    // Our custom "rgb" sort function, to sort red, then green, then blue
+    dynatable.sorts.functions["rgb"] = function(a, b, attr, direction) {
+      var colors = { Red: 1, Green: 2, Blue: 3},
+          aColorValue = colors[a[attr]],
+          bColorValue = colors[b[attr]];
+      return direction > 0 ? aColorValue - bColorValue : bColorValue - aColorValue;
+    };
+  })
+  .dynatable({
+    // Turn off the features we don't need
+    features: {
+      paginate: false,
+      search: false,
+      recordCount: false
+    },
+    // Tell dynatable to use the 'rgb' sort function for the 'color' column
+    dataset: {
+      sortTypes: {
+        color: 'rgb'
+      }
+    },
+    // Just a little extra flair for styling the table
+    table: {
+      cellFilter: function(html) {
+        return $('<td></td>', {
+          html: html,
+          style: "background: " + html
+        });
+      }
     }
-  },
-  // Just a little extra flair for styling the table
-  table: {
-    cellFilter: function(html) {
-      return $('<td></td>', {
-        html: html,
-        style: "background: " + html
-      });
-    }
-  }
-}).data('dynatable');
-
-dynatable.sorts.functions["rgb"] = function(a, b, attr, direction) {
-  var colors = { Red: 1, Green: 2, Blue: 3},
-      aColorValue = colors[a[attr]],
-      bColorValue = colors[b[attr]];
-  return direction > 0 ? aColorValue - bColorValue : bColorValue - aColorValue;
-  };
+  });
 {% endhighlight %}
 
+<div class="dynatable-demo">
 <table id="sorting-function-example" style="color: white;">
   <thead>
     <tr>
@@ -1549,42 +1555,131 @@ dynatable.sorts.functions["rgb"] = function(a, b, attr, direction) {
     </tr>
   </tbody>
 </table>
+</div>
 
 <script>
 (function() {
-  var dynatable = $('#sorting-function-example').dynatable({
-    features: {
-      paginate: false,
-      search: false,
-      recordCount: false
-    },
-    dataset: {
-      sortTypes: {
-        color: 'rgb'
+  $('#sorting-function-example')
+    .bind('dynatable:init', function(e, dynatable) {
+      dynatable.sorts.functions["rgb"] = function(a, b, attr, direction) {
+        var colors = { Red: 1, Green: 2, Blue: 3},
+            aColorValue = colors[a[attr]],
+            bColorValue = colors[b[attr]];
+        return direction > 0 ? aColorValue - bColorValue : bColorValue - aColorValue;
+      };
+    })
+    .dynatable({
+      features: {
+        paginate: false,
+        search: false,
+        recordCount: false
+      },
+      dataset: {
+        sortTypes: {
+          color: 'rgb'
+        }
+      },
+      table: {
+        cellFilter: function(html) {
+          return $('<td></td>', {
+            html: html,
+            style: "background: " + html
+          });
+        }
       }
-    },
-    table: {
-      cellFilter: function(html) {
-        return $('<td></td>', {
-          html: html,
-          style: "background: " + html
-        });
-      }
-    }
-  }).data('dynatable');
-
-  dynatable.sorts.functions["rgb"] = function(a, b, attr, direction) {
-    var colors = { Red: 1, Green: 2, Blue: 3},
-        aColorValue = colors[a[attr]],
-        bColorValue = colors[b[attr]];
-    return direction > 0 ? aColorValue - bColorValue : bColorValue - aColorValue;
-  };
+    });
 })();
 </script>
 
-We may also sort programmatically with the dynatable API...
+We may also sort programmatically with the dynatable API. For example,
+let's add a button below which sorts our above table of colors in
+alphabetical order:
 
-### Querying (aka Filtering or Searching)
+<a href="#" class="btn primary" id="sorting-function-example-button">Sort A-Z</a>
+<a href="#" class="btn" id="sorting-function-example-clear-button">Clear Sorts</a>
+
+<script>
+(function() {
+  var dynatable = $('#sorting-function-example').data('dynatable');
+
+  // Option 1
+  // Create a new sort function to run from the sort we add below on
+  // button click.
+  dynatable.sorts.functions['color-alpha-sort'] = function(a, b, attr, direction) {
+    return a.color === b.color ? 0 : a.color > b.color;
+  };
+  // Tell dynatable to use our custom sort function for the 'color-alpha' sort.
+  dynatable.settings.dataset.sortTypes['color-alpha'] = 'color-alpha-sort';
+
+  // Option 2
+  // Create a 'color-alpha' property for each record so that we can use
+  // the built-in 'string' sort function which just sorts based on the
+  // property matching the sort type name.
+  //$.map(dynatable.settings.dataset.originalRecords, function(record) {
+  //  record['color-alpha'] = record.color;
+  //});
+  // Tell dynatable that our custom sort function should just use the built-in 'string' sort function.
+  //dynatable.settings.dataset.sortTypes['color-alpha'] = 'string';
+
+  // Sort by our new 'color-alpha' sort when clicked.
+  $('#sorting-function-example-button').click( function(e) {
+    // Clear any existing sorts
+    dynatable.sorts.clear();
+    dynatable.sorts.add('color-alpha', 1) // 1=ASCENDING, -1=DESCENDING
+    dynatable.process();
+    e.preventDefault();
+  });
+
+  $('#sorting-function-example-clear-button').click( function(e) {
+    dynatable.sorts.clear();
+    dynatable.process();
+    e.preventDefault()
+  });
+})();
+</script>
+
+The code for the buttons above could be done a couple different ways:
+
+{% highlight js %}
+var dynatable = $('#sorting-function-example').data('dynatable');
+
+// Option 1
+// Create a new sort function to run from the sort we add below on
+// button click.
+dynatable.sorts.functions['color-alpha-sort'] = function(a, b, attr, direction) {
+  return a.color === b.color ? 0 : a.color > b.color;
+};
+// Tell dynatable to use our custom sort function for the 'color-alpha' sort.
+dynatable.settings.dataset.sortTypes['color-alpha'] = 'color-alpha-sort';
+
+// Option 2
+// Create a 'color-alpha' property for each record so that we can use
+// the built-in 'string' sort function which just sorts based on the
+// property matching the sort type name.
+//$.map(dynatable.settings.dataset.originalRecords, function(record) {
+//  record['color-alpha'] = record.color;
+//});
+// Tell dynatable that our custom sort function should just use the built-in 'string' sort function.
+//dynatable.settings.dataset.sortTypes['color-alpha'] = 'string';
+
+// Sort by our new 'color-alpha' sort when clicked.
+$('#sorting-function-example-button').click( function(e) {
+  // Clear any existing sorts
+  dynatable.sorts.clear();
+  dynatable.sorts.add('color-alpha', 1) // 1=ASCENDING, -1=DESCENDING
+  dynatable.process();
+  e.preventDefault();
+});
+
+$('#sorting-function-example-clear-button').click( function(e) {
+  dynatable.sorts.clear();
+  dynatable.process();
+  e.preventDefault()
+});
+{% endhighlight %}
+
+### Querying
+(aka filtering or searching)
 
 In addition to sorting, we can also query the data by some
 term or value. By default, dynatable includes a search box which
@@ -1620,11 +1715,17 @@ var dynatable = $('#search-example').dynatable({
 });
 
 $('#search-year').change( function() {
-  dynatable.dataset.queries = {year: $(this).val()};
+  var value = $(this).val();
+  if (value === "") {
+    dynatable.queries.remove("year");
+  } else {
+    dynatable.queries.add("year",value);
+  }
   dynatable.process();
 });
 {% endhighlight %}
 
+<div class="dynatable-demo">
 <div id="search-example-year-filter" style="float: left;">
   Year:
   <select id="search-year" name="year">
@@ -1672,6 +1773,7 @@ $('#search-year').change( function() {
     </tr>
   </tbody>
 </table>
+</div>
 
 <script>
 (function() {
@@ -1684,7 +1786,12 @@ $('#search-year').change( function() {
   }).data('dynatable');
 
   $('#search-year').change( function() {
-    dynatable.queries.add("year",$(this).val());
+    var value = $(this).val();
+    if (value === "") {
+      dynatable.queries.remove("year");
+    } else {
+      dynatable.queries.add("year",value);
+    }
     dynatable.process();
   });
 })();
@@ -1728,21 +1835,23 @@ the query function, rather than the name of a column or record
 attribute.*
 
 {% highlight js %}
-var dynatable = $('#search-function-example').dynatable({
-  features: {
-    paginate: false,
-    recordCount: false,
-    sorting: false,
-    search: false
-  },
-  inputs: {
-    queries: $('#max-price')
-  }
-}).data('dynatable');
-
-dynatable.queries.functions['max-price'] = function(record, queryValue) {
-  return parseFloat(record.price.replace(/,/,'')) <= parseFloat(queryValue);
-};
+$('#search-function-example')
+  .bind('dynatable:init', function(e, dynatable) {
+    dynatable.queries.functions['max-price'] = function(record, queryValue) {
+      return parseFloat(record.price.replace(/,/,'')) <= parseFloat(queryValue);
+    };
+  })
+  .dynatable({
+    features: {
+      paginate: false,
+      recordCount: false,
+      sorting: false,
+      search: false
+    },
+    inputs: {
+      queries: $('#max-price')
+    }
+  });
 {% endhighlight %}
 
 By default, when a query is added, dynatable will first look in the
@@ -1756,6 +1865,7 @@ The query function is called once for each record and should return
 either `true` or `false`, letting dynatable know if that record matches
 the query or not.
 
+<div class="dynatable-demo">
 <div id="search-function-example-price-filter" style="float: left; margin-bottom: 1em;">
   Max Price:
   <input id="max-price" type=number />
@@ -1802,24 +1912,27 @@ the query or not.
     </tr>
   </tbody>
 </table>
+</div>
 
 <script>
 (function() {
-  var dynatable = $('#search-function-example').dynatable({
-    features: {
-      paginate: false,
-      recordCount: false,
-      sorting: false,
-      search: false
-    },
-    inputs: {
-      queries: $('#max-price')
-    }
-  }).data('dynatable');
-
-  dynatable.queries.functions['max-price'] = function(record, queryValue) {
-    return parseFloat(record.price.replace(/,/,'')) <= parseFloat(queryValue);
-  };
+  $('#search-function-example')
+    .bind('dynatable:init', function(e, dynatable) {
+      dynatable.queries.functions['max-price'] = function(record, queryValue) {
+        return parseFloat(record.price.replace(/,/,'')) <= parseFloat(queryValue);
+      };
+    })
+    .dynatable({
+      features: {
+        paginate: false,
+        recordCount: false,
+        sorting: false,
+        search: false
+      },
+      inputs: {
+        queries: $('#max-price')
+      }
+    });
 })();
 </script>
 
@@ -1873,20 +1986,177 @@ If the resulting dataset for a given operation is too large for the
 pushState cache, then dynatable will automatically fallback to
 re-running the operations or re-sending the AJAX request to the server.
 
+<div class="alert-message block-message">
+  PushState works in <a href="http://caniuse.com/#search=pushstate"
+target=_blank>all modern browsers that support it</a>. For other
+browsers (IE9 or earlier), a pushState polyfill such as
+<a href="https://github.com/browserstate/history.js" target=_blank>History.js</a>
+may be used.
+</div>
+
 #### Processing Indicator
+
+For long-running operations (and for AJAX tables which must request data
+form the server), dynatable automatically appends a "processing"
+indicator to the table to let users know something is happening. We can
+style this indicator however we want. By default, it's just the word
+"Processing..." overlaid in the center of the table.
+
+Below, we've created a custom sort function with a blocking alert the
+first time it runs, so
+that you can see the processing indicator in action.
+
+<div class="dynatable-demo">
+<table id="processing-indicator-example">
+  <thead>
+    <tr>
+      <th>Important Things</th>
+    </tr>
+  </thread>
+  <tbody>
+    <tr>
+      <td>E=MC<sup>2</sup></td>
+    </tr>
+    <tr>
+      <td>F=MA</td>
+    </tr>
+    <tr>
+      <td>A<sup>2</sup>+B<sup>2</sup>=C<sup>2</sup></td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<script>
+(function() {
+  var shown = false;
+  $('#processing-indicator-example')
+    .bind('dynatable:init', function(e, dynatable) {
+      dynatable.sorts.functions['long-sort'] = function(a, b, attr, ascending) {
+        if (!shown) {
+          alert('Do you see the processing indicator?');
+          shown = true;
+        }
+        return dynatable.sorts.functions.string(a, b, attr, ascending);
+      };
+    })
+    .dynatable({
+      features: {
+        paginate: false,
+        search: false,
+        recordCount: false,
+        pushState: false
+      },
+      dataset: {
+        sortTypes: {
+          importantThings: 'long-sort'
+        }
+      }
+    });
+})();
+</script>
+
+Of course, we could have also just invoked the processing indicator
+manually (but then we wouldn't have had an excuse to include another
+example of a custom sort function).
+
+To show or hide the processing indicator, we can call the
+<code>dynatable.processingIndicator.show()</code> and
+<code>dynatable.processingIndicator.hide()</code> functions.
+
+<a href="#" class="btn primary" id="processing-indicator-example-button">Show Standard Processing Indicator</a>
+
+<script>
+(function() {
+  var dynatable = $('#processing-indicator-example').data('dynatable');
+  $('#processing-indicator-example-button').click( function(e) {
+    dynatable.processingIndicator.show();
+    setTimeout(dynatable.processingIndicator.hide, 3000);
+    e.preventDefault();
+  });
+})();
+</script>
+
+We can configure the html content of the processing indicator (including
+images or gifs), using the <code>inputs.processingText</code>
+configuration.
+
+We can also style the processing indicator overlay and inner block, by
+attaching styles to the
+<code>dynatable-processing</code> class and the <code>.dynatable-processing span</code>
+CSS selector, respectively.
+
+{% highlight js %}
+$('#processing-indicator-nice-example').dynatable({
+  features: {
+    paginate: false,
+    search: false,
+    recordCount: false,
+    pushState: false,
+    sort: false
+  },
+  inputs: {
+    processingText: 'Loading <img src="/images/loading.gif" />'
+  }
+});
+{% endhighlight %}
+
+<div class="dynatable-demo">
+<table id="processing-indicator-nice-example">
+  <thead>
+    <tr>
+      <th>Important Things</th>
+    </tr>
+  </thread>
+  <tbody>
+    <tr>
+      <td>E=MC<sup>2</sup></td>
+    </tr>
+    <tr>
+      <td>F=MA</td>
+    </tr>
+    <tr>
+      <td>A<sup>2</sup>+B<sup>2</sup>=C<sup>2</sup></td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<script>
+(function() {
+  $('#processing-indicator-nice-example').dynatable({
+    features: {
+      paginate: false,
+      search: false,
+      recordCount: false,
+      pushState: false,
+      sort: false
+    },
+    inputs: {
+      processingText: 'Loading <img src="/images/loading.gif" />'
+    }
+  });
+})();
+</script>
+
+<a href="#" class="btn primary" id="processing-indicator-nice-example-button">Show Nicer Processing Indicator</a>
+
+<script>
+(function() {
+  var dynatable = $('#processing-indicator-nice-example').data('dynatable');
+  $('#processing-indicator-nice-example-button').click( function(e) {
+    dynatable.processingIndicator.show();
+    setTimeout(dynatable.processingIndicator.hide, 3000);
+    e.preventDefault();
+  });
+})();
+</script>
 
 ## Rendering
 
 When rendering JSON data to the page, dynatable passes data through
-filters (you may notice that this is the opposite of the tranlation step
+filters (you may notice that this is the opposite of the normalization step
 which runs the DOM elements through "unfilters").
-
-<div class="alert-message block-message">
-  <strong>Documentation and more demos coming soon.</strong>
-</div>
-
-<i id="dynatable-api"></i>
-## Interacting with the Dynatable API
 
 <div class="alert-message block-message">
   <strong>Documentation and more demos coming soon.</strong>

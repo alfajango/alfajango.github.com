@@ -534,6 +534,34 @@ img.styled {
   background: #fff;
   padding: 15px;
   border-radius: 5px;
+  margin-bottom: 18px;
+}
+.dynatable-demo table {
+  margin-bottom: 0;
+}
+.dynatable-demo .dynatable-record-count,
+.dynatable-demo .dynatable-pagination-links {
+  margin-top: 9px;
+}
+.dynatable-demo td,
+.dynatable-demo td img {
+  vertical-align: middle;
+}
+
+#dynatable-processing-processing-indicator-nice-example {
+  background: #000;
+  opacity: 0.6;
+}
+#dynatable-processing-processing-indicator-nice-example span {
+  background: #FFF;
+  border: solid 2px #57A957;
+  color: #333;
+  padding: 25px;
+  font-size: 2em;
+  box-shadow: 0px 0px 15px rgba(0,0,0,0.5);
+}
+#dynatable-processing-processing-indicator-nice-example span img {
+  vertical-align: middle;
 }
 
 cite {
