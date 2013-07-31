@@ -2360,17 +2360,19 @@ custom function for rendering each attribute within the row, but we opted
 to skip it entirely and to just do everything in the `table.rowFilter`.
 
 <div class="dynatable-demo">
-<ul id="ul-example">
-  <li><span>First thing: </span><a href="#thing1">click 1</a></li>
-  <li><span>Second thing: </span><a href="#thing2">click 2</a></li>
-  <li><span>Third thing: </span><a href="#thing3">click 3</a></li>
-  <li><span>Fourth thing: </span><a href="#thing4">click 4</a></li>
-  <li><span>Fifth thing: </span><a href="#thing5">click 5</a></li>
-  <li><span>Sixth thing: </span><a href="#thing6">click 6</a></li>
-  <li><span>Seventh thing: </span><a href="#thing7">click 7</a></li>
-  <li><span>Eighth thing: </span><a href="#thing8">click 8</a></li>
-  <li><span>Ninth thing: </span><a href="#thing9">click 9</a></li>
-  <li><span>Tenth thing: </span><a href="#thing10">click 10</a></li>
+<ul id="ul-example" class="row">
+  <li class="span4"><span>First thing: </span><a href="#thing1">click 1</a></li>
+  <li class="span4"><span>Second thing: </span><a href="#thing2">click 2</a></li>
+  <li class="span4"><span>Third thing: </span><a href="#thing3">click 3</a></li>
+  <li class="span4"><span>Fourth thing: </span><a href="#thing4">click 4</a></li>
+  <li class="span4"><span>Fifth thing: </span><a href="#thing5">click 5</a></li>
+  <li class="span4"><span>Sixth thing: </span><a href="#thing6">click 6</a></li>
+  <li class="span4"><span>Seventh thing: </span><a href="#thing7">click 7</a></li>
+  <li class="span4"><span>Eighth thing: </span><a href="#thing8">click 8</a></li>
+  <li class="span4"><span>Ninth thing: </span><a href="#thing9">click 9</a></li>
+  <li class="span4"><span>Tenth thing: </span><a href="#thing10">click 10</a></li>
+  <li class="span4"><span>Eleventh thing: </span><a href="#thing11">click 1`</a></li>
+  <li class="span4"><span>Twelfth thing: </span><a href="#thing12">click 12</a></li>
 </ul>
 </div>
 
@@ -2382,7 +2384,7 @@ to skip it entirely and to just do everything in the `table.rowFilter`.
       // Function that renders the list items from our records
       rowFilter: function(rowIndex, record, columns, cellFilter) {
         var $li = $('<li></li>');
-        $li.addClass('my-row').html('<span>' + record.name + '</span><a href="' + record.url + '">' + record.label + '</a>');
+        $li.addClass('span4').html('<span>' + record.name + '</span><a href="' + record.url + '">' + record.label + '</a>');
         return $li;
       },
       // Function that creates our records from the DOM when the page is loaded
@@ -2395,8 +2397,8 @@ to skip it entirely and to just do everything in the `table.rowFilter`.
       }
     },
     dataset: {
-      perPageDefault: 5,
-      perPageOptions: [1, 5, 10]
+      perPageDefault: 4,
+      perPageOptions: [2, 4, 8, 12]
     }
   });
 })();
