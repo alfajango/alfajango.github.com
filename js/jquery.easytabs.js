@@ -505,6 +505,7 @@
       if( fire($container,"easytabs:before", [$clicked, $targetPanel, settings]) ){
         var $visiblePanel = plugin.panels.filter(":visible"),
             $panelContainer = $targetPanel.parent(),
+            panelHeight,
             targetHeight,
             visibleHeight,
             heightDifference,
@@ -513,8 +514,12 @@
 
         if (settings.animate) {
           targetHeight = getHeightForHidden($targetPanel);
+          panelHeight = $panelContainer.height();
+          if ($panelContainer.css('box-sizing') === "border-box") {
+            targetHeight += ($panelContainer.outerHeight() - panelHeight);
+          }
           visibleHeight = $visiblePanel.length ? setAndReturnHeight($visiblePanel) : 0;
-          heightDifference = targetHeight - visibleHeight;
+          heightDifference = targetHeight - panelHeight;
         }
 
         // Set lastHash to help indicate if defaultTab should be
@@ -531,7 +536,7 @@
           if (settings.animate && settings.transitionIn == 'fadeIn') {
             if (heightDifference < 0)
               $panelContainer.animate({
-                height: $panelContainer.height() + heightDifference
+                height: targetHeight
               }, transitions.halfSpeed ).css({ 'min-height': '' });
           }
 
@@ -567,7 +572,7 @@
         if( settings.animate && settings.transitionOut == 'fadeOut' ) {
           if( heightDifference > 0 ) {
             $panelContainer.animate({
-              height: ( $panelContainer.height() + heightDifference )
+              height: targetHeight
             }, transitions.halfSpeed );
           } else {
             // Prevent height jumping before height transition is triggered at midTransition
