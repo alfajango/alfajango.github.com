@@ -48,7 +48,7 @@ pre::-webkit-scrollbar-thumb,
 /* layout */
 
 body {
-  background: #ececec;
+  background: #FFF;
 }
 
 a {
@@ -62,6 +62,45 @@ p {
   font-size: 16px;
   line-height: 22px;
   margin-bottom: 14px;
+}
+
+.double-underline {
+  position: relative;
+  border-bottom: solid 1px #ccc;
+  -webkit-box-shadow: 0px 3px 0px #fff, 0px 4px 0px #ccc;
+  -moz-box-shadow: 0px 3px 0px #fff, 0px 4px 0px #ccc;
+  box-shadow: 0px 3px 0px #fff, 0px 4px 0px #ccc;
+}
+.double-underline:after {
+  content:"";
+  display:block; /* reduce the damage in FF3.0 */
+  position:absolute;
+  left: 50%;
+  margin-left: -22px;
+  bottom: 0px;
+  margin-bottom: -12px;
+  width: 45px;
+  height: 12px;
+  background: url('/images/divider-triangles.png') #fff no-repeat top center;
+}
+
+#projects-splash-bg {
+  background: #EDEEEE;
+  margin-top: -15px;
+  border-top: 10px #63B46C solid;
+}
+
+#projects-splash {
+  padding: 2em 0 3em;
+}
+
+#projects-splash h1 {
+  color: #63B46C;
+}
+
+#projects-splash p {
+  font-size: 1.5em;
+  line-height: 1.5em;
 }
 
 #post h2 {
@@ -93,7 +132,7 @@ p {
 
 #tagbar {
   width: 100%;
-  background: #fff;
+  background: #EDEEEE;
   padding: 10px 0 15px;
   color: #333;
   border-top: solid 1px #007b09;
@@ -108,7 +147,6 @@ p {
   /*height: 90px;*/
 }
 #download-and-share-container {
-  background: #fff;
   z-index: 100;
   width: 100%;
 }
@@ -334,7 +372,7 @@ a.nav-links:hover {
   display: block;
   width: 175px;
   margin: 5px 0;
-  font-size: 20px;
+  padding: 15px 15px 10px;
   text-align: center;
   float: right;
   clear: right;
@@ -342,10 +380,14 @@ a.nav-links:hover {
 .tooltip {
   font-size: 20px;
 }
+.tooltip.left {
+  margin-left: -11px;
+}
 .tooltip-inner {
-  padding: 8px 10px 10px;
+  padding: 20px 15px 20px;
   background: #ececec;
   color: #333;
+  line-height: 24px;
 }
 .tooltip-arrow {
   border-left-color: #ececec !important;
@@ -555,6 +597,9 @@ img.styled {
 #dynatable-processing-processing-indicator-nice-example {
   background: #000;
   opacity: 0.6;
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  border-radius: 4px;
 }
 #dynatable-processing-processing-indicator-nice-example span {
   background: #FFF;

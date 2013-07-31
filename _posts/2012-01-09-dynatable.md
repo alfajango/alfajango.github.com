@@ -28,7 +28,7 @@ $('#my-table').dynatable();
 
 <div class="dynatable-demo">
 
-<table id="example-table" class="wikitable sortable" style="margin-left:auto;margin-right:auto;text-align: right">
+<table id="example-table" class="wikitable sortable table table-bordered" style="margin-left:auto;margin-right:auto;text-align: right">
 <thead>
 <tr>
 <th>Rank</th>
@@ -1503,7 +1503,7 @@ column.
 Hold shift and click a second row to add secondary sorting, and so on.
 
 <div class="dynatable-demo">
-<table id="sorting-example">
+<table id="sorting-example" class="table table-bordered">
   <thead>
     <tr>
       <th>Make</th>
@@ -1644,7 +1644,7 @@ $('#sorting-function-example')
 {% endhighlight %}
 
 <div class="dynatable-demo">
-<table id="sorting-function-example" style="color: white;">
+<table id="sorting-function-example" class="table table-bordered">
   <thead>
     <tr>
       <th>Color</th>
@@ -1853,7 +1853,7 @@ $('#search-year').change( function() {
   </select>
 </div>
 
-<table id="search-example">
+<table id="search-example" class="table table-bordered">
   <thead>
     <tr>
       <th>Make</th>
@@ -1986,7 +1986,7 @@ the query or not.
   Max Price:
   $<input id="max-price" type=number step=1000 />
 </div>
-<table id="search-function-example">
+<table id="search-function-example" class="table table-bordered">
   <thead>
     <tr>
       <th>Make</th>
@@ -2154,7 +2154,7 @@ first time it runs, so
 that you can see the processing indicator in action.
 
 <div class="dynatable-demo">
-<table id="processing-indicator-example">
+<table id="processing-indicator-example" class="table table-bordered">
   <thead>
     <tr>
       <th>Important Things</th>
@@ -2249,7 +2249,7 @@ $('#processing-indicator-nice-example').dynatable({
 {% endhighlight %}
 
 <div class="dynatable-demo">
-<table id="processing-indicator-nice-example">
+<table id="processing-indicator-nice-example" class="table table-bordered">
   <thead>
     <tr>
       <th>Important Things</th>

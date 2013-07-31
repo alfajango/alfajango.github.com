@@ -82,7 +82,7 @@ $('.comment').emoticonize();
 
 There are three optional parameters.
 
-<table>
+<table class="table table-bordered">
   <thead>
   <tr>
   <th>Option</th>

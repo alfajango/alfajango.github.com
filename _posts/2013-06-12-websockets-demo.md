@@ -181,7 +181,7 @@ msg.log('Hello there');
 There are three client modules included by default in this app that are
 required for the app to function (i.e. the core modules):
 
-<table>
+<table class="table table-bordered">
 <tr>
 <th>connected.js
 <br />
@@ -218,7 +218,7 @@ In addition to the required client modules above, two other modules are
 included to demonstration what an add-on module would look like and what
 they can do:
 
-<table>
+<table class="table table-bordered">
 <tr>
 <th style="min-width: 75px;">click.js
 <br />

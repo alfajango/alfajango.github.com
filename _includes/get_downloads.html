@@ -1,6 +1,7 @@
 <script type='text/javascript'>
   var domain = location,
       url = location.host == 'os.alfajango.com' ? 'http://s3.alfajango.com/os-projects-downloads.json' : '/output.json',
+      ready = new $.Deferred,
       resultJSON,
       setJSON = function(data) {
         resultJSON = data;
@@ -19,38 +20,40 @@
     return x1 + x2;
   }
 
-  $(document).ready( function() {
-    requestJSON.done( function() {
-      $.each( ['rubygems', 'github', 'jspkg'], function(i, service) {
-        $('[data-' + service + ']').each( function() {
-          var $this = $(this),
-              project = $this.data(service),
-              number, label;
+  $.when(requestJSON, ready).then(function() {
+    $.each( ['rubygems', 'github', 'jspkg'], function(i, service) {
+      $('[data-' + service + ']').each( function() {
+        var $this = $(this),
+            project = $this.data(service),
+            number, label;
 
-          switch (service) {
-            case 'rubygems':
-              number = 'total_downloads';
-              label = 'downloads';
-              break;
-            case 'github':
-              number = 'watchers';
-              label = 'watchers';
-              break;
-            case 'jspkg':
-              number = 'total_downloads';
-              label = 'downloads';
-          };
+        switch (service) {
+          case 'rubygems':
+            number = 'total_downloads';
+            label = 'downloads';
+            break;
+          case 'github':
+            number = 'watchers';
+            label = 'watchers';
+            break;
+          case 'jspkg':
+            number = 'total_downloads';
+            label = 'downloads';
+        };
 
-          $this
-            .tooltip({
-              title: addCommas(resultJSON[project][service][number]) + ' ' + label,
-              placement: 'left',
-              trigger: 'manual'
-            })
-            .tooltip('show');
-        });
+        $this
+          .tooltip({
+            title: addCommas(resultJSON[project][service][number]) + ' ' + label,
+            placement: 'left',
+            trigger: 'manual'
+          })
+          .tooltip('show');
       });
-
     });
+
+  });
+
+  $(window).load( function() {
+    ready.resolve();
   });
 </script>

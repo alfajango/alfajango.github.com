@@ -1,0 +1,472 @@
+/* ==========================================================================
+   Author's custom styles
+   ========================================================================== */
+
+.clear {
+  width: 100%;
+  height: 0;
+  clear: both;
+}
+
+body {
+  padding-top: 106px;
+  padding-bottom: 0;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+h1 {
+  font-family: UniversLT-LightUltraCondensed, "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-weight: lighter;
+}
+h2, h3 {
+  font-family: UniversLT-UltraCondensed, "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-weight: lighter;
+}
+
+h1 {
+  font-size: 140px;
+  line-height: 140px;
+}
+
+h2 {
+  font-size: 80px;
+  line-height: 80px;
+  color: #333;
+}
+
+h3 {
+  font-size: 40px;
+  line-height: 40px;
+}
+
+p {
+  color: #777;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+a {
+  color: #68B451;
+}
+a:hover {
+  color: #51a351;
+}
+
+input[type="text"], input[type="email"], textarea {
+  -moz-box-shadow:    inset 2px 3px 5px rgba(0,0,0,0.15);
+  -webkit-box-shadow: inset 2px 3px 5px rgba(0,0,0,0.15);
+  box-shadow:         inset 2px 3px 5px rgba(0,0,0,0.15);
+  padding: 10px 16px;
+}
+
+::-webkit-input-placeholder {
+    color:    #9f9f9f;
+}
+:-moz-placeholder {
+    color:    #9f9f9f;
+}
+::-moz-placeholder {
+    color:    #9f9f9f;
+}
+:-ms-input-placeholder {
+    color:    #9f9f9f;
+}
+
+.highlight pre {
+  background: transparent;
+  color: #fff;
+}
+
+.highlight {
+  -webkit-border-radius: 3px;
+     -moz-border-radius: 3px;
+          border-radius: 3px;
+}
+
+.btn {
+  font-family: UniversLT-UltraCondensed;
+  text-transform: uppercase;
+  font-size: 40px;
+  font-weight: lighter;
+  padding: 20px 32px 15px;
+  line-height: 40px;
+  letter-spacing: 1px;
+}
+.btn-large [class^="icon-"], .btn-large [class*=" icon-"] {
+  margin-top: 12px;
+}
+
+
+dt a {
+}
+
+dt, dt a {
+  font-size: 20px;
+  color: #65b651;
+}
+
+dd {
+  margin-left: 0;
+}
+
+dd, dd p {
+  color: #999;
+  margin: 10px 0 15px;
+}
+
+img.svg {
+  display: none;
+}
+html.svg img.svg {
+  display: block;
+}
+html.svg img.non-svg {
+  display: none !important;
+}
+
+.navbar .brand img.horizontal-logo {
+  display: none;
+}
+
+.full-logo.svg {
+  height: 82px;
+}
+.horizontal-logo.svg {
+  height: 38px;
+}
+
+.responsive-headline {
+  display: block;
+}
+
+h2.headline-with-emphasis,
+h3.headline-with-emphasis {
+  display: block;
+  color: #b8b8b8;
+  font-weight: 500;
+  margin-bottom: 40px;
+  border-bottom: solid 1px #ccc;
+  padding: 0;
+}
+h3.headline-with-emphasis {
+  padding: 0;
+}
+h2.headline-with-emphasis:after,
+h3.headline-with-emphasis:after {
+  content: "";
+  display: block;
+  border-bottom: solid 1px #fff;
+  margin-top: 20px;
+  margin-bottom: -2px;
+}
+
+h2.headline-with-emphasis span,
+h3.headline-with-emphasis span {
+  color: #65b561;
+}
+h2.headline-with-emphasis span.light,
+h3.headline-with-emphasis span.light {
+  color: #ccc;
+}
+
+h2.headline-with-emphasis small,
+h3.headline-with-emphasis small {
+  text-transform: none;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 23px;
+  color: #999;
+  margin-left: 15px;
+}
+
+.hero-unit {
+  background: transparent;
+  padding: 30px 0;
+}
+
+h1, h2 {
+  text-transform: uppercase;
+}
+
+/*-----------------------------------|
+|  NAVIGATION                        |
+|-----------------------------------*/
+
+.navbar-inner .container {
+  height: 90px;
+}
+
+.navbar-fixed-top {
+  position: absolute;
+}
+.navbar-fixed-top.fixed-half {
+  position: fixed;
+  top: -51px;
+}
+
+.navbar .brand {
+  display: block;
+  height: 86px;
+  width: 228px;
+  padding: 0;
+  margin: 0;
+  position: relative;
+  padding-top: 5px;
+}
+.navbar .brand img {
+  display: block;
+  position: absolute;
+}
+.navbar .brand img.horizontal-logo {
+  margin-top: 47px;
+}
+
+.nav-right-container {
+  float: right;
+}
+
+.global-nav {
+  display: block;
+  padding: 5px 25px;
+  background: #65B560;
+  margin-top: 9px;
+  float: right;
+}
+
+nav.global-nav .nav > li > a {
+  color: #000;
+  text-transform: uppercase;
+  padding: 8px 20px 3px;
+  width: auto;
+  font-family: UniversLT-UltraCondensed;
+  font-weight: lighter;
+  font-size: 28px;
+  letter-spacing: 2px;
+}
+
+.navbar .global-nav .nav > .active > a, .navbar .global-nav .nav > .active > a:hover, .navbar .global-nav .nav > .active > a:focus {
+  background: transparent;
+  color: #fff;
+  -webkit-box-shadow: none;
+  -moz-box-shadow: none;
+  box-shadow: none;
+  position: relative;
+}
+
+.navbar .global-nav .nav > .active > a:after {
+  content:"";
+  display:block; /* reduce the damage in FF3.0 */
+  position:absolute;
+  left: 50%;
+  margin-left: -5px; /* sin(45)x15, where 45 is rotation angle and 15 is border-width */
+  bottom:-18px; /* value = - border-top-width - border-bottom-width */
+  width: 0px;
+  height: 0px;
+  border-width:15px 15px 0 0; /* vary these values to change the angle of the vertex */
+  border-style:solid;
+  border-color: #000 transparent;
+  z-index: 10;
+  -webkit-transform: rotate(45deg);
+  -moz-transform: rotate(45deg);
+  -o-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
+  border-radius: 2px;
+  -webkit-border-radius: 2px;
+  -moz-border-radius: 2px;
+}
+
+nav.site-nav {
+  float: right;
+}
+
+nav.site-nav .nav > li > a {
+  color: #ccc;
+}
+
+/*-----------------------------------|
+|  FOOTER                            |
+|-----------------------------------*/
+
+#pre-footer-background {
+  background: #000;
+  border-top: solid #fff 10px;
+}
+
+#pre-footer-inner {
+  padding: 20px 0;
+}
+
+.blog-feed {
+  width: 70%;
+  float: left;
+}
+
+.blog-feed h3, .talk-to-us h3 {
+  color: #fff;
+}
+
+.blog-feed dt span {
+  color: #fff;
+  font-size: 12px;
+}
+
+.talk-to-us {
+  width: 20%;
+  float: left;
+  margin-left: 10%;
+}
+
+#footer-background {
+  background: #181818;
+  border: solid 10px #333;
+  border-width: 10px 0;
+  padding: 10px 0;
+}
+
+#footer-background p {
+  font-size: 16px;
+  line-height: 16px;
+  padding: 0;
+  margin: 0;
+}
+
+/*-----------------------------------|
+|  RESPONSIVE                        |
+|-----------------------------------*/
+
+/* Large desktop */
+@media (min-width: 1200px) {
+}
+
+@media (min-width: 980px) and (max-width: 1199px) {
+
+  h2.headline-with-emphasis, h3.headline-with-emphasis {
+    font-size: 65px;
+  }
+
+  h2.headline-with-emphasis small, h3.headline-with-emphasis small {
+    margin-left: 5px;
+    font-size: 18px;
+  }
+
+  .blog-feed dt span {
+    display: block;
+    margin: 5px 0 -5px;
+  }
+}
+
+/* Portrait tablet to landscape and desktop */
+@media (max-width: 979px) {
+  body {
+    padding-top: 60px;
+  }
+  h2 {
+    font-size: 70px;
+  }
+
+  .full-logo {
+    display: none !important;
+  }
+  .navbar .brand img.horizontal-logo {
+    display: block;
+    margin-top: 0;
+  }
+  .navbar {
+    height: 51px;
+    position: fixed;
+  }
+  .navbar-fixed-top {
+    margin-bottom: 0;
+  }
+  .navbar-inner {
+    height: 41px;
+  }
+  .navbar .brand {
+    height: 51px;
+    padding: 2px 5px;
+  }
+  .nav-right-container {
+    float: none;
+  }
+  nav.global-nav {
+    float: none;
+    margin-top: 0;
+    text-align: center;
+  }
+  .nav-collapse.collapse.in {
+    overflow: visible;
+  }
+  .nav-collapse:before {
+    content:"";
+    display:block; /* reduce the damage in FF3.0 */
+    position:absolute;
+    top: -20px;
+    right: 0;
+    margin-right: 25px;
+    width: 0px;
+    height: 0px;
+    border-width:20px 20px 0 0; /* vary these values to change the angle of the vertex */
+    border-style:solid;
+    border-color: transparent #65B560;
+    z-index: 10;
+  }
+  .navbar .global-nav .nav > .active > a:after {
+    display: none;
+  }
+  nav.site-nav {
+    float: none;
+    background: #000;
+    text-align: center;
+  }
+  .navbar-inverse .nav-collapse .nav>li>a, .navbar-inverse .nav-collapse .dropdown-menu a {
+    color: #d9d9d9;
+  }
+  .nav-collapse .nav {
+    margin: 0;
+  }
+  .nav-separator {
+    display: none;
+  }
+
+  .hero-background {
+    margin-bottom: 0;
+  }
+
+  .blog-feed {
+    width: 60%;
+  }
+  .talk-to-us {
+    width: 30%;
+  }
+}
+
+/* Landscape phone to portrait tablet */
+@media (max-width: 767px) {
+  body {
+    padding-left: 0;
+    padding-right: 0;
+  }
+
+  .container,
+  .navbar .container {
+    padding: 0 20px;
+  }
+
+  h2.headline-with-emphasis small,
+  h3.headline-with-emphasis small {
+    display: block;
+  }
+
+  .blog-feed {
+    float: none;
+    width: 100%;
+  }
+  .talk-to-us {
+    float: none;
+    width: 100%;
+    margin-left: 0;
+    text-align: center;
+  }
+}
+
+/* Landscape phones and down */
+@media (max-width: 480px) {
+}
