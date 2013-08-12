@@ -2350,7 +2350,9 @@ To show or hide the processing indicator, we can call the
   var dynatable = $('#processing-indicator-example').data('dynatable');
   $('#processing-indicator-example-button').click( function(e) {
     dynatable.processingIndicator.show();
-    setTimeout(dynatable.processingIndicator.hide, 3000);
+    setTimeout(function() {
+      dynatable.processingIndicator.hide();
+    }, 3000);
     e.preventDefault();
   });
 })();
@@ -2424,8 +2426,11 @@ $('#processing-indicator-nice-example').dynatable({
 (function() {
   var dynatable = $('#processing-indicator-nice-example').data('dynatable');
   $('#processing-indicator-nice-example-button').click( function(e) {
+    dynatable.processingIndicator.hide();
     dynatable.processingIndicator.show();
-    setTimeout(dynatable.processingIndicator.hide, 3000);
+    setTimeout(function() {
+      dynatable.processingIndicator.hide();
+    }, 3000);
     e.preventDefault();
   });
 })();
