@@ -2504,3 +2504,21 @@ The confiuration options (with default values) for dynatable are:
   }
 }
 {% endhighlight %}
+
+## API
+
+### Dom
+
+### DomColumns
+
+### Records
+
+### RecordsCount
+
+### Queries
+
+### Sorts
+
+### SortsHeaders
+
+### InputSearch
