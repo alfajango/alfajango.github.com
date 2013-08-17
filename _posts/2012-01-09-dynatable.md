@@ -1,5 +1,5 @@
 ---
-layout: project
+layout: dynatable
 title: jQuery Dynatable Plugin
 heading: Dynatable
 tagline: HTML5+JSON interactive table plugin.

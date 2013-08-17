@@ -5,6 +5,7 @@
     <link rel="stylesheet" media="all" href="/css/reset.css" />
     <link rel="stylesheet" media="all" href="/css/bootstrap.min.css" />
     <link rel="stylesheet" media="all" href="/css/application.css" />
+    <link rel="stylesheet" media="all" href="/css/project.css" />
     <link rel="stylesheet" media="all" href="/css/pygments.css" />
     <link rel="stylesheet" media="all" href="/css/share.css" />
     <link rel="stylesheet" media="all" href="/css/dynatable-docs.css" />
@@ -91,24 +92,24 @@
     {% include share.html %}
   </head>
   <body>
-    <div id='headbar'>
+    <div id='topbar'>
       <div class='contained'>
-        <div id='built-by'>
-          <h3>built and supported by <span>Alfa Jango</span></h3>
-          <a class='nav-links' id='visit-site' href="http://www.alfajango.com">
+        <span id='supported-by'>
+          built and supported by
+          <a href="http://www.alfajango.com">
             <img src='/images/alfa-jango-logo.png' id='aj-logo' />
           </a>
-        </div>
-        <div id='title-and-share'>
-          <div id='share-container'>
-            <div id="shareme" data-url="http://os.alfajango.com{{ page.url }}" data-text="{{ page.title }}" data-title="share this page <img src='/images/share-buttons.png' />"></div>
-          </div>
         </div>
       </div>
       <br class='clear' />
     </div>
     <div id='splashbar'>
       <div class='contained'>
+        <div id='title-and-share'>
+          <div id='share-container'>
+            <div id="shareme" data-url="http://os.alfajango.com{{ page.url }}" data-text="{{ page.title }}" data-title="share this page <img src='/images/share-buttons.png' />"></div>
+          </div>
+        </div>
         <h1>{{ page.heading }}</h1>
       </div>
     </div>
