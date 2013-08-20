@@ -1167,6 +1167,9 @@ $('#my-table').dynatable();
 
 <script type="text/javascript">
   $('#example-table').dynatable({
+    features: {
+      pushState: true
+    },
     unfilters: {
       'us-$': function(el, record) {
         return Number(el.innerHTML.replace(/,/g, ''));
@@ -2586,6 +2589,21 @@ to skip it entirely and to just do everything in the `table.rowFilter`.
 </script>
 
 ## Configuration
+
+If you want to change any of the following default configuration options
+globally (for all instances of dynatable within your application), you
+can call the `$.dynatableSetup()` function to do so:
+
+{% highlight js %}
+$.dynatableSetup({
+  // your global default options here
+});
+{% endhighlight %}
+
+For example, this documentation page has `features: { pushState: false}`
+so as not to fill your browser's pushState queue as you click around
+through made-up data in the examples (except for the first example,
+which re-enables it for demo purposes).
 
 The confiuration options (with default values) for dynatable are:
 
