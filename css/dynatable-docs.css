@@ -179,3 +179,20 @@ th {
 .side-by-side.left { 
   margin-right: 2%;
 }
+
+#ul-example {
+  overflow: hidden;
+  width: 100%;
+  position: relative;
+  margin-left: 0;
+  margin-top: 0;
+  top: -10px;
+}
+
+#ul-example .first {
+  margin-left: 0;
+}
+
+#ul-example li {
+  margin-top: 18px;
+}

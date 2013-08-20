@@ -1277,7 +1277,8 @@ Results in this JSON collection:
 
 <br class="clear" />
 
-By default, dynatable converts headings to `camelCase` for the JSON
+By default, dynatable converts headings to `camelCase`
+(`favoriteMusic`) for the JSON
 record attributes, as is common in JavaScript. However, we can configure
 it to convert to `trimDash` (`Favorite-Music`), `dashed`
 (`favorite-music`), `underscore` (`favorite_music`), or `lowercase`
@@ -1475,21 +1476,6 @@ $('#my-ajax-table').dynatable({
 Or maybe we do need the normalization step, but we want to read the
 data from an unordered list instead of a table:
 
-{% highlight html %}
-<ul id="my-list">
-  <li>
-    <span class="name">Fender Custom Esquire GT</span>
-    <span class="type">Guitar</span>
-    $<span class="price">450.00</span>
-  </li>
-  <li>
-    <span class="name">ESP LTD B4-E</span>
-    <span class="type">Bass</span>
-    $<span class="price">400.00</span>
-  </li>
-</ul>
-{% endhighlight %}
-
 We can use the `table`
 settings to configure such awesomeness. We'll use the
 `table.bodyRowSelector` setting to tell dynatable to use `li` elements
@@ -1517,6 +1503,26 @@ a future version to "normalizations" vs. "renderers" instead of
 "unfilters" vs. "filters".
 </div>
 
+<div class="side-by-side left">
+<p>
+The following:
+</p>
+
+{% highlight html %}
+<ul id="my-list">
+  <li>
+    <span class="name">Fender Custom Esquire GT</span>
+    <span class="type">Guitar</span>
+    $<span class="price">450.00</span>
+  </li>
+  <li>
+    <span class="name">ESP LTD B4-E</span>
+    <span class="type">Bass</span>
+    $<span class="price">400.00</span>
+  </li>
+</ul>
+{% endhighlight %}
+
 {% highlight js %}
 $('#my-list').dynatable({
   table: {
@@ -1530,8 +1536,12 @@ $('#my-list').dynatable({
   }
 });
 {% endhighlight %}
+</div>
 
-This will result in the following JSON:
+<div class="side-by-side right">
+<p>
+Will result in the following JSON:
+</p>
 
 {% highlight js %}
 [
@@ -1547,6 +1557,8 @@ This will result in the following JSON:
   }
 ]
 {% endhighlight %}
+</div>
+<br class="clear" />
 
 ## Operations
 
@@ -2401,36 +2413,55 @@ If our container element is a `ul`, we could customize our rowFilter as
 follows:
 
 {% highlight html %}
-<ul id="ul-example">
-  <li><span>First thing: </span><a href="#thing1">click 1</a></li>
-  <li><span>Second thing: </span><a href="#thing2">click 2</a></li>
-  <li><span>Third thing: </span><a href="#thing3">click 3</a></li>
-  ...
+<ul id="ul-example" class="row-fluid">
+  <li class="span4" data-color="gray">
+    <div class="thumbnail">
+      <div class="thumbnail-image">
+        <img src="http://placekitten.com/g/300/200" />
+      </div>
+      <div class="caption">
+        <h3>Kitten 1</h3>
+        <p>Cras justo odio, dapibus ac facilisis in, egestas eget quam. Donec id elit non mi porta gravida at eget metus. Nullam id dolor id nibh ultricies vehicula ut id elit.</p>
+        <p><a href="#" class="btn btn-primary">Action</a> <a href="#" class="btn">Action</a></p>
+      </div>
+    </div>
+  </li>
+  <!-- ... //-->
 </ul>
 {% endhighlight %}
 
 {% highlight js %}
+// Function that renders the list items from our records
+function ulFilter(rowIndex, record, columns, cellFilter) {
+  var cssClass = "span4", li;
+  if (rowIndex % 3 === 0) { cssClass += ' first'; }
+  li = '<li class="' + cssClass + '"><div class="thumbnail"><div class="thumbnail-image">' + record.thumbnail + '</div><div class="caption">' + record.caption + '</div></div></li>';
+  return li;
+}
+
+// Function that creates our records from the DOM when the page is loaded
+function ulUnFilter(index, li, record) {
+  var $li = $(li),
+      $caption = $li.find('.caption');
+  record.thumbnail = $li.find('.thumbnail-image').html();
+  record.caption = $caption.html();
+  record.label = $caption.find('h3').text();
+  record.description = $caption.find('p').text();
+  record.color = $li.data('color');
+}
+
 $('#ul-example').dynatable({
   table: {
     bodyRowSelector: 'li',
-    // Function that renders the list items from our records
-    rowFilter: function(rowIndex, record, columns, cellFilter) {
-      var $li = $('<li></li>');
-      $li.addClass('my-row').html('<span>' + record.name + '</span><a href="' + record.url + '">' + record.label + '</a>');
-      return $li;
-    },
-    // Function that creates our records from the DOM when the page is loaded
-    rowUnfilter: function(index, li, record) {
-      var $li = $(li),
-          $a = $li.find('a');
-      record.name = $li.find('span').text();
-      record.label = $a.text();
-      record.url = $a.attr('href');
-    }
+    rowFilter: ulFilter,
+    rowUnfilter: ulUnFilter
   },
   dataset: {
-    perPageDefault: 5,
-    perPageOptions: [1, 5, 10]
+    perPageDefault: 3,
+    perPageOptions: [3, 6]
+  },
+  params: {
+    records: 'kittens'
   }
 });
 {% endhighlight %}
@@ -2440,45 +2471,115 @@ custom function for rendering each attribute within the row, but we opted
 to skip it entirely and to just do everything in the `table.rowFilter`.
 
 <div class="dynatable-demo">
-<ul id="ul-example" class="row">
-  <li class="span4"><span>First thing: </span><a href="#thing1">click 1</a></li>
-  <li class="span4"><span>Second thing: </span><a href="#thing2">click 2</a></li>
-  <li class="span4"><span>Third thing: </span><a href="#thing3">click 3</a></li>
-  <li class="span4"><span>Fourth thing: </span><a href="#thing4">click 4</a></li>
-  <li class="span4"><span>Fifth thing: </span><a href="#thing5">click 5</a></li>
-  <li class="span4"><span>Sixth thing: </span><a href="#thing6">click 6</a></li>
-  <li class="span4"><span>Seventh thing: </span><a href="#thing7">click 7</a></li>
-  <li class="span4"><span>Eighth thing: </span><a href="#thing8">click 8</a></li>
-  <li class="span4"><span>Ninth thing: </span><a href="#thing9">click 9</a></li>
-  <li class="span4"><span>Tenth thing: </span><a href="#thing10">click 10</a></li>
-  <li class="span4"><span>Eleventh thing: </span><a href="#thing11">click 1`</a></li>
-  <li class="span4"><span>Twelfth thing: </span><a href="#thing12">click 12</a></li>
-</ul>
+  <ul id="ul-example" class="row-fluid">
+    <li class="span4" data-color="gray">
+      <div class="thumbnail">
+        <div class="thumbnail-image">
+          <img src="http://placekitten.com/g/300/200" />
+        </div>
+        <div class="caption">
+          <h3>Kitten 1</h3>
+          <p>Cras justo odio, dapibus ac facilisis in, egestas eget quam. Donec id elit non mi porta gravida at eget metus. Nullam id dolor id nibh ultricies vehicula ut id elit.</p>
+          <p><a href="#" class="btn btn-primary">Action</a> <a href="#" class="btn">Action</a></p>
+        </div>
+      </div>
+    </li>
+    <li class="span4" data-color="color">
+      <div class="thumbnail">
+        <div class="thumbnail-image">
+          <img src="http://placekitten.com/300/200" />
+        </div>
+        <div class="caption">
+          <h3>Kitten 2</h3>
+          <p>Cras justo odio, dapibus ac facilisis in, egestas eget quam. Donec id elit non mi porta gravida at eget metus. Nullam id dolor id nibh ultricies vehicula ut id elit.</p>
+          <p><a href="#" class="btn btn-primary">Action</a> <a href="#" class="btn">Action</a></p>
+        </div>
+      </div>
+    </li>
+    <li class="span4" data-color="gray">
+      <div class="thumbnail">
+        <div class="thumbnail-image">
+          <img src="http://placekitten.com/g/300/200" />
+        </div>
+        <div class="caption">
+          <h3>Kitten 3</h3>
+          <p>Cras justo odio, dapibus ac facilisis in, egestas eget quam. Donec id elit non mi porta gravida at eget metus. Nullam id dolor id nibh ultricies vehicula ut id elit.</p>
+          <p><a href="#" class="btn btn-primary">Action</a> <a href="#" class="btn">Action</a></p>
+        </div>
+      </div>
+    </li>
+    <li class="span4" data-color="color">
+      <div class="thumbnail">
+        <div class="thumbnail-image">
+          <img src="http://placekitten.com/300/200" />
+        </div>
+        <div class="caption">
+          <h3>Kitten 4</h3>
+          <p>Cras justo odio, dapibus ac facilisis in, egestas eget quam. Donec id elit non mi porta gravida at eget metus. Nullam id dolor id nibh ultricies vehicula ut id elit.</p>
+          <p><a href="#" class="btn btn-primary">Action</a> <a href="#" class="btn">Action</a></p>
+        </div>
+      </div>
+    </li>
+    <li class="span4" data-color="gray">
+      <div class="thumbnail">
+        <div class="thumbnail-image">
+          <img src="http://placekitten.com/g/300/200" />
+        </div>
+        <div class="caption">
+          <h3>Kitten 5</h3>
+          <p>Cras justo odio, dapibus ac facilisis in, egestas eget quam. Donec id elit non mi porta gravida at eget metus. Nullam id dolor id nibh ultricies vehicula ut id elit.</p>
+          <p><a href="#" class="btn btn-primary">Action</a> <a href="#" class="btn">Action</a></p>
+        </div>
+      </div>
+    </li>
+    <li class="span4" data-color="color">
+      <div class="thumbnail">
+        <div class="thumbnail-image">
+          <img src="http://placekitten.com/300/200" />
+        </div>
+        <div class="caption">
+          <h3>Kitten 6</h3>
+          <p>Cras justo odio, dapibus ac facilisis in, egestas eget quam. Donec id elit non mi porta gravida at eget metus. Nullam id dolor id nibh ultricies vehicula ut id elit.</p>
+          <p><a href="#" class="btn btn-primary">Action</a> <a href="#" class="btn">Action</a></p>
+        </div>
+      </div>
+    </li>
+  </ul>
 </div>
 
 <script>
 (function() {
+  // Function that renders the list items from our records
+  function ulFilter(rowIndex, record, columns, cellFilter) {
+    var cssClass = "span4", li;
+    if (rowIndex % 3 === 0) { cssClass += ' first'; }
+    li = '<li class="' + cssClass + '"><div class="thumbnail"><div class="thumbnail-image">' + record.thumbnail + '</div><div class="caption">' + record.caption + '</div></div></li>';
+    return li;
+  }
+
+  // Function that creates our records from the DOM when the page is loaded
+  function ulUnFilter(index, li, record) {
+    var $li = $(li),
+        $caption = $li.find('.caption');
+    record.thumbnail = $li.find('.thumbnail-image').html();
+    record.caption = $caption.html();
+    record.label = $caption.find('h3').text();
+    record.description = $caption.find('p').text();
+    record.color = $li.data('color');
+  }
+
   $('#ul-example').dynatable({
     table: {
       bodyRowSelector: 'li',
-      // Function that renders the list items from our records
-      rowFilter: function(rowIndex, record, columns, cellFilter) {
-        var $li = $('<li></li>');
-        $li.addClass('span4').html('<span>' + record.name + '</span><a href="' + record.url + '">' + record.label + '</a>');
-        return $li;
-      },
-      // Function that creates our records from the DOM when the page is loaded
-      rowUnfilter: function(index, li, record) {
-        var $li = $(li),
-            $a = $li.find('a');
-        record.name = $li.find('span').text();
-        record.label = $a.text();
-        record.url = $a.attr('href');
-      }
+      rowFilter: ulFilter,
+      rowUnfilter: ulUnFilter
     },
     dataset: {
-      perPageDefault: 4,
-      perPageOptions: [2, 4, 8, 12]
+      perPageDefault: 3,
+      perPageOptions: [3, 6]
+    },
+    params: {
+      records: 'kittens'
     }
   });
 })();
