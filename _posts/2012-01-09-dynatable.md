@@ -1214,7 +1214,10 @@ The first module normalizes an HTML table into a JSON collection.
 Dynatable names the attributes of each record according to the table
 heading, so that the JSON collection is human-readable and easy to work with.
 
+<div class="side-by-side left">
+<p>
 The following table:
+</p>
 
 {% highlight html %}
 <table>
@@ -1244,8 +1247,12 @@ The following table:
   </tbody>
 </table>
 {% endhighlight %}
+</div>
 
+<div class="side-by-side right">
+<p>
 Results in this JSON collection:
+</p>
 
 {% highlight js %}
 [
@@ -1266,6 +1273,9 @@ Results in this JSON collection:
   }
 ]
 {% endhighlight %}
+</div>
+
+<br class="clear" />
 
 By default, dynatable converts headings to `camelCase` for the JSON
 record attributes, as is common in JavaScript. However, we can configure
@@ -1300,7 +1310,12 @@ $('#my-table')
 
 Sometimes, we need columns with labels different than the record
 attribute name. If a column heading contains the `data-dynatable-column`
-attribute, the associated record attribute will be named by that value:
+attribute, the associated record attribute will be named by that value.
+
+<div class="side-by-side left">
+<p>
+So this:
+</p>
 
 {% highlight html %}
 <table id="my-final-table">
@@ -1313,8 +1328,12 @@ attribute, the associated record attribute will be named by that value:
   </tbody>
 </table>
 {% endhighlight %}
+</div>
 
+<div class="side-by-side right">
+<p>
 Would result in:
+</p>
 
 {% highlight js %}
 [
@@ -1328,7 +1347,9 @@ Would result in:
   }
 ]
 {% endhighlight %}
+</div>
 
+<br class="clear" />
 
 The default behavior makes it easy to make an existing HTML table
 dynamic. But we're not limited to reading tables.
@@ -1339,6 +1360,7 @@ Perhaps we already have our data in JSON format. We can
 skip the initial record normalization by setting up an empty table for
 rendering and directly passing our data into dynatable:
 
+<div class="side-by-side left">
 {% highlight html %}
 <table id="my-final-table">
   <thead>
@@ -1349,7 +1371,9 @@ rendering and directly passing our data into dynatable:
   </tbody>
 </table>
 {% endhighlight %}
+</div>
 
+<div class="side-by-side right">
 {% highlight js %}
 var myRecords = [
   {
@@ -1367,13 +1391,43 @@ $('#my-final-table').dynatable({
   }
 });
 {% endhighlight %}
+</div>
+<br class="clear" />
+
+<table id="my-final-table" class="table table-bordered">
+  <thead>
+    <th>Band</th>
+    <th>Song</th>
+  </thead>
+  <tbody>
+  </tbody>
+</table>
+
+<script>
+var myRecords = [
+  {
+    "band": "Weezer",
+    "song": "El Scorcho"
+  },
+  {
+    "band": "Chevelle",
+    "song": "Family System"
+  }
+];
+$('#my-final-table').dynatable({
+  dataset: {
+    records: myRecords
+  }
+});
+</script>
 
 ### JSON from AJAX
 
 Or maybe, we want to fetch the data via AJAX:
 
+<div class="side-by-side left">
 {% highlight html %}
-<table id="my-final-table">
+<table id="my-ajax-table">
   <thead>
     <th>Some Attribute</th>
     <th>Some Other Attribute</th>
@@ -1382,15 +1436,39 @@ Or maybe, we want to fetch the data via AJAX:
   </tbody>
 </table>
 {% endhighlight %}
+</div>
 
+<div class="side-by-side right">
 {% highlight js %}
-$('#my-final-table').dynatable({
+$('#my-ajax-table').dynatable({
   dataset: {
     ajax: true,
-    ajaxUrl: '/my_data.json'
+    ajaxUrl: '/dynatable-ajax.json',
+    records: []
   }
 });
 {% endhighlight %}
+</div>
+<br class="clear" />
+
+<table id="my-ajax-table" class="table table-bordered">
+  <thead>
+    <th>Some Attribute</th>
+    <th>Some Other Attribute</th>
+  </thead>
+  <tbody>
+  </tbody>
+</table>
+
+<script>
+$('#my-ajax-table').dynatable({
+  dataset: {
+    ajax: true,
+    ajaxUrl: '/dynatable-ajax.json',
+    records: []
+  }
+});
+</script>
 
 ### Lists and non-Tables
 

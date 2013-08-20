@@ -1,6 +1,12 @@
 a {
   color: #00a290;
 }
+ol {
+  list-style: decimal;
+}
+ul {
+  list-style: disc;
+}
 #topbar {
   background: #2d2f31;
 }
@@ -155,4 +161,12 @@ a {
 
 th {
   background: #006a72;
+}
+
+.side-by-side {
+  width: 49%;
+  float: left;
+}
+.side-by-side.left { 
+  margin-right: 2%;
 }
