@@ -8,6 +8,7 @@
     <link rel="stylesheet" media="all" href="/css/project.css" />
     <link rel="stylesheet" media="all" href="/css/pygments.css" />
     <link rel="stylesheet" media="all" href="/css/share.css" />
+    <link href="http://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet" type="text/css">
     <link rel="stylesheet" media="all" href="/css/dynatable-docs.css" />
     <script type='text/javascript' src='/js/jquery-1.9.1.min.js'></script>
     <script type='text/javascript' src='/js/jquery.scrollTo.js'></script>
@@ -24,6 +25,10 @@
     {% endfor %}
 
     <script>
+      function getRandomInt (min, max) {
+        return Math.floor(Math.random() * (max - min + 1)) + min;
+      }
+
       var $toc,
           $tagbar,
           $content,
@@ -46,7 +51,7 @@
         tagbarHeight = $tagbar.outerHeight(),
         tagbarTop = $tagbar.offset().top,
         contentTop = $content.offset().top,
-        downloadBarTop = $downloadBar.offset().top,
+        //downloadBarTop = $downloadBar.offset().top,
         scrollRatio = tocWidth / tagbarHeight;
 
         $('#toc').toc({
@@ -55,94 +60,122 @@
             return $(heading).text().replace(/^\s+|\s+$/g, "").replace(/\s+/g, "-").replace(/([A-Z])/g, function($1){return $1.toLowerCase();});
           }
         });
-      });
+      })
+        .delegate('#plugin-graphic', 'click', function() {
+          $('#splashbar .mountain').remove();
+          loadMountains();
+        });
 
-
-      $(window).scroll(function(e){
-        var scrollTop = $(this).scrollTop();
-
-        // TOC sidebar animation and pinning
-        if (scrollTop > tocTop && $toc.css('position') != 'fixed'){
-          $toc.css({'position': 'fixed', 'top': '0px'});
+      function loadMountains() {
+        var mountains = [],
+            $splash = $('#splashbar'),
+            splashWidth = $splash.width() - 100,
+            splashHeight = $splash.height(),
+            spacing = parseFloat(splashWidth)/7;
+        for (var i=0; i < 7; i++) {
+          var dim = getRandomInt(200, 500),
+              pos = (i * spacing) + getRandomInt(-100,100),
+              bottom = splashHeight - dim/4; 
+          mountains.push('<i class="mountain" style="display: none; left: ' + pos + 'px; width: ' + dim + 'px; height: ' + dim + 'px; top: ' + bottom + 'px;"></i>');
         }
-        if (scrollTop < contentTop && $toc.css('position') != 'absolute'){
-          $toc.css({'position': 'absolute', 'top': 'auto'});
-        }
-        if (scrollTop > tagbarTop) {
-          var leftOffset = tocWidth - (scrollTop - tagbarTop) * scrollRatio;
-          if (scrollTop < (tagbarTop + tagbarHeight)) {
-            $toc.offset({'left': -(leftOffset)});
-          } else if ($toc.offset().left < 0) {
-            $toc.offset({'left': 0});
+        $splash.append(mountains.join('')).find('.mountain').fadeIn();
+      }
+
+      $(window)
+        .scroll(function(e){
+          var scrollTop = $(this).scrollTop();
+
+          // TOC sidebar animation and pinning
+          if (scrollTop > tocTop && $toc.css('position') != 'fixed'){
+            $toc.css({'position': 'fixed', 'top': '0px'});
           }
-        } else if (scrollTop < tagbarTop) {
-          $toc.offset({'left': -tocWidth});
-        }
+          if (scrollTop < contentTop && $toc.css('position') != 'absolute'){
+            $toc.css({'position': 'absolute', 'top': 'auto'});
+          }
+          if (scrollTop > tagbarTop) {
+            var leftOffset = tocWidth - (scrollTop - tagbarTop) * scrollRatio;
+            if (scrollTop < (tagbarTop + tagbarHeight)) {
+              $toc.offset({'left': -(leftOffset)});
+            } else if ($toc.offset().left < 0) {
+              $toc.offset({'left': 0});
+            }
+          } else if (scrollTop < tagbarTop) {
+            $toc.offset({'left': -tocWidth});
+          }
 
-        // Download pinning
-        //if (scrollTop > downloadBarTop && $downloadBar.css('position') != 'fixed'){
-        //  $downloadBar.css({'position': 'fixed', 'top': '0px'});
-        //}
-        //if (scrollTop < downloadBarTop && $downloadBar.css('position') != 'static'){
-        //  $downloadBar.css({'position': 'static', 'top': 'auto'});
-        //}
-      });
+          // Download pinning
+          //if (scrollTop > downloadBarTop && $downloadBar.css('position') != 'fixed'){
+          //  $downloadBar.css({'position': 'fixed', 'top': '0px'});
+          //}
+          //if (scrollTop < downloadBarTop && $downloadBar.css('position') != 'static'){
+          //  $downloadBar.css({'position': 'static', 'top': 'auto'});
+          //}
+        })
+        .load(function() {
+          loadMountains();
+        });
     </script>
+    {% include get_downloads.html %}
     {% include analytics.html %}
     {% include share.html %}
   </head>
   <body>
     <div id='topbar'>
       <div class='contained'>
-        <span id='supported-by'>
+        <ul id='right-nav'>
+          <li><a href="/">Open Source Projects</a></li>
+          <li><a href="http://www.alfajango.com/blog">Blog</a></li>
+        </ul>
+        <div id='supported-by'>
           built and supported by
           <a href="http://www.alfajango.com">
-            <img src='/images/alfa-jango-logo.png' id='aj-logo' />
+            <img src='/images/alfa-jango-logo.png' id='supported-by-aj-logo' />
           </a>
         </div>
       </div>
-      <br class='clear' />
     </div>
     <div id='splashbar'>
       <div class='contained'>
-        <div id='title-and-share'>
+        <div class="splash-left">
+          <img id="plugin-graphic" src="/images/dynatable.png" />
+        </div>
+        <div class="splash-right">
           <div id='share-container'>
-            <div id="shareme" data-url="http://os.alfajango.com{{ page.url }}" data-text="{{ page.title }}" data-title="share this page <img src='/images/share-buttons.png' />"></div>
+            <div id="shareme" data-url="http://os.alfajango.com{{ page.url }}" data-text="{{ page.title }}" data-title="<span>share this:</span> <img src='/images/dynatable-share.png' />"></div>
+          </div>
+          <iframe class="github-button" src="http://ghbtns.com/github-btn.html?user=JangoSteve&repo=jquery-dynatable&type=watch&count=true" allowtransparency="true" frameborder="0" scrolling="0" width="110" height="20"></iframe>
+          <iframe class="github-button" src="http://ghbtns.com/github-btn.html?user=JangoSteve&repo=jquery-dynatable&type=fork&count=true" allowtransparency="true" frameborder="0" scrolling="0" width="110" height="20"></iframe>
+          <h1 id="title">{{ page.heading }}</h1>
+          {% if page.tagline %}
+            <div id="tagline">{{ page.tagline }}</div>
+          {% endif %}
+          {% if page.second_heading %}
+            <h2>{{ page.second_heading }}</h2>
+          {% endif %}
+          {% if page.description %}
+            <p id="description">{{ page.description }}</p>
+          {% endif %}
+          <div id="download">
+            {% if page.download %}
+            <a class='btn btn-success large-button' id='download-button' href='{{ page.download.href }}'><img src='/images/wooden-box.png' /> {{page.download.title}}</a>
+            {% endif %}
+            {% if page.github %}
+            <a class='btn large-button' id='github-button' href='{{ page.github.href }}'><img src='/images/github-icon.png' /> {{page.github.title}}</a>
+            {% endif %}
           </div>
         </div>
-        <h1>{{ page.heading }}</h1>
       </div>
     </div>
     <div id='tagbar' {% if page.url == '/index.html' %} class='homepage' {% endif %}>
       <div class='contained'>
-              {% if page.twitter %}
-              <div id='twitter-button-container'>
-                <a id="twitter-button" href="https://twitter.com/{{ page.twitter.user }}" class="twitter-follow-button" data-show-count="false" data-size="large">{{ twitter.title }}</a>
-              </div>
-              {% endif %}
-        {% if page.tagline %}
-          <span class="tagline">{{ page.tagline }}</span>
-        {% endif %}
-        {% if page.second_heading %}
-          <h2>{{ page.second_heading }}</h2>
-        {% endif %}
-        {% if page.description %}
-          <p class="description">{{ page.description }}</p>
-        {% endif %}
-      </div>
-      <div id="download-and-share-placeholder">
-        <div id="download-and-share-container">
-          <div class='contained'>
-            <div id="download-and-share">
-              {% if page.download %}
-              <a class='btn btn-success large-button' id='download-button' href='{{ page.download.href }}'><img src='/images/wooden-box.png' /> {{page.download.title}}</a>
-              {% endif %}
-              {% if page.github %}
-              <a class='btn large-button' id='github-button' href='{{ page.github.href }}'><img src='/images/github-icon.png' /> {{page.github.title}}</a>
-              {% endif %}
-            </div>
-          </div>
+        {% if page.twitter %}
+        <div id='twitter-button-container'>
+          <a id="twitter-button" href="https://twitter.com/{{ page.twitter.user }}" class="twitter-follow-button" data-show-count="false" data-size="large">{{ twitter.title }}</a>
         </div>
+        {% endif %}
+        {% if page.download and page.download.data %}
+        <div id="download-count" data-{{ page.download.type }}="{{ page.download.data }}"></div>
+        {% endif %}
       </div>
     </div>
     <div id='content' class='contained'>

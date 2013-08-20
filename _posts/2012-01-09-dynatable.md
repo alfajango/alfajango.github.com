@@ -1,15 +1,17 @@
 ---
 layout: dynatable
 title: jQuery Dynatable Plugin
-heading: Dynatable
+heading: Dyna<span>table</span>
 tagline: HTML5+JSON interactive table plugin.
 description: Dynatable is a funner, semantic, interactive table plugin
   using jQuery, HTML5, and JSON.
 download:
   title: Download
   href: http://jspkg.com/packages/dynatable
+  data: dynatable
+  type: jspkg
 github:
-  title: Fork on Github
+  title: View Source
   href: https://github.com/JangoSteve/jquery-dynatable
 links:
   - title: Report bug or request feature
@@ -1427,7 +1429,7 @@ which data in the JSON:
 dynatable how to write the JSON records back to the page, but we'll get
 to that in the Render section.*
 
-<div class="alert-message block-message">
+<div class="alert alert-block">
 In the parlance of dynatable, "filtering" refers to the transformation
 of data during the rendering step. I.e. the JSON data is filtered into
 DOM text. The initial normalization step from the DOM into JSON data is
@@ -2133,7 +2135,7 @@ If the resulting dataset for a given operation is too large for the
 pushState cache, then dynatable will automatically fallback to
 re-running the operations or re-sending the AJAX request to the server.
 
-<div class="alert-message block-message">
+<div class="alert alert-block">
   PushState works in <a href="http://caniuse.com/#search=pushstate"
 target=_blank>all modern browsers that support it</a>. For other
 browsers (IE9 or earlier), a pushState polyfill such as

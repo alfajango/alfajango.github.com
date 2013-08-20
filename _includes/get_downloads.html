@@ -41,13 +41,17 @@
             label = 'downloads';
         };
 
-        $this
-          .tooltip({
-            title: addCommas(resultJSON[project][service][number]) + ' ' + label,
-            placement: 'left',
-            trigger: 'manual'
-          })
-          .tooltip('show');
+        if (this.id === "download-count") {
+          $this.html(addCommas(resultJSON[project][service][number]) + ' <span>' + label + '</span>');
+        } else {
+          $this
+            .tooltip({
+              title: addCommas(resultJSON[project][service][number]) + ' ' + label,
+              placement: 'left',
+              trigger: 'manual'
+            })
+            .tooltip('show');
+        }
       });
     });
 
