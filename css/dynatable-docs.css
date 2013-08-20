@@ -62,15 +62,24 @@ ul {
 .splash-right {
   width: 45%;
 }
+#share-container, .github-button {
+  padding-top: 28px;
+}
+#share-container {
+  margin-left: 5%;
+}
 #shareme .box {
   margin-left: 0;
+}
+#shareme .buttons {
+  top: 17px;
 }
 #shareme .share {
   margin-left: 0;
 }
 #shareme .share span {
   font-size: 16px;
-  color: #6cc4bb;
+  color: #2c393e;
   margin-right: 10px;
   line-height: 25px;
 }

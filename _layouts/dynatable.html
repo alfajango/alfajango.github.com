@@ -140,11 +140,6 @@
           <img id="plugin-graphic" src="/images/dynatable.png" />
         </div>
         <div class="splash-right">
-          <div id='share-container'>
-            <div id="shareme" data-url="http://os.alfajango.com{{ page.url }}" data-text="{{ page.title }}" data-title="<span>share this:</span> <img src='/images/dynatable-share.png' />"></div>
-          </div>
-          <iframe class="github-button" src="http://ghbtns.com/github-btn.html?user=JangoSteve&repo=jquery-dynatable&type=watch&count=true" allowtransparency="true" frameborder="0" scrolling="0" width="110" height="20"></iframe>
-          <iframe class="github-button" src="http://ghbtns.com/github-btn.html?user=JangoSteve&repo=jquery-dynatable&type=fork&count=true" allowtransparency="true" frameborder="0" scrolling="0" width="110" height="20"></iframe>
           <h1 id="title">{{ page.heading }}</h1>
           {% if page.tagline %}
             <div id="tagline">{{ page.tagline }}</div>
@@ -168,6 +163,11 @@
     </div>
     <div id='tagbar' {% if page.url == '/index.html' %} class='homepage' {% endif %}>
       <div class='contained'>
+        <div id='share-container'>
+          <div id="shareme" data-url="http://os.alfajango.com{{ page.url }}" data-text="{{ page.title }}" data-title="<span>share this:</span> <img src='/images/dynatable-share-white.png' />"></div>
+        </div>
+        <iframe class="github-button" src="http://ghbtns.com/github-btn.html?user=JangoSteve&repo=jquery-dynatable&type=watch&count=true" allowtransparency="true" frameborder="0" scrolling="0" width="110" height="20"></iframe>
+        <iframe class="github-button" src="http://ghbtns.com/github-btn.html?user=JangoSteve&repo=jquery-dynatable&type=fork&count=true" allowtransparency="true" frameborder="0" scrolling="0" width="110" height="20"></iframe>
         {% if page.twitter %}
         <div id='twitter-button-container'>
           <a id="twitter-button" href="https://twitter.com/{{ page.twitter.user }}" class="twitter-follow-button" data-show-count="false" data-size="large">{{ twitter.title }}</a>
