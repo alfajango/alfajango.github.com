@@ -1365,6 +1365,11 @@ skip the initial record normalization by setting up an empty table for
 rendering and directly passing our data into dynatable:
 
 <div class="side-by-side left">
+
+<p>
+HTML table to render records:
+</p>
+
 {% highlight html %}
 <table id="my-final-table">
   <thead>
@@ -1375,11 +1380,23 @@ rendering and directly passing our data into dynatable:
   </tbody>
 </table>
 {% endhighlight %}
+
+<div class="alert alert-block">
+Of course we could just code the json data directly in our JavaScript on
+the right, but what's the fun in that?
+As a bonus, edit the JSON data to the right and watch the data in the table
+update in real-time. &#8594;
+</div>
+
 </div>
 
 <div class="side-by-side right">
-{% highlight js %}
-var myRecords = [
+<p>
+This is a <code>pre#json-records</code> element:
+</p>
+
+<pre id="json-records" contenteditable>
+[
   {
     "band": "Weezer",
     "song": "El Scorcho"
@@ -1388,7 +1405,11 @@ var myRecords = [
     "band": "Chevelle",
     "song": "Family System"
   }
-];
+]
+</pre>
+{% highlight js %}
+var $records = $('#json-records'),
+    myRecords = JSON.parse($records.text());
 $('#my-final-table').dynatable({
   dataset: {
     records: myRecords
@@ -1408,21 +1429,27 @@ $('#my-final-table').dynatable({
 </table>
 
 <script>
-var myRecords = [
-  {
-    "band": "Weezer",
-    "song": "El Scorcho"
-  },
-  {
-    "band": "Chevelle",
-    "song": "Family System"
-  }
-];
-$('#my-final-table').dynatable({
-  dataset: {
-    records: myRecords
-  }
-});
+(function() {
+  var $records = $('#json-records'),
+      myRecords = JSON.parse($records.text());
+  var dynatable = $('#my-final-table').dynatable({
+    dataset: {
+      records: myRecords
+    }
+  }).data('dynatable');
+
+  $records.bind('input', function() {
+    try {
+      var json = JSON.parse($(this).text());
+      $records.removeClass('error');
+
+      dynatable.settings.dataset.originalRecords = json;
+      dynatable.process();
+    } catch(e) {
+      $records.addClass('error');
+    }
+  });
+})();
 </script>
 
 ### JSON from AJAX
@@ -1454,6 +1481,8 @@ $('#my-ajax-table').dynatable({
 {% endhighlight %}
 </div>
 <br class="clear" />
+
+[View AJAX data](/dynatable-ajax.json)
 
 <table id="my-ajax-table" class="table table-bordered">
   <thead>
