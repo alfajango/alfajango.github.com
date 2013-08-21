@@ -1479,10 +1479,13 @@ $('#my-ajax-table').dynatable({
   }
 });
 {% endhighlight %}
+
+<p>
+<a href="/dynatable-ajax.json">View AJAX data</a>
+</p>
+
 </div>
 <br class="clear" />
-
-[View AJAX data](/dynatable-ajax.json)
 
 <table id="my-ajax-table" class="table table-bordered">
   <thead>
@@ -2732,6 +2735,10 @@ The confiuration options (with default values) for dynatable are:
   }
 }
 {% endhighlight %}
+
+## Events
+
+
 
 ## API
 
