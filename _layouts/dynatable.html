@@ -8,6 +8,7 @@
     <link rel="stylesheet" media="all" href="/css/project.css" />
     <link rel="stylesheet" media="all" href="/css/pygments.css" />
     <link rel="stylesheet" media="all" href="/css/share.css" />
+    <link href='http://fonts.googleapis.com/css?family=Nunito:300' rel='stylesheet' type='text/css'>
     <link href="http://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet" type="text/css">
     <link rel="stylesheet" media="all" href="/css/dynatable-docs.css" />
     <script type='text/javascript' src='/js/jquery-1.9.1.min.js'></script>
@@ -138,9 +139,6 @@
     </div>
     <div id='splashbar'>
       <div class='contained'>
-        <div class="splash-left">
-          <img id="plugin-graphic" src="/images/dynatable.png" />
-        </div>
         <div class="splash-right">
           <h1 id="title">{{ page.heading }}</h1>
           {% if page.tagline %}
@@ -160,6 +158,9 @@
             <a class='btn large-button' id='github-button' href='{{ page.github.href }}'><img src='/images/github-icon.png' /> {{page.github.title}}</a>
             {% endif %}
           </div>
+        </div>
+        <div class="splash-left">
+          <img id="plugin-graphic" src="/images/dynatable.png" />
         </div>
       </div>
     </div>
