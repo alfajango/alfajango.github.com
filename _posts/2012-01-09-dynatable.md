@@ -2729,8 +2729,54 @@ The confiuration options (with default values) for dynatable are:
 }
 {% endhighlight %}
 
-## Events
+## Event Hooks
 
+<table class="table table-bordered">
+  <thead>
+    <tr>
+      <th>Event</th>
+      <th>Description</th>
+      <th>Parameters</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>dynatable:init</cod></td>
+      <td>Run after dynatable is initialized and setup, right before the initial <code>process()</code> is run.</td>
+      <td><code>dynatable</code> (attached dynatable instance object)</td>
+    </tr>
+    <tr>
+      <td><code>dynatable:beforeProcess</cod></td>
+      <td>Run at the beginning of <code>process()</code>.</td>
+      <td><code>data</code> (the data object containing the settings and records for the <code>process()</code> function)</td>
+    </tr>
+    <tr>
+      <td><code>dynatable:ajax:success</cod></td>
+      <td>Run only if the dynatable instance has <code>dataset.ajax=true</code>, when the AJAX request returns successfully during the <code>process()</code> function.</td>
+      <td><code>response</code> (the jqXhr response object)</td>
+    </tr>
+    <tr>
+      <td><code>dynatable:afterProcess</cod></td>
+      <td>Run at the end of the <code>process()</code> function.</td>
+      <td><code>data</code> (the data object containing the settings and records for the <code>process()</code> function)</td>
+    </tr>
+    <tr>
+      <td><code>dynatable:beforeUpdate</cod></td>
+      <td>Run right before the DOM is updated with the current record set.</td>
+      <td><code>$rows</code> (the set of DOM rows about to be written to the DOM)</td>
+    </tr>
+    <tr>
+      <td><code>dynatable:afterUpdate</cod></td>
+      <td>Run right after the DOM is updated with the current record set.</td>
+      <td><code>$rows</code> (the set of DOM rows just written to the DOM)</td>
+    </tr>
+    <tr>
+      <td><code>dynatable:push</cod></td>
+      <td>Run when pushState data is pushed to the window.</td>
+      <td><code>data</code> (the data object containing the settings and records to be cached in the pushState cache)</td>
+    </tr>
+  </tbody>
+</table>
 
 
 ## API
