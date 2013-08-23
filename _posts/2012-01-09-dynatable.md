@@ -1515,16 +1515,16 @@ We can use the `table`
 settings to configure such awesomeness. We'll use the
 `table.bodyRowSelector` setting to tell dynatable to use `li` elements
 as record rows instead of the default `tr` elements, and we'll use the
-`table.rowFilter` setting to tell dynatable how to process each `li`
+`filters._rowFilter` setting to tell dynatable how to process each `li`
 into a JSON record object.
 
-Dynatable will call the `table.rowUnfilter`
+Dynatable will call the `unfilters._rowUnfilter`
 function once for each record in the `table.bodyRowSelector` collection,
 and pass it the current count index, the DOM element, and the JSON
 record. This allows full control over which data in the DOM maps to
 which data in the JSON:
 
-*NOTE: We'll also need a `table.rowUnfilter` function to tell
+*NOTE: We'll also need a `unfilters._rowUnfilter` function to tell
 dynatable how to write the JSON records back to the page, but we'll get
 to that in the Render section.*
 
@@ -1759,8 +1759,8 @@ $('#sorting-function-example')
       }
     },
     // Just a little extra flair for styling the table
-    table: {
-      cellFilter: function(html) {
+    filters: {
+      _cellFilter: function(html) {
         return $('<td></td>', {
           html: html,
           style: "color: " + html
@@ -1822,8 +1822,8 @@ $('#sorting-function-example')
           color: 'rgb'
         }
       },
-      table: {
-        cellFilter: function(html) {
+      filters: {
+        _cellFilter: function(html) {
           return $('<td></td>', {
             html: html,
             style: "color: " + html
@@ -2439,10 +2439,10 @@ dynatable assumes we're rendering to an HTML table, so our
 `table.bodyRowSelector` is `'tbody tr'`.
 
 To render our records, dynatable will loop through our records, running
-`table.rowFilter` on each record to create a collection of DOM elements.
-The default `table.rowFilter` creates a table `tr` element and loops
+`filters._rowFilter` on each record to create a collection of DOM elements.
+The default `filters._rowFilter` creates a table `tr` element and loops
 through the element attributes (matching our columns) to call
-`table.cellFilter` on each.
+`filters._cellFilter` on each.
 
 If our container element is a `ul`, we could customize our rowFilter as
 follows:
@@ -2487,13 +2487,17 @@ function ulUnFilter(index, li, record) {
 
 $('#ul-example').dynatable({
   table: {
-    bodyRowSelector: 'li',
-    rowFilter: ulFilter,
-    rowUnfilter: ulUnFilter
+    bodyRowSelector: 'li'
   },
   dataset: {
     perPageDefault: 3,
     perPageOptions: [3, 6]
+  },
+  filters: {
+    _rowFilter: ulFilter
+  },
+  unfilters: {
+    _rowUnfilter: ulUnFilter
   },
   params: {
     records: 'kittens'
@@ -2501,9 +2505,9 @@ $('#ul-example').dynatable({
 });
 {% endhighlight %}
 
-We could have defined our own `table.cellFilter` as well, defining a
+We could have defined our own `filters._cellFilter` as well, defining a
 custom function for rendering each attribute within the row, but we opted
-to skip it entirely and to just do everything in the `table.rowFilter`.
+to skip it entirely and to just do everything in the `filters._rowFilter`.
 
 <div class="dynatable-demo">
   <ul id="ul-example" class="row-fluid">
@@ -2605,13 +2609,17 @@ to skip it entirely and to just do everything in the `table.rowFilter`.
 
   $('#ul-example').dynatable({
     table: {
-      bodyRowSelector: 'li',
-      rowFilter: ulFilter,
-      rowUnfilter: ulUnFilter
+      bodyRowSelector: 'li'
     },
     dataset: {
       perPageDefault: 3,
       perPageOptions: [3, 6]
+    },
+    filters: {
+      _rowFilter: ulFilter
+    },
+    unfilters: {
+      _rowUnfilter: ulUnFilter
     },
     params: {
       records: 'kittens'
@@ -2654,31 +2662,7 @@ The confiuration options (with default values) for dynatable are:
     columns: null,
     headRowSelector: 'thead tr', // or e.g. tr:first-child
     bodyRowSelector: 'tbody tr',
-    headRowClass: null,
-    rowFilter: function(rowIndex, record, columns, cellFilter) {
-      var $tr = $('<tr></tr>');
-
-      // grab the record's attribute for each column
-      $.each(columns, function(colIndex, column) {
-        var html = column.dataFilter(record),
-        $td = cellFilter(html);
-
-        if (column.hidden) {
-          $td.hide();
-        }
-        if (column.textAlign) {
-          $td.css('text-align', column.textAlign);
-        }
-        $tr.append($td);
-      });
-
-      return $tr;
-    },
-    cellFilter: function(html) {
-      return $('<td></td>', {
-        html: html
-      });
-    }
+    headRowClass: null
   },
   inputs: {
     queries: null,
@@ -2719,8 +2703,17 @@ The confiuration options (with default values) for dynatable are:
     sortTypes: {},
     records: null
   },
-  filters: {},
-  unfilters: {},
+  // Built-in filter functions
+  filters: {
+    _rowFilter: defaultRowFilter,
+    _cellFilter: defaultCellFilter,
+    _attributeFilter: defaultAttributeFilter
+  },
+  // Built-in unfilter functions
+  unfilters: {
+    _rowUnfilter: null,
+    _attributeUnfilter: defaultAttributeUnfilter
+  },
   params: {
     dynatable: 'dynatable',
     queries: 'queries',

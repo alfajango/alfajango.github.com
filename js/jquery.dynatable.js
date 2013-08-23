@@ -17,10 +17,29 @@
       dt,
       Model,
       models = {},
+      modelPrototypes = {
+        dom: Dom,
+        domColumns: DomColumns,
+        records: Records,
+        recordsCount: RecordsCount,
+        processingIndicator: ProcessingIndicator,
+        state: State,
+        sorts: Sorts,
+        sortsHeaders: SortsHeaders,
+        queries: Queries,
+        inputsSearch: InputsSearch,
+        paginationPage: PaginationPage,
+        paginationPerPage: PaginationPerPage,
+        paginationLinks: PaginationLinks
+      },
       utility,
       build,
       processAll,
-      initModel;
+      initModel,
+      defaultRowFilter,
+      defaultCellFilter,
+      defaultAttributeFilter,
+      defaultAttributeUnfilter;
 
   //-----------------------------------------------------------------
   // Cached plugin global defaults
@@ -40,32 +59,7 @@
       columns: null,
       headRowSelector: 'thead tr', // or e.g. tr:first-child
       bodyRowSelector: 'tbody tr',
-      headRowClass: null,
-      rowFilter: function(rowIndex, record, columns, cellFilter) {
-        var $tr = $('<tr></tr>');
-
-        // grab the record's attribute for each column
-        for (var i = 0, len = columns.length; i < len; i++) {
-          var column = columns[i],
-              html = column.dataFilter(record),
-          $td = cellFilter(html);
-
-          if (column.hidden) {
-            $td.hide();
-          }
-          if (column.textAlign) {
-            $td.css('text-align', column.textAlign);
-          }
-          $tr.append($td);
-        }
-
-        return $tr;
-      },
-      cellFilter: function(html) {
-        return $('<td></td>', {
-          html: html
-        });
-      }
+      headRowClass: null
     },
     inputs: {
       queries: null,
@@ -106,8 +100,15 @@
       sortTypes: {},
       records: null
     },
-    filters: {},
-    unfilters: {},
+    filters: {
+      _rowFilter: defaultRowFilter,
+      _cellFilter: defaultCellFilter,
+      _attributeFilter: defaultAttributeFilter
+    },
+    unfilters: {
+      _rowUnfilter: null,
+      _attributeUnfilter: defaultAttributeUnfilter
+    },
     params: {
       dynatable: 'dynatable',
       queries: 'queries',
@@ -269,6 +270,43 @@
     this.$element.trigger('dynatable:afterProcess', data);
   };
 
+  function defaultRowFilter(rowIndex, record, columns, cellFilter) {
+    var $tr = $('<tr></tr>');
+
+    // grab the record's attribute for each column
+    for (var i = 0, len = columns.length; i < len; i++) {
+      var column = columns[i],
+      html = column.dataFilter(record),
+      $td = cellFilter(html);
+
+      if (column.hidden) {
+        $td.hide();
+      }
+      if (column.textAlign) {
+        $td.css('text-align', column.textAlign);
+      }
+      $tr.append($td);
+    }
+
+    return $tr;
+  };
+
+  function defaultCellFilter(html) {
+    return $('<td></td>', {
+      html: html
+    });
+  };
+
+  function defaultAttributeFilter(record) {
+    // `this` is the column object in this.obj.settings.columns
+    // TODO: automatically convert common types, such as arrays and objects, to string
+    return record[this.id];
+  };
+
+  function defaultAttributeUnfilter(cell, record) {
+    return $(cell).html();
+  };
+
   //-----------------------------------------------------------------
   // Dynatable object model prototype
   // (all object models get these default functions)
@@ -296,11 +334,18 @@
     init: function() {}
   };
 
+  for (model in modelPrototypes) {
+    if (modelPrototypes.hasOwnProperty(model)) {
+      var modelPrototype = modelPrototypes[model];
+      modelPrototype.prototype = Model;
+      models[model] = modelPrototype;
+    }
+  }
+
   //-----------------------------------------------------------------
   // Dynatable object models
   //-----------------------------------------------------------------
 
-  Dom.prototype = Model;
   function Dom() {
     // update table contents with new records array
     // from query (whether ajax or not)
@@ -308,8 +353,8 @@
       var _this = this,
           $rows = $(),
           columns = this.obj.settings.table.columns,
-          rowFilter = this.obj.settings.table.rowFilter,
-          cellFilter = this.obj.settings.table.cellFilter;
+          rowFilter = this.obj.settings.filters._rowFilter,
+          cellFilter = this.obj.settings.filters._cellFilter;
 
       this.obj.$element.trigger('dynatable:beforeUpdate', $rows);
 
@@ -365,9 +410,7 @@
       this.obj.$element.trigger('dynatable:afterUpdate', $rows);
     };
   };
-  models.dom = Dom;
 
-  DomColumns.prototype = Model;
   function DomColumns() {
     this.initOnLoad = function() {
       return this.obj.$element.is('table');
@@ -405,8 +448,8 @@
         index: position,
         label: label,
         id: id,
-        dataFilter: this.obj.settings.filters[id] || this.defaultFilter,
-        dataUnfilter: this.obj.settings.unfilters[id] || this.defaultUnfilter,
+        dataFilter: this.obj.settings.filters[id] || this.obj.settings.filters._attributeFilter,
+        dataUnfilter: this.obj.settings.unfilters[id] || this.obj.settings.unfilters._attributeUnfilter,
         sorts: sorts,
         hidden: $column.css('display') === 'none',
         textAlign: $column.css('text-align')
@@ -484,14 +527,6 @@
         adjustColumns[i].index -= 1;
       }
     };
-    this.defaultFilter = function(record) {
-      // `this` is the column object in this.obj.settings.columns
-      // TODO: automatically convert common types, such as arrays and objects, to string
-      return record[this.id];
-    };
-    this.defaultUnfilter = function(cell, record) {
-      return $(cell).html();
-    };
     this.generate = function($cell) {
       var cell = $cell === undefined ? $('<th></th>') : $cell;
       return this.attachGeneratedAttributes(cell);
@@ -506,9 +541,7 @@
         .attr('data-dynatable-generated', increment);
     };
   };
-  models.domColumns = DomColumns;
 
-  Records.prototype = Model;
   function Records() {
     this.initOnLoad = function() {
       return !this.obj.settings.dataset.ajax;
@@ -631,8 +664,8 @@
         });
         // Allow configuration function which alters record based on attributes of
         // table row (e.g. from html5 data- attributes)
-        if (typeof(_this.obj.settings.table.rowUnfilter) === "function") {
-          _this.obj.settings.table.rowUnfilter(index, this, record);
+        if (typeof(_this.obj.settings.unfilters._rowUnfilter) === "function") {
+          _this.obj.settings.unfilters._rowUnfilter(index, this, record);
         }
         records.push(record);
       });
@@ -643,9 +676,7 @@
       return this.obj.settings.dataset.records.length;
     };
   };
-  models.records = Records;
 
-  RecordsCount.prototype = Model;
   function RecordsCount() {
     this.initOnLoad = function() {
       return this.obj.settings.features.recordCount;
@@ -682,9 +713,7 @@
       $target[this.obj.settings.inputs.recordCountPlacement](this.create());
     };
   };
-  models.recordsCount = RecordsCount;
 
-  ProcessingIndicator.prototype = Model;
   function ProcessingIndicator() {
     this.init = function() {
       this.attach();
@@ -728,9 +757,7 @@
       $('#dynatable-processing-' + this.obj.element.id).hide();
     };
   };
-  models.processingIndicator = ProcessingIndicator;
 
-  State.prototype = Model;
   function State() {
     this.initOnLoad = function() {
       // Check if pushState option is true, and if browser supports it
@@ -793,9 +820,7 @@
       }
     };
   };
-  models.state = State;
 
-  Sorts.prototype = Model;
   function Sorts() {
     this.initOnLoad = function() {
       return this.obj.settings.features.sort;
@@ -858,9 +883,7 @@
       }
     };
   };
-  models.sorts = Sorts;
 
-  SortsHeaders.prototype = Model;
   // turn table headers into links which add sort to sorts array
   function SortsHeaders() {
     this.initOnLoad = function() {
@@ -964,9 +987,7 @@
       return this.obj.settings.dataset.sorts[column.sorts[0]];
     };
   };
-  models.sortsHeaders = SortsHeaders;
 
-  Queries.prototype = Model;
   function Queries() {
   // For ajax, to add a query, just do
     this.initOnLoad = function() {
@@ -1085,9 +1106,7 @@
       }
     };
   };
-  models.queries = Queries;
 
-  InputsSearch.prototype = Model;
   function InputsSearch() {
     this.initOnLoad = function() {
       return this.obj.settings.features.search;
@@ -1125,9 +1144,7 @@
       $target[this.obj.settings.inputs.searchPlacement](this.create());
     };
   };
-  models.inputsSearch = InputsSearch;
 
-  PaginationPage.prototype = Model;
   function PaginationPage() {
   // provide a public function for selecting page
     this.initOnLoad = function() {
@@ -1141,9 +1158,7 @@
       this.obj.settings.dataset.page = parseInt(page, 10);
     }
   };
-  models.paginationPage = PaginationPage;
 
-  PaginationPerPage.prototype = Model;
   function PaginationPerPage() {
     this.initOnLoad = function() {
       return this.obj.settings.features.paginate;
@@ -1192,9 +1207,7 @@
       this.obj.settings.dataset.perPage = parseInt(number);
     };
   };
-  models.paginationPerPage = PaginationPerPage;
 
-  PaginationLinks.prototype = Model;
   function PaginationLinks() {
   // pagination links which update dataset.page attribute
     this.initOnLoad = function() {
@@ -1294,7 +1307,6 @@
       $target[this.obj.settings.inputs.paginationLinkPlacement](this.obj.paginationLinks.create());
     };
   };
-  models.paginationLinks = PaginationLinks;
 
   utility = {
     normalizeText: function(text, style) {
