@@ -2703,13 +2703,19 @@ The confiuration options (with default values) for dynatable are:
     sortTypes: {},
     records: null
   },
-  // Built-in filter functions
+  // Built-in filter functions,
+  // can be overwritten, any additional functions
+  // provided in filters will be merged with
+  // this default object.
   filters: {
     _rowFilter: defaultRowFilter,
     _cellFilter: defaultCellFilter,
     _attributeFilter: defaultAttributeFilter
   },
-  // Built-in unfilter functions
+  // Built-in unfilter functions,
+  // can be overwritten, any additional functions
+  // provided in unfilters will be merged with
+  // this default object.
   unfilters: {
     _rowUnfilter: null,
     _attributeUnfilter: defaultAttributeUnfilter
