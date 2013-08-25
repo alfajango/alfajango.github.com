@@ -1938,6 +1938,7 @@ you'd like to match, and the value is what we're matching.
 Below, we'll include the default text search, and
 additionally include our own "Year" filter.
 
+<div class="side-by-side left">
 {% highlight html %}
 <select id="search-year" name="year">
   <option></option>
@@ -1947,7 +1948,9 @@ additionally include our own "Year" filter.
   <option>2013</option>
 </select>
 {% endhighlight %}
+</div>
 
+<div class="side-by-side right">
 {% highlight js %}
 var dynatable = $('#search-example').dynatable({
   features: {
@@ -1967,6 +1970,8 @@ $('#search-year').change( function() {
   dynatable.process();
 });
 {% endhighlight %}
+</div>
+<br class="clear" />
 
 <div class="dynatable-demo">
 <div id="search-example-year-filter" style="float: left;">
@@ -2787,18 +2792,156 @@ The confiuration options (with default values) for dynatable are:
 
 ## API
 
-### Dom
+You can interface directly with the dynatable API for finer grained
+control and greater customization. The internal API is divided into
+namespaces. To use the API, just call the namespaced function on the
+dynatable object (stored in the `data['dynatable']` attribute of the
+element on which dynatable was called).
 
-### DomColumns
+{% highlight js %}
+var dynatable = $('#my-table').data('dynatable');
+{% endhighlight %}
 
-### Records
+For example, to update the dom with the current record set:
 
-### RecordsCount
+{% highlight js %}
+dynatable.dom.update();
+{% endhighlight %}
 
-### Queries
+<div class="alert alert-block">
+Since dynatable is still pre-version-one, the API is still in flux and
+may change. Below is a list of the current API functions and arguments
+(if any).
+</div>
 
-### Sorts
+### dom
 
-### SortsHeaders
+update
 
-### InputSearch
+### domColumns
+
+getFromTable
+
+add [$column, position, skipAppend, skipUpdate]
+
+remove [columnIndexOrId]
+
+removeFromTable [columnId]
+
+removeFromArray [index]
+
+generate [$cell]
+
+attachGeneratedAttributes
+
+### records
+
+updateFromJson [data]
+
+sort
+
+paginate
+
+resetOriginal
+
+pageBounds
+
+getFromTable
+
+count
+
+### recordsCount
+
+create
+
+attach
+
+### processingIndicator
+
+create
+
+position
+
+attach
+
+show
+
+hide
+
+### state
+
+push [data]
+
+pop [event]
+
+### sorts
+
+add [attr, direction]
+
+remove [attr]
+
+clear
+
+guessType [a, b, attr]
+
+functions (object)
+
+### sortsHeaders
+
+create [cell]
+
+attach
+
+attachOne [cell]
+
+appendArrowUp [$link]
+
+appendArrorDown [$link]
+
+removeArrow [$link]
+
+removeAllArrows
+
+toggleSort [event, $link, column]
+
+sortedByColumn [$link, column]
+
+sortedByColumnValue [column]
+
+### queries
+
+add [name, value]
+
+remove [name]
+
+run
+
+runSearch [query]
+
+setupInputs
+
+functions (object)
+
+### inputSearch
+
+create
+
+attach
+
+### paginationPage
+
+set [page]
+
+### paginationPerPage
+
+create
+
+attach
+
+set [number]
+
+### paginationLinks
+
+create
+
+attach
