@@ -1170,12 +1170,12 @@ $('#my-table').dynatable();
     features: {
       pushState: true
     },
-    unfilters: {
+    readers: {
       'us-$': function(el, record) {
         return Number(el.innerHTML.replace(/,/g, ''));
       }
     },
-    filters: {
+    writers: {
       'us-$': function(record) {
         return record['us-$'].toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
       }
@@ -1515,28 +1515,18 @@ We can use the `table`
 settings to configure such awesomeness. We'll use the
 `table.bodyRowSelector` setting to tell dynatable to use `li` elements
 as record rows instead of the default `tr` elements, and we'll use the
-`filters._rowFilter` setting to tell dynatable how to process each `li`
+`writers._rowWriter` setting to tell dynatable how to process each `li`
 into a JSON record object.
 
-Dynatable will call the `unfilters._rowUnfilter`
+Dynatable will call the `readers._rowReader`
 function once for each record in the `table.bodyRowSelector` collection,
 and pass it the current count index, the DOM element, and the JSON
 record. This allows full control over which data in the DOM maps to
 which data in the JSON:
 
-*NOTE: We'll also need a `unfilters._rowUnfilter` function to tell
+*NOTE: We'll also need a `readers._rowReader` function to tell
 dynatable how to write the JSON records back to the page, but we'll get
 to that in the Render section.*
-
-<div class="alert alert-block">
-In the parlance of dynatable, "filtering" refers to the transformation
-of data during the rendering step. I.e. the JSON data is filtered into
-DOM text. The initial normalization step from the DOM into JSON data is
-therefore called "unfiltering". This may be confusing, as the
-terminology depends on our perspective. We may change these functions in
-a future version to "normalizations" vs. "renderers" instead of
-"unfilters" vs. "filters".
-</div>
 
 <div class="side-by-side left">
 <p>
@@ -1562,7 +1552,7 @@ The following:
 $('#my-list').dynatable({
   table: {
     bodyRowSelector: 'li',
-    rowUnfilter: function(index, li, record) {
+    rowReader: function(index, li, record) {
       var $li = $(li);
       record.name = $li.find('.name').text();
       record.type = $li.find('.type').text();
@@ -1681,12 +1671,12 @@ Hold shift and click a second row to add secondary sorting, and so on.
       search: false,
       recordCount: false
     },
-    unfilters: {
+    readers: {
       'price': function(el, record) {
         return Number(el.innerHTML.replace(/,/g, ''));
       }
     },
-    filters: {
+    writers: {
       'price': function(record) {
         return record.price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
       }
@@ -1695,8 +1685,8 @@ Hold shift and click a second row to add secondary sorting, and so on.
 </script>
 
 In the example above, we run the "Price" column values through an
-"unfilter" function which returns a JavaScript `Number` and parses out
-the comma seperator. Likewise, we then run it through a rendering filter
+"reader" function which returns a JavaScript `Number` and parses out
+the comma seperator. Likewise, we then run it through a rendering "writer" 
 which re-inserts the comma when rendering the number back to the DOM.
 
 Sometimes, we need one column to sort based on some other attribute.
@@ -1759,8 +1749,8 @@ $('#sorting-function-example')
       }
     },
     // Just a little extra flair for styling the table
-    filters: {
-      _cellFilter: function(html) {
+    writers: {
+      _cellWriter: function(html) {
         return $('<td></td>', {
           html: html,
           style: "color: " + html
@@ -1822,8 +1812,8 @@ $('#sorting-function-example')
           color: 'rgb'
         }
       },
-      filters: {
-        _cellFilter: function(html) {
+      writers: {
+        _cellWriter: function(html) {
           return $('<td></td>', {
             html: html,
             style: "color: " + html
@@ -2281,10 +2271,6 @@ indicator to the table to let users know something is happening. We can
 style this indicator however we want. By default, it's just the word
 "Processing..." overlaid in the center of the table.
 
-Below, we've created a custom sort function with a blocking alert the
-first time it runs, so
-that you can see the processing indicator in action.
-
 <div class="dynatable-demo">
 <table id="processing-indicator-example" class="table table-bordered">
   <thead>
@@ -2308,13 +2294,11 @@ that you can see the processing indicator in action.
 
 <script>
 (function() {
-  var shown = false;
   $('#processing-indicator-example')
     .bind('dynatable:init', function(e, dynatable) {
       dynatable.sorts.functions['long-sort'] = function(a, b, attr, ascending) {
-        if (!shown) {
-          alert('Do you see the processing indicator?');
-          shown = true;
+        for (var i=0; i < 10000; i++) {
+          // Woo!
         }
         return dynatable.sorts.functions.string(a, b, attr, ascending);
       };
@@ -2335,15 +2319,13 @@ that you can see the processing indicator in action.
 })();
 </script>
 
-Of course, we could have also just invoked the processing indicator
-manually (but then we wouldn't have had an excuse to include another
-example of a custom sort function).
-
 To show or hide the processing indicator, we can call the
 <code>dynatable.processingIndicator.show()</code> and
 <code>dynatable.processingIndicator.hide()</code> functions.
 
-<a href="#" class="btn primary" id="processing-indicator-example-button">Show Standard Processing Indicator</a>
+<a href="#" class="btn primary"
+id="processing-indicator-example-button">Show Standard Processing
+Indicator for 3 seconds</a>
 
 <script>
 (function() {
@@ -2358,7 +2340,7 @@ To show or hide the processing indicator, we can call the
 })();
 </script>
 
-We can configure the html content of the processing indicator (including
+We can customize the html content of the processing indicator (including
 images or gifs), using the <code>inputs.processingText</code>
 configuration.
 
@@ -2439,8 +2421,8 @@ $('#processing-indicator-nice-example').dynatable({
 ## Rendering
 
 When rendering JSON data to the page, dynatable passes data through
-filters (you may notice that this is the opposite of the normalization step
-which runs the DOM elements through "unfilters").
+"writers" (you may notice that this is the opposite of the normalization step
+which runs the DOM elements through "readers").
 
 When rendering (and normalizing), dynatable assumes that our container element (on which
 we called dynatable) contains elements matching
@@ -2449,12 +2431,12 @@ dynatable assumes we're rendering to an HTML table, so our
 `table.bodyRowSelector` is `'tbody tr'`.
 
 To render our records, dynatable will loop through our records, running
-`filters._rowFilter` on each record to create a collection of DOM elements.
-The default `filters._rowFilter` creates a table `tr` element and loops
+`writers._rowWriter` on each record to create a collection of DOM elements.
+The default `writers._rowWriter` creates a table `tr` element and loops
 through the element attributes (matching our columns) to call
-`filters._cellFilter` on each.
+`writers._cellWriter` on each.
 
-If our container element is a `ul`, we could customize our rowFilter as
+If our container element is a `ul`, we could customize our rowWriter as
 follows:
 
 {% highlight html %}
@@ -2477,7 +2459,7 @@ follows:
 
 {% highlight js %}
 // Function that renders the list items from our records
-function ulFilter(rowIndex, record, columns, cellFilter) {
+function ulWriter(rowIndex, record, columns, cellWriter) {
   var cssClass = "span4", li;
   if (rowIndex % 3 === 0) { cssClass += ' first'; }
   li = '<li class="' + cssClass + '"><div class="thumbnail"><div class="thumbnail-image">' + record.thumbnail + '</div><div class="caption">' + record.caption + '</div></div></li>';
@@ -2485,7 +2467,7 @@ function ulFilter(rowIndex, record, columns, cellFilter) {
 }
 
 // Function that creates our records from the DOM when the page is loaded
-function ulUnFilter(index, li, record) {
+function ulReader(index, li, record) {
   var $li = $(li),
       $caption = $li.find('.caption');
   record.thumbnail = $li.find('.thumbnail-image').html();
@@ -2503,11 +2485,11 @@ $('#ul-example').dynatable({
     perPageDefault: 3,
     perPageOptions: [3, 6]
   },
-  filters: {
-    _rowFilter: ulFilter
+  writers: {
+    _rowWriter: ulWriter
   },
-  unfilters: {
-    _rowUnfilter: ulUnFilter
+  readers: {
+    _rowReader: ulReader
   },
   params: {
     records: 'kittens'
@@ -2515,9 +2497,9 @@ $('#ul-example').dynatable({
 });
 {% endhighlight %}
 
-We could have defined our own `filters._cellFilter` as well, defining a
+We could have defined our own `writers._cellWriter` as well, defining a
 custom function for rendering each attribute within the row, but we opted
-to skip it entirely and to just do everything in the `filters._rowFilter`.
+to skip it entirely and to just do everything in the `writers._rowWriter`.
 
 <div class="dynatable-demo">
   <ul id="ul-example" class="row-fluid">
@@ -2599,7 +2581,7 @@ to skip it entirely and to just do everything in the `filters._rowFilter`.
 <script>
 (function() {
   // Function that renders the list items from our records
-  function ulFilter(rowIndex, record, columns, cellFilter) {
+  function ulWriter(rowIndex, record, columns, cellWriter) {
     var cssClass = "span4", li;
     if (rowIndex % 3 === 0) { cssClass += ' first'; }
     li = '<li class="' + cssClass + '"><div class="thumbnail"><div class="thumbnail-image">' + record.thumbnail + '</div><div class="caption">' + record.caption + '</div></div></li>';
@@ -2607,7 +2589,7 @@ to skip it entirely and to just do everything in the `filters._rowFilter`.
   }
 
   // Function that creates our records from the DOM when the page is loaded
-  function ulUnFilter(index, li, record) {
+  function ulReader(index, li, record) {
     var $li = $(li),
         $caption = $li.find('.caption');
     record.thumbnail = $li.find('.thumbnail-image').html();
@@ -2625,11 +2607,11 @@ to skip it entirely and to just do everything in the `filters._rowFilter`.
       perPageDefault: 3,
       perPageOptions: [3, 6]
     },
-    filters: {
-      _rowFilter: ulFilter
+    writers: {
+      _rowWriter: ulWriter
     },
-    unfilters: {
-      _rowUnfilter: ulUnFilter
+    readers: {
+      _rowReader: ulReader
     },
     params: {
       records: 'kittens'
@@ -2713,22 +2695,22 @@ The confiuration options (with default values) for dynatable are:
     sortTypes: {},
     records: null
   },
-  // Built-in filter functions,
+  // Built-in writer functions,
   // can be overwritten, any additional functions
-  // provided in filters will be merged with
+  // provided in writers will be merged with
   // this default object.
-  filters: {
-    _rowFilter: defaultRowFilter,
-    _cellFilter: defaultCellFilter,
-    _attributeFilter: defaultAttributeFilter
+  writers: {
+    _rowWriter: defaultRowWriter,
+    _cellWriter: defaultCellWriter,
+    _attributeWriter: defaultAttributeWriter
   },
-  // Built-in unfilter functions,
+  // Built-in reader functions,
   // can be overwritten, any additional functions
-  // provided in unfilters will be merged with
+  // provided in readers will be merged with
   // this default object.
-  unfilters: {
-    _rowUnfilter: null,
-    _attributeUnfilter: defaultAttributeUnfilter
+  readers: {
+    _rowReader: null,
+    _attributeReader: defaultAttributeReader
   },
   params: {
     dynatable: 'dynatable',
