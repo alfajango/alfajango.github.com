@@ -1,0 +1,13 @@
+#mobile-device {
+  background: url('/images/alfajango-iphone.png') no-repeat;
+  width: 390px;
+  height: 752px;
+}
+
+#content-frame {
+  width: 310px;
+  height: 524px;
+  position: relative;
+  left: 44px;
+  top: 110px;
+}

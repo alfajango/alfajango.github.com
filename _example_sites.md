@@ -32,6 +32,7 @@ Project pages:
   - http://fredhq.com/projects/roundabout/
   - http://ricostacruz.com/jquery.transit/
   - http://sailsjs.org/
+  - http://simplefocus.com/flowtype/
 
 Blogs:
 
