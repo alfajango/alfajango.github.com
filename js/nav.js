@@ -19,7 +19,7 @@ var navFadeOut = function($nav) {
   // parent nav div when hovering over a link in the nav.
   if (!fadingOut && $window.scrollTop() > $nav.height() && $nav.find(':hover').length === 0) {
     fadingOut = true;
-    $nav.stop(true, true).fadeTo(500, 0.5, function() {
+    $nav.stop(true, true).fadeTo(500, 0.75, function() {
       fadingOut = false;
     });
   }
