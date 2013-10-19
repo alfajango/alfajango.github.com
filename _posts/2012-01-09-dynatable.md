@@ -2439,7 +2439,126 @@ through the element attributes (matching our columns) to call
 
 ### A Stylized List
 
-If our container element is a `ul`, we could customize our rowWriter as
+<div class="dynatable-demo">
+  <ul id="ul-example" class="row-fluid">
+    <li class="span4" data-color="gray">
+      <div class="thumbnail">
+        <div class="thumbnail-image">
+          <img src="http://placekitten.com/g/300/200" />
+        </div>
+        <div class="caption">
+          <h3>Kitten 1</h3>
+          <p>Cras justo odio, dapibus ac facilisis in, egestas eget quam. Donec id elit non mi porta gravida at eget metus.</p>
+          <p><a href="#" class="btn btn-primary">Action</a> <a href="#" class="btn">Action</a></p>
+        </div>
+      </div>
+    </li>
+    <li class="span4" data-color="color">
+      <div class="thumbnail">
+        <div class="thumbnail-image">
+          <img src="http://placekitten.com/300/200" />
+        </div>
+        <div class="caption">
+          <h3>Kitten 2</h3>
+          <p>Cras justo odio, dapibus ac facilisis in, egestas eget quam. Donec id elit non mi porta gravida at eget metus.</p>
+          <p><a href="#" class="btn btn-primary">Action</a> <a href="#" class="btn">Action</a></p>
+        </div>
+      </div>
+    </li>
+    <li class="span4" data-color="gray">
+      <div class="thumbnail">
+        <div class="thumbnail-image">
+          <img src="http://placekitten.com/g/300/200" />
+        </div>
+        <div class="caption">
+          <h3>Kitten 3</h3>
+          <p>Cras justo odio, dapibus ac facilisis in, egestas eget quam. Donec id elit non mi porta gravida at eget metus.</p>
+          <p><a href="#" class="btn btn-primary">Action</a> <a href="#" class="btn">Action</a></p>
+        </div>
+      </div>
+    </li>
+    <li class="span4" data-color="color">
+      <div class="thumbnail">
+        <div class="thumbnail-image">
+          <img src="http://placekitten.com/300/200" />
+        </div>
+        <div class="caption">
+          <h3>Kitten 4</h3>
+          <p>Cras justo odio, dapibus ac facilisis in, egestas eget quam. Donec id elit non mi porta gravida at eget metus.</p>
+          <p><a href="#" class="btn btn-primary">Action</a> <a href="#" class="btn">Action</a></p>
+        </div>
+      </div>
+    </li>
+    <li class="span4" data-color="gray">
+      <div class="thumbnail">
+        <div class="thumbnail-image">
+          <img src="http://placekitten.com/g/300/200" />
+        </div>
+        <div class="caption">
+          <h3>Kitten 5</h3>
+          <p>Cras justo odio, dapibus ac facilisis in, egestas eget quam. Donec id elit non mi porta gravida at eget metus.</p>
+          <p><a href="#" class="btn btn-primary">Action</a> <a href="#" class="btn">Action</a></p>
+        </div>
+      </div>
+    </li>
+    <li class="span4" data-color="color">
+      <div class="thumbnail">
+        <div class="thumbnail-image">
+          <img src="http://placekitten.com/300/200" />
+        </div>
+        <div class="caption">
+          <h3>Kitten 6</h3>
+          <p>Cras justo odio, dapibus ac facilisis in, egestas eget quam. Donec id elit non mi porta gravida at eget metus.</p>
+          <p><a href="#" class="btn btn-primary">Action</a> <a href="#" class="btn">Action</a></p>
+        </div>
+      </div>
+    </li>
+  </ul>
+</div>
+
+<script>
+(function() {
+  // Function that renders the list items from our records
+  function ulWriter(rowIndex, record, columns, cellWriter) {
+    var cssClass = "span4", li;
+    if (rowIndex % 3 === 0) { cssClass += ' first'; }
+    li = '<li class="' + cssClass + '"><div class="thumbnail"><div class="thumbnail-image">' + record.thumbnail + '</div><div class="caption">' + record.caption + '</div></div></li>';
+    return li;
+  }
+
+  // Function that creates our records from the DOM when the page is loaded
+  function ulReader(index, li, record) {
+    var $li = $(li),
+        $caption = $li.find('.caption');
+    record.thumbnail = $li.find('.thumbnail-image').html();
+    record.caption = $caption.html();
+    record.label = $caption.find('h3').text();
+    record.description = $caption.find('p').text();
+    record.color = $li.data('color');
+  }
+
+  $('#ul-example').dynatable({
+    table: {
+      bodyRowSelector: 'li'
+    },
+    dataset: {
+      perPageDefault: 3,
+      perPageOptions: [3, 6]
+    },
+    writers: {
+      _rowWriter: ulWriter
+    },
+    readers: {
+      _rowReader: ulReader
+    },
+    params: {
+      records: 'kittens'
+    }
+  });
+})();
+</script>
+
+If our container element is a `ul`, like above, we could customize our rowWriter as
 follows:
 
 {% highlight html %}
@@ -2451,7 +2570,7 @@ follows:
       </div>
       <div class="caption">
         <h3>Kitten 1</h3>
-        <p>Cras justo odio, dapibus ac facilisis in, egestas eget quam. Donec id elit non mi porta gravida at eget metus. Nullam id dolor id nibh ultricies vehicula ut id elit.</p>
+        <p>Cras justo odio, dapibus ac facilisis in, egestas eget quam. Donec id elit non mi porta gravida at eget metus.</p>
         <p><a href="#" class="btn btn-primary">Action</a> <a href="#" class="btn">Action</a></p>
       </div>
     </div>
@@ -2503,125 +2622,6 @@ $('#ul-example').dynatable({
 We could have defined our own `writers._cellWriter` as well, defining a
 custom function for rendering each attribute within the row, but we opted
 to skip it entirely and to just do everything in the `writers._rowWriter`.
-
-<div class="dynatable-demo">
-  <ul id="ul-example" class="row-fluid">
-    <li class="span4" data-color="gray">
-      <div class="thumbnail">
-        <div class="thumbnail-image">
-          <img src="http://placekitten.com/g/300/200" />
-        </div>
-        <div class="caption">
-          <h3>Kitten 1</h3>
-          <p>Cras justo odio, dapibus ac facilisis in, egestas eget quam. Donec id elit non mi porta gravida at eget metus. Nullam id dolor id nibh ultricies vehicula ut id elit.</p>
-          <p><a href="#" class="btn btn-primary">Action</a> <a href="#" class="btn">Action</a></p>
-        </div>
-      </div>
-    </li>
-    <li class="span4" data-color="color">
-      <div class="thumbnail">
-        <div class="thumbnail-image">
-          <img src="http://placekitten.com/300/200" />
-        </div>
-        <div class="caption">
-          <h3>Kitten 2</h3>
-          <p>Cras justo odio, dapibus ac facilisis in, egestas eget quam. Donec id elit non mi porta gravida at eget metus. Nullam id dolor id nibh ultricies vehicula ut id elit.</p>
-          <p><a href="#" class="btn btn-primary">Action</a> <a href="#" class="btn">Action</a></p>
-        </div>
-      </div>
-    </li>
-    <li class="span4" data-color="gray">
-      <div class="thumbnail">
-        <div class="thumbnail-image">
-          <img src="http://placekitten.com/g/300/200" />
-        </div>
-        <div class="caption">
-          <h3>Kitten 3</h3>
-          <p>Cras justo odio, dapibus ac facilisis in, egestas eget quam. Donec id elit non mi porta gravida at eget metus. Nullam id dolor id nibh ultricies vehicula ut id elit.</p>
-          <p><a href="#" class="btn btn-primary">Action</a> <a href="#" class="btn">Action</a></p>
-        </div>
-      </div>
-    </li>
-    <li class="span4" data-color="color">
-      <div class="thumbnail">
-        <div class="thumbnail-image">
-          <img src="http://placekitten.com/300/200" />
-        </div>
-        <div class="caption">
-          <h3>Kitten 4</h3>
-          <p>Cras justo odio, dapibus ac facilisis in, egestas eget quam. Donec id elit non mi porta gravida at eget metus. Nullam id dolor id nibh ultricies vehicula ut id elit.</p>
-          <p><a href="#" class="btn btn-primary">Action</a> <a href="#" class="btn">Action</a></p>
-        </div>
-      </div>
-    </li>
-    <li class="span4" data-color="gray">
-      <div class="thumbnail">
-        <div class="thumbnail-image">
-          <img src="http://placekitten.com/g/300/200" />
-        </div>
-        <div class="caption">
-          <h3>Kitten 5</h3>
-          <p>Cras justo odio, dapibus ac facilisis in, egestas eget quam. Donec id elit non mi porta gravida at eget metus. Nullam id dolor id nibh ultricies vehicula ut id elit.</p>
-          <p><a href="#" class="btn btn-primary">Action</a> <a href="#" class="btn">Action</a></p>
-        </div>
-      </div>
-    </li>
-    <li class="span4" data-color="color">
-      <div class="thumbnail">
-        <div class="thumbnail-image">
-          <img src="http://placekitten.com/300/200" />
-        </div>
-        <div class="caption">
-          <h3>Kitten 6</h3>
-          <p>Cras justo odio, dapibus ac facilisis in, egestas eget quam. Donec id elit non mi porta gravida at eget metus. Nullam id dolor id nibh ultricies vehicula ut id elit.</p>
-          <p><a href="#" class="btn btn-primary">Action</a> <a href="#" class="btn">Action</a></p>
-        </div>
-      </div>
-    </li>
-  </ul>
-</div>
-
-<script>
-(function() {
-  // Function that renders the list items from our records
-  function ulWriter(rowIndex, record, columns, cellWriter) {
-    var cssClass = "span4", li;
-    if (rowIndex % 3 === 0) { cssClass += ' first'; }
-    li = '<li class="' + cssClass + '"><div class="thumbnail"><div class="thumbnail-image">' + record.thumbnail + '</div><div class="caption">' + record.caption + '</div></div></li>';
-    return li;
-  }
-
-  // Function that creates our records from the DOM when the page is loaded
-  function ulReader(index, li, record) {
-    var $li = $(li),
-        $caption = $li.find('.caption');
-    record.thumbnail = $li.find('.thumbnail-image').html();
-    record.caption = $caption.html();
-    record.label = $caption.find('h3').text();
-    record.description = $caption.find('p').text();
-    record.color = $li.data('color');
-  }
-
-  $('#ul-example').dynatable({
-    table: {
-      bodyRowSelector: 'li'
-    },
-    dataset: {
-      perPageDefault: 3,
-      perPageOptions: [3, 6]
-    },
-    writers: {
-      _rowWriter: ulWriter
-    },
-    readers: {
-      _rowReader: ulReader
-    },
-    params: {
-      records: 'kittens'
-    }
-  });
-})();
-</script>
 
 ### An Interactive Chart
 
