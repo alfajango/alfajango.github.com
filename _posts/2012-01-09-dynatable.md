@@ -1727,6 +1727,9 @@ the "color" column below will sort the images from greenish to bluish to
 reddish (using javascript and canvas in our sorting function to evaluate
 the color content of each image):
 
+<div class="row-fluid">
+<div class="span6">
+
 {% highlight js %}
 $(window).load(function() {
   $('#sorting-function-example')
@@ -1770,6 +1773,10 @@ $(window).load(function() {
 })
 {% endhighlight %}
 
+</div>
+
+<div class="span6">
+
 <div class="dynatable-demo">
 <table id="sorting-function-example" class="table table-bordered">
   <thead>
@@ -1808,6 +1815,16 @@ $(window).load(function() {
 * Images from List of North American dinosaurs from <a target="_blank" href="http://en.wikipedia.org/wiki/List_of_North_American_dinosaurs">Wikipedia</a>
 </i>
 </cite>
+
+We may also sort programmatically with the dynatable API. For example,
+let's add a button below which sorts our above table of colors in
+alphabetical order:
+
+<a href="#" class="btn primary" id="sorting-function-example-button">Sort A-Z</a>
+<a href="#" class="btn" id="sorting-function-example-clear-button">Clear Sorts</a>
+</div>
+</div>
+
 
 <script>
 (function() {
@@ -1901,13 +1918,6 @@ $(window).load(function() {
   })
 })();
 </script>
-
-We may also sort programmatically with the dynatable API. For example,
-let's add a button below which sorts our above table of colors in
-alphabetical order:
-
-<a href="#" class="btn primary" id="sorting-function-example-button">Sort A-Z</a>
-<a href="#" class="btn" id="sorting-function-example-clear-button">Clear Sorts</a>
 
 <script>
 (function() {
