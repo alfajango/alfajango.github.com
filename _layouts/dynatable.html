@@ -2,6 +2,7 @@
 <html>
   <head>
     <title>{{ page.title }}</title>
+    <meta name="viewport" content="width=device-width">
     <link rel="stylesheet" media="all" href="/css/reset.css" />
     <link rel="stylesheet" media="all" href="/css/bootstrap.min.css" />
     <link rel="stylesheet" media="all" href="/css/application.css" />
@@ -124,7 +125,7 @@
   </head>
   <body>
     <div id='topbar'>
-      <div class='contained'>
+      <div id='topbar-contained'>
         <ul id='right-nav'>
           <li><a href="/">Open Source Projects</a></li>
           <li><a href="http://www.alfajango.com/blog">Blog</a></li>
@@ -138,7 +139,10 @@
       </div>
     </div>
     <div id='splashbar'>
-      <div class='contained'>
+      <div class=''>
+        <div class="splash-left">
+          <img id="plugin-graphic" src="/images/dynatable.png" />
+        </div>
         <div class="splash-right">
           <h1 id="title">{{ page.heading }}</h1>
           {% if page.tagline %}
@@ -150,17 +154,23 @@
           {% if page.description %}
             <p id="description">{{ page.description }}</p>
           {% endif %}
+        </div>
+        <div class="splash-right splash-download">
           <div id="download">
             {% if page.download %}
-            <a class='btn btn-success large-button' id='download-button' href='{{ page.download.href }}'><img src='/images/wooden-box.png' /> {{page.download.title}}</a>
+            <div id="download-group">
+              <a class='btn btn-success large-button' id='download-button' href='{{ page.download.href }}'><img src='/images/wooden-box.png' /> {{page.download.title}}</a>
+              <div id="download-count" data-{{ page.download.type }}="{{ page.download.data }}"></div>
+            </div>
             {% endif %}
             {% if page.github %}
-            <a class='btn large-button' id='github-button' href='{{ page.github.href }}'><img src='/images/github-icon.png' /> {{page.github.title}}</a>
+            <div id="github-group">
+              <a class='btn large-button' id='github-button' href='{{ page.github.href }}'><img src='/images/github-icon.png' /> {{page.github.title}}</a>
+              <iframe class="github-button" src="http://ghbtns.com/github-btn.html?user=JangoSteve&repo=jquery-dynatable&type=watch&count=true" allowtransparency="true" frameborder="0" scrolling="0" width="110" height="20"></iframe>
+              <iframe class="github-button" src="http://ghbtns.com/github-btn.html?user=JangoSteve&repo=jquery-dynatable&type=fork&count=true" allowtransparency="true" frameborder="0" scrolling="0" width="110" height="20"></iframe>
+            </div>
             {% endif %}
           </div>
-        </div>
-        <div class="splash-left">
-          <img id="plugin-graphic" src="/images/dynatable.png" />
         </div>
       </div>
     </div>
@@ -169,16 +179,6 @@
         <div id='share-container'>
           <div id="shareme" data-url="http://os.alfajango.com{{ page.url }}" data-text="{{ page.title }}" data-title="<span>share this:</span> <img src='/images/dynatable-share-white.png' />"></div>
         </div>
-        <iframe class="github-button" src="http://ghbtns.com/github-btn.html?user=JangoSteve&repo=jquery-dynatable&type=watch&count=true" allowtransparency="true" frameborder="0" scrolling="0" width="110" height="20"></iframe>
-        <iframe class="github-button" src="http://ghbtns.com/github-btn.html?user=JangoSteve&repo=jquery-dynatable&type=fork&count=true" allowtransparency="true" frameborder="0" scrolling="0" width="110" height="20"></iframe>
-        {% if page.twitter %}
-        <div id='twitter-button-container'>
-          <a id="twitter-button" href="https://twitter.com/{{ page.twitter.user }}" class="twitter-follow-button" data-show-count="false" data-size="large">{{ twitter.title }}</a>
-        </div>
-        {% endif %}
-        {% if page.download and page.download.data %}
-        <div id="download-count" data-{{ page.download.type }}="{{ page.download.data }}"></div>
-        {% endif %}
       </div>
     </div>
     <div id='content' class='contained'>
