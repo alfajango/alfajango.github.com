@@ -18,6 +18,7 @@ links:
     href: https://github.com/JangoSteve/jquery-dynatable/issues
 javascripts:
   - jquery.dynatable.js
+  - highcharts.js
 stylesheets:
   - jquery.dynatable.css
 ---
@@ -2436,6 +2437,8 @@ The default `writers._rowWriter` creates a table `tr` element and loops
 through the element attributes (matching our columns) to call
 `writers._cellWriter` on each.
 
+### A Stylized List
+
 If our container element is a `ul`, we could customize our rowWriter as
 follows:
 
@@ -2619,6 +2622,190 @@ to skip it entirely and to just do everything in the `writers._rowWriter`.
   });
 })();
 </script>
+
+### An Interactive Chart
+
+<div id="chart-example-chart"></div>
+<a class="btn primary" id="toggle-chart-table">Show Table to Sort the Chart Series</a>
+<table id="chart-example" class="table table-bordered">
+  <thead><tr><th>City</th><th>Population</th></tr></thead>
+  <tbody>
+    <tr><td>Tokyo</td><td>34.4</td></tr>
+    <tr><td>Jakarta</td><td>21.8</td></tr>
+    <tr><td>New York</td><td>20.1</td></tr>
+    <tr><td>Seoul</td><td>20</td></tr>
+    <tr><td>Manila</td><td>19.6</td></tr>
+    <tr><td>Mumbai</td><td>19.5</td></tr>
+    <tr><td>Sao Paulo</td><td>19.1</td></tr>
+    <tr><td>Mexico City</td><td>18.4</td></tr>
+    <tr><td>Dehli</td><td>18</td></tr>
+    <tr><td>Osaka</td><td>17.3</td></tr>
+    <tr><td>Cairo</td><td>16.8</td></tr>
+    <tr><td>Kolkata</td><td>15</td></tr>
+    <tr><td>Los Angeles</td><td>14.7</td></tr>
+    <tr><td>Shanghai</td><td>14.5</td></tr>
+    <tr><td>Moscow</td><td>13.3</td></tr>
+    <tr><td>Beijing</td><td>12.8</td></tr>
+    <tr><td>Buenos Aires</td><td>12.4</td></tr>
+    <tr><td>Guangzhou</td><td>11.8</td></tr>
+    <tr><td>Shenzhen</td><td>11.7</td></tr>
+    <tr><td>Istanbul</td><td>11.2</td></tr>
+  </tbody>
+</table>
+
+<script>
+(function() {
+  var $table = $('#chart-example'), $chart = $('#chart-example-chart');
+
+  $('#toggle-chart-table').click(function(e) {
+    e.preventDefault();
+    $table.slideToggle();
+  });
+
+  function updateChart() {
+    var dynatable = $table.data('dynatable'), categories = [], values = [];
+    $.each(dynatable.settings.dataset.records, function() {
+      categories.push(this.city);
+      values.push(parseFloat(this.population));
+    });
+    $chart.highcharts({
+      chart: {
+        type: 'column'
+      },
+      title: {
+        text: 'World\'s largest cities per 2008'
+      },
+      xAxis: {
+        categories: categories
+      },
+      yAxis: {
+        min: 0,
+        title: {
+          text: 'Population (millions)'
+        }
+      },
+      series: [{
+        name: 'Population',
+        color: '#006A72',
+        data: values
+      }]
+    });
+  };
+
+  $table
+    .dynatable({
+      inputs: {
+        queryEvent: 'blur change keyup',
+        recordCountTarget: $chart,
+        paginationLinkTarget: $chart,
+        searchTarget: $chart,
+        perPageTarget: $chart
+      },
+      dataset: {
+        perPageOptions: [5, 10, 20],
+        sortTypes: {
+          'population': 'number'
+        }
+      }
+    })
+    .hide()
+    .bind('dynatable:afterProcess', updateChart);
+
+  updateChart();
+})();
+</script>
+
+{% highlight html %}
+<div id="chart-example-chart"></div>
+<a class="btn primary" id="toggle-chart-table">Show Table to Sort the Chart Series</a>
+<table id="chart-example" class="table table-bordered">
+  <thead><tr><th>City</th><th>Population</th></tr></thead>
+  <tbody>
+    <tr><td>Tokyo</td><td>34.4</td></tr>
+    <tr><td>Jakarta</td><td>21.8</td></tr>
+    <tr><td>New York</td><td>20.1</td></tr>
+    <tr><td>Seoul</td><td>20</td></tr>
+    <tr><td>Manila</td><td>19.6</td></tr>
+    <tr><td>Mumbai</td><td>19.5</td></tr>
+    <tr><td>Sao Paulo</td><td>19.1</td></tr>
+    <tr><td>Mexico City</td><td>18.4</td></tr>
+    <tr><td>Dehli</td><td>18</td></tr>
+    <tr><td>Osaka</td><td>17.3</td></tr>
+    <tr><td>Cairo</td><td>16.8</td></tr>
+    <tr><td>Kolkata</td><td>15</td></tr>
+    <tr><td>Los Angeles</td><td>14.7</td></tr>
+    <tr><td>Shanghai</td><td>14.5</td></tr>
+    <tr><td>Moscow</td><td>13.3</td></tr>
+    <tr><td>Beijing</td><td>12.8</td></tr>
+    <tr><td>Buenos Aires</td><td>12.4</td></tr>
+    <tr><td>Guangzhou</td><td>11.8</td></tr>
+    <tr><td>Shenzhen</td><td>11.7</td></tr>
+    <tr><td>Istanbul</td><td>11.2</td></tr>
+  </tbody>
+</table>
+{% endhighlight %}
+
+{% highlight js %}
+(function() {
+  var $table = $('#chart-example'), $chart = $('#chart-example-chart');
+
+  $('#toggle-chart-table').click(function(e) {
+    e.preventDefault();
+    $table.slideToggle();
+  });
+
+  function updateChart() {
+    var dynatable = $table.data('dynatable'), categories = [], values = [];
+    $.each(dynatable.settings.dataset.records, function() {
+      categories.push(this.city);
+      values.push(parseFloat(this.population));
+    });
+    $chart.highcharts({
+      chart: {
+        type: 'column'
+      },
+      title: {
+        text: 'World\'s largest cities per 2008'
+      },
+      xAxis: {
+        categories: categories
+      },
+      yAxis: {
+        min: 0,
+        title: {
+          text: 'Population (millions)'
+        }
+      },
+      series: [{
+        name: 'Population',
+        color: '#006A72',
+        data: values
+      }]
+    });
+  };
+
+  $table
+    .dynatable({
+      inputs: {
+        queryEvent: 'blur change keyup',
+        recordCountTarget: $chart,
+        paginationLinkTarget: $chart,
+        searchTarget: $chart,
+        perPageTarget: $chart
+      },
+      dataset: {
+        perPageOptions: [5, 10, 20],
+        sortTypes: {
+          'population': 'number'
+        }
+      }
+    })
+    .hide()
+    .bind('dynatable:afterProcess', updateChart);
+
+  updateChart();
+})();
+{% endhighlight %}
 
 ## Configuration
 
