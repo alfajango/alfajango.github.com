@@ -9,6 +9,10 @@ ul {
 }
 #topbar {
   background: #2d2f31;
+  height: inherit;
+  min-height: 50px;
+  overflow: auto;
+	width: 100%;
 }
 #topbar-contained {
   width: 99%;
@@ -38,10 +42,14 @@ ul {
   border-left: solid 1px #38393a;
 }
 #supported-by {
+  float: left;
   line-height: 47px;
   color: #fff;
   text-transform: uppercase;
   font-size: 10px;
+}
+#supported-by a {
+  color: #fff;
 }
 #splashbar {
   overflow: hidden;
@@ -269,6 +277,14 @@ th {
 @media only screen and (max-width: 850px) {
   #share-container {
     width: 90%;
+  }
+}
+@media (max-width: 650px) {
+  #supported-by,
+  #right-nav {
+    display: block;
+    float: none;
+    text-align: center;
   }
 }
 @media (max-width: 480px) {
