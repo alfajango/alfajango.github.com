@@ -209,6 +209,9 @@ ul {
 #content {
   min-width: inherit;
 }
+#post {
+  max-width: 960px;
+}
 
 #toc .toc-active {
   background: #006a72;
@@ -255,6 +258,18 @@ th {
 #ul-example h3 {
   line-height: 1.2em;
   height: 3em;
+}
+
+@media (max-width: 1680px) {
+  #post {
+    width: 70%;
+  }
+}
+
+@media (max-width: 1380px) {
+  #post {
+    width: 80%;
+  }
 }
 
 @media (max-width: 1200px) {
