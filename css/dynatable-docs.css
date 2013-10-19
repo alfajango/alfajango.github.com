@@ -249,6 +249,13 @@ th {
 #ul-example li {
   margin-top: 18px;
 }
+#ul-example .thumbnail-image {
+  height: 170px;
+}
+#ul-example h3 {
+  line-height: 1.2em;
+  height: 3em;
+}
 
 @media (max-width: 1200px) {
   #post {

@@ -1722,83 +1722,18 @@ If we have a column we don't want to be sortable, we just add the
 `data-dynatable-no-sort` attribute.
 
 We can also use our own custom sort function. We just need to add our
-sort function to the `sorts.functions` object. For example, let's say we
-want to sort our table records by red, then green, then blue:
+sort function to the `sorts.functions` object. For example, sorting by
+the "color" column below will sort the images from greenish to bluish to
+reddish (using javascript and canvas in our sorting function to evaluate
+the color content of each image):
 
 {% highlight js %}
-$('#sorting-function-example')
-  .bind('dynatable:init', function(e, dynatable) {
-    // Our custom "rgb" sort function, to sort red, then green, then blue
-    dynatable.sorts.functions["rgb"] = function(a, b, attr, direction) {
-      var colors = { Red: 1, Green: 2, Blue: 3},
-          aColorValue = colors[a[attr]],
-          bColorValue = colors[b[attr]];
-      return direction > 0 ? aColorValue - bColorValue : bColorValue - aColorValue;
-    };
-  })
-  .dynatable({
-    // Turn off the features we don't need
-    features: {
-      paginate: false,
-      search: false,
-      recordCount: false
-    },
-    // Tell dynatable to use the 'rgb' sort function for the 'color' column
-    dataset: {
-      sortTypes: {
-        color: 'rgb'
-      }
-    },
-    // Just a little extra flair for styling the table
-    writers: {
-      _cellWriter: function(html) {
-        return $('<td></td>', {
-          html: html,
-          style: "color: " + html
-        });
-      }
-    }
-  });
-{% endhighlight %}
-
-<div class="dynatable-demo">
-<table id="sorting-function-example" class="table table-bordered">
-  <thead>
-    <tr>
-      <th>Color</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td style="color: blue;">Blue</td>
-    </tr>
-    <tr>
-      <td style="color: green">Green</td>
-    </tr>
-    <tr>
-      <td style="color: blue;">Blue</td>
-    </tr>
-    <tr>
-      <td style="color: red;">Red</td>
-    </tr>
-    <tr>
-      <td style="color: green;">Green</td>
-    </tr>
-    <tr>
-      <td style="color: red;">Red</td>
-    </tr>
-  </tbody>
-</table>
-</div>
-
-<script>
-(function() {
+$(window).load(function() {
   $('#sorting-function-example')
     .bind('dynatable:init', function(e, dynatable) {
       dynatable.sorts.functions["rgb"] = function(a, b, attr, direction) {
-        var colors = { Red: 1, Green: 2, Blue: 3},
-            aColorValue = colors[a[attr]],
-            bColorValue = colors[b[attr]];
+        var aColorValue = a.dec,
+            bColorValue = b.dec;
         return direction > 0 ? aColorValue - bColorValue : bColorValue - aColorValue;
       };
     })
@@ -1813,15 +1748,157 @@ $('#sorting-function-example')
           color: 'rgb'
         }
       },
+      readers: {
+        color: function(cell, record) {
+          // Inspect the source of this example to see the getAverageRGB function.
+          var $cell = $(cell),
+              rgb = getAverageRGB($cell.find('img').get(0));
+          record['rgb'] = rgb;
+          record['dec'] = ( rgb.r << 16 ) + ( rgb.g << 8 ) + rgb.b;
+          record['name'] = $cell.text();
+          return $cell.html();
+        }
+      },
       writers: {
         _cellWriter: function(html) {
           return $('<td></td>', {
-            html: html,
-            style: "color: " + html
+            html: html
           });
         }
       }
     });
+})
+{% endhighlight %}
+
+<div class="dynatable-demo">
+<table id="sorting-function-example" class="table table-bordered">
+  <thead>
+    <tr>
+      <th>Color</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><img src="/images/dinosaurs/150px-Cerasinops_BW.jpg" /> Cerasinops</td>
+    </tr>
+    <tr>
+      <td><img src="/images/dinosaurs/150px-Ceratosaurus_sketch2.jpg" /> Ceratosaurus</td>
+    </tr>
+    <tr>
+      <td><img src="/images/dinosaurs/150px-Allosaurus_BW.jpg" /> Allosaurus</td>
+    </tr>
+    <tr>
+      <td><img src="/images/dinosaurs/150px-Tyrannosaurus_BW.jpg" /> Tyrannosaurus</td>
+    </tr>
+    <tr>
+      <td><img src="/images/dinosaurs/150px-Brachylophosaurus-v4.jpg" /> Brachylophosaurus</td>
+    </tr>
+    <tr>
+      <td><img src="/images/dinosaurs/Albertaceratops_BW.jpg" /> Albertaceratops</td>
+    </tr>
+    <tr>
+      <td><img src="/images/dinosaurs/Utahraptor_BW.jpg" /> Utahraptor</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<cite>
+<i>
+* Images from List of North American dinosaurs from <a target="_blank" href="http://en.wikipedia.org/wiki/List_of_North_American_dinosaurs">Wikipedia</a>
+</i>
+</cite>
+
+<script>
+(function() {
+  function getAverageRGB(imgEl) {
+
+    var blockSize = 5, // only visit every 5 pixels
+        defaultRGB = {r:0,g:0,b:0}, // for non-supporting envs
+        canvas = document.createElement('canvas'),
+        context = canvas.getContext && canvas.getContext('2d'),
+        data, width, height,
+        i = -4,
+        length,
+        rgb = {r:0,g:0,b:0},
+        count = 0;
+
+    if (!context) {
+      return defaultRGB;
+    }
+
+    height = canvas.height = imgEl.naturalHeight || imgEl.offsetHeight || imgEl.height;
+    width = canvas.width = imgEl.naturalWidth || imgEl.offsetWidth || imgEl.width;
+
+    context.drawImage(imgEl, 0, 0);
+
+    try {
+      data = context.getImageData(0, 0, width, height);
+    } catch(e) {
+      /* security error, img on diff domain */
+      return defaultRGB;
+    }
+
+    length = data.data.length;
+
+    while ( (i += blockSize * 4) < length ) {
+      // Ignore grayish values
+      if ( Math.abs(data.data[i] - data.data[i+1]) > 25 && Math.abs(data.data[i+1] - data.data[i+3]) > 25 ) {
+        ++count;
+        rgb.r += data.data[i];
+        rgb.g += data.data[i+1];
+        rgb.b += data.data[i+2];
+      }
+    }
+
+    // ~~ used to floor values
+    rgb.r = ~~(rgb.r/count);
+    rgb.g = ~~(rgb.g/count);
+    rgb.b = ~~(rgb.b/count);
+
+    return rgb;
+
+  }
+
+  $(window).load(function() {
+    $('#sorting-function-example')
+      .bind('dynatable:init', function(e, dynatable) {
+        dynatable.sorts.functions["rgb"] = function(a, b, attr, direction) {
+          var aColorValue = a.dec,
+              bColorValue = b.dec;
+          return direction > 0 ? aColorValue - bColorValue : bColorValue - aColorValue;
+        };
+      })
+      .dynatable({
+        features: {
+          paginate: false,
+          search: false,
+          recordCount: false
+        },
+        dataset: {
+          sortTypes: {
+            color: 'rgb'
+          }
+        },
+        readers: {
+          color: function(cell, record) {
+            var $cell = $(cell),
+                rgb = getAverageRGB($cell.find('img').get(0));
+            record['rgb'] = rgb;
+            record['dec'] = ( rgb.r << 16 ) + ( rgb.g << 8 ) + rgb.b;
+            record['name'] = $cell.text();
+            return $cell.html();
+          }
+        },
+        writers: {
+          _cellWriter: function(html) {
+            return $('<td></td>', {
+              html: html
+            });
+          }
+        }
+      });
+  })
 })();
 </script>
 
@@ -1834,32 +1911,64 @@ alphabetical order:
 
 <script>
 (function() {
-  var dynatable = $('#sorting-function-example').data('dynatable');
+  $('#sorting-function-example').bind('dynatable:init', function(e, dynatable) {
+
+    // Option 1
+    // Create a new sort function to run from the sort we add below on
+    // button click.
+    dynatable.sorts.functions['color-text-sort'] = function(a, b, attr, direction) {
+      return a.color === b.color ? 0 : a.name > b.name;
+    };
+    // Tell dynatable to use our custom sort function for the 'color-alpha' sort.
+    dynatable.settings.dataset.sortTypes['name'] = 'color-text-sort';
+
+    // Option 2
+    // Tell dynatable that our custom sort function should just use the built-in 'string' sort function,
+    // for the 'name' attribute we created from the plain text of the color cell.
+    //dynatable.settings.dataset.sortTypes['name'] = 'string';
+
+    // Sort by our new 'color-alpha' sort when clicked.
+    $('#sorting-function-example-button').click( function(e) {
+      // Clear any existing sorts
+      dynatable.sorts.clear();
+      dynatable.sorts.add('name', 1) // 1=ASCENDING, -1=DESCENDING
+      dynatable.process();
+      e.preventDefault();
+    });
+
+    $('#sorting-function-example-clear-button').click( function(e) {
+      dynatable.sorts.clear();
+      dynatable.process();
+      e.preventDefault()
+    });
+  });
+})();
+</script>
+
+The code for the buttons above could be done a couple different ways:
+
+{% highlight js %}
+$('#sorting-function-example').bind('dynatable:init', function(e, dynatable) {
 
   // Option 1
   // Create a new sort function to run from the sort we add below on
   // button click.
-  dynatable.sorts.functions['color-alpha-sort'] = function(a, b, attr, direction) {
-    return a.color === b.color ? 0 : a.color > b.color;
+  dynatable.sorts.functions['color-text-sort'] = function(a, b, attr, direction) {
+    return a.color === b.color ? 0 : a.name > b.name;
   };
   // Tell dynatable to use our custom sort function for the 'color-alpha' sort.
-  dynatable.settings.dataset.sortTypes['color-alpha'] = 'color-alpha-sort';
+  dynatable.settings.dataset.sortTypes['name'] = 'color-text-sort';
 
   // Option 2
-  // Create a 'color-alpha' property for each record so that we can use
-  // the built-in 'string' sort function which just sorts based on the
-  // property matching the sort type name.
-  //$.map(dynatable.settings.dataset.originalRecords, function(record) {
-  //  record['color-alpha'] = record.color;
-  //});
-  // Tell dynatable that our custom sort function should just use the built-in 'string' sort function.
-  //dynatable.settings.dataset.sortTypes['color-alpha'] = 'string';
+  // Tell dynatable that our custom sort function should just use the built-in 'string' sort function,
+  // for the 'name' attribute we created from the plain text of the color cell.
+  //dynatable.settings.dataset.sortTypes['name'] = 'string';
 
   // Sort by our new 'color-alpha' sort when clicked.
   $('#sorting-function-example-button').click( function(e) {
     // Clear any existing sorts
     dynatable.sorts.clear();
-    dynatable.sorts.add('color-alpha', 1) // 1=ASCENDING, -1=DESCENDING
+    dynatable.sorts.add('name', 1) // 1=ASCENDING, -1=DESCENDING
     dynatable.process();
     e.preventDefault();
   });
@@ -1869,46 +1978,6 @@ alphabetical order:
     dynatable.process();
     e.preventDefault()
   });
-})();
-</script>
-
-The code for the buttons above could be done a couple different ways:
-
-{% highlight js %}
-var dynatable = $('#sorting-function-example').data('dynatable');
-
-// Option 1
-// Create a new sort function to run from the sort we add below on
-// button click.
-dynatable.sorts.functions['color-alpha-sort'] = function(a, b, attr, direction) {
-  return a.color === b.color ? 0 : a.color > b.color;
-};
-// Tell dynatable to use our custom sort function for the 'color-alpha' sort.
-dynatable.settings.dataset.sortTypes['color-alpha'] = 'color-alpha-sort';
-
-// Option 2
-// Create a 'color-alpha' property for each record so that we can use
-// the built-in 'string' sort function which just sorts based on the
-// property matching the sort type name.
-//$.map(dynatable.settings.dataset.originalRecords, function(record) {
-//  record['color-alpha'] = record.color;
-//});
-// Tell dynatable that our custom sort function should just use the built-in 'string' sort function.
-//dynatable.settings.dataset.sortTypes['color-alpha'] = 'string';
-
-// Sort by our new 'color-alpha' sort when clicked.
-$('#sorting-function-example-button').click( function(e) {
-  // Clear any existing sorts
-  dynatable.sorts.clear();
-  dynatable.sorts.add('color-alpha', 1) // 1=ASCENDING, -1=DESCENDING
-  dynatable.process();
-  e.preventDefault();
-});
-
-$('#sorting-function-example-clear-button').click( function(e) {
-  dynatable.sorts.clear();
-  dynatable.process();
-  e.preventDefault()
 });
 {% endhighlight %}
 
@@ -2439,82 +2508,95 @@ through the element attributes (matching our columns) to call
 
 ### A Stylized List
 
+
 <div class="dynatable-demo">
   <ul id="ul-example" class="row-fluid">
     <li class="span4" data-color="gray">
       <div class="thumbnail">
         <div class="thumbnail-image">
-          <img src="http://placekitten.com/g/300/200" />
+          <img src="/images/dinosaurs/Stegosaurus_BW.jpg" />
         </div>
         <div class="caption">
-          <h3>Kitten 1</h3>
-          <p>Cras justo odio, dapibus ac facilisis in, egestas eget quam. Donec id elit non mi porta gravida at eget metus.</p>
-          <p><a href="#" class="btn btn-primary">Action</a> <a href="#" class="btn">Action</a></p>
+          <h3>Stegosaurus armatus</h3>
+          <p>State: Colorado</p>
+          <p>Year: 1982</p>
+          <p><a target="_blank" href="http://en.wikipedia.org/wiki/Stegosaurus" class="btn btn-primary">View</a> <a href="#" class="btn">Action</a></p>
         </div>
       </div>
     </li>
     <li class="span4" data-color="color">
       <div class="thumbnail">
         <div class="thumbnail-image">
-          <img src="http://placekitten.com/300/200" />
+          <img src="/images/dinosaurs/300px-Astrodon1DB.jpg" />
         </div>
         <div class="caption">
-          <h3>Kitten 2</h3>
-          <p>Cras justo odio, dapibus ac facilisis in, egestas eget quam. Donec id elit non mi porta gravida at eget metus.</p>
-          <p><a href="#" class="btn btn-primary">Action</a> <a href="#" class="btn">Action</a></p>
+          <h3>Astrodon johnstoni</h3>
+          <p>State: Maryland</p>
+          <p>Year: 1998</p>
+          <p><a target="_blank" href="http://en.wikipedia.org/wiki/Astrodon_johnstoni" class="btn btn-primary">View</a> <a href="#" class="btn">Action</a></p>
         </div>
       </div>
     </li>
     <li class="span4" data-color="gray">
       <div class="thumbnail">
         <div class="thumbnail-image">
-          <img src="http://placekitten.com/g/300/200" />
+          <img src="/images/dinosaurs/300px-Hypsibema_missouriensis_Bollinger_County_Museum_of_Natural_History.jpg" />
         </div>
         <div class="caption">
-          <h3>Kitten 3</h3>
-          <p>Cras justo odio, dapibus ac facilisis in, egestas eget quam. Donec id elit non mi porta gravida at eget metus.</p>
-          <p><a href="#" class="btn btn-primary">Action</a> <a href="#" class="btn">Action</a></p>
+          <h3>Hypsibema missouriensis</h3>
+          <p>State: Missouri</p>
+          <p>Year: 2004</p>
+          <p><a target="_blank" href="http://en.wikipedia.org/wiki/Hypsibema_missouriensis" class="btn btn-primary">View</a> <a href="#" class="btn">Action</a></p>
         </div>
       </div>
     </li>
     <li class="span4" data-color="color">
       <div class="thumbnail">
         <div class="thumbnail-image">
-          <img src="http://placekitten.com/300/200" />
+          <img src="/images/dinosaurs/Knight_hadrosaurs.jpg" />
         </div>
         <div class="caption">
-          <h3>Kitten 4</h3>
-          <p>Cras justo odio, dapibus ac facilisis in, egestas eget quam. Donec id elit non mi porta gravida at eget metus.</p>
-          <p><a href="#" class="btn btn-primary">Action</a> <a href="#" class="btn">Action</a></p>
+          <h3>Hadrosaurus foulkii</h3>
+          <p>State: New Jersey</p>
+          <p>Year: 1991</p>
+          <p><a target="_blank" href="http://en.wikipedia.org/wiki/Hadrosaurus" class="btn btn-primary">View</a> <a href="#" class="btn">Action</a></p>
         </div>
       </div>
     </li>
     <li class="span4" data-color="gray">
       <div class="thumbnail">
         <div class="thumbnail-image">
-          <img src="http://placekitten.com/g/300/200" />
+          <img src="/images/dinosaurs/300px-Sauroposeidon_dinosaur.svg.png" />
         </div>
         <div class="caption">
-          <h3>Kitten 5</h3>
-          <p>Cras justo odio, dapibus ac facilisis in, egestas eget quam. Donec id elit non mi porta gravida at eget metus.</p>
-          <p><a href="#" class="btn btn-primary">Action</a> <a href="#" class="btn">Action</a></p>
+          <h3>Paluxysaurus jonesi</h3>
+          <p>State: Texas</p>
+          <p>Year: 2009</p>
+          <p><a target="_blank" href="http://en.wikipedia.org/wiki/Paluxysaurus" class="btn btn-primary">View</a> <a href="#" class="btn">Action</a></p>
         </div>
       </div>
     </li>
     <li class="span4" data-color="color">
       <div class="thumbnail">
         <div class="thumbnail-image">
-          <img src="http://placekitten.com/300/200" />
+          <img src="/images/dinosaurs/300px-Triceratops_BW.jpg" />
         </div>
         <div class="caption">
-          <h3>Kitten 6</h3>
-          <p>Cras justo odio, dapibus ac facilisis in, egestas eget quam. Donec id elit non mi porta gravida at eget metus.</p>
-          <p><a href="#" class="btn btn-primary">Action</a> <a href="#" class="btn">Action</a></p>
+          <h3>Triceratops</h3>
+          <p>State: Wyoming</p>
+          <p>Year: 1994</p>
+          <p><a target="_blank" href="http://en.wikipedia.org/wiki/Triceratops" class="btn btn-primary">View</a> <a href="#" class="btn">Action</a></p>
         </div>
       </div>
     </li>
   </ul>
 </div>
+
+<cite>
+<i>
+* List of U.S. state dinosaurs from <a target="_blank" href="http://en.wikipedia.org/wiki/List_of_U.S._state_dinosaurs">Wikipedia</a>
+</i>
+</cite>
 
 <script>
 (function() {
@@ -2552,7 +2634,7 @@ through the element attributes (matching our columns) to call
       _rowReader: ulReader
     },
     params: {
-      records: 'kittens'
+      records: 'dinosaurs'
     }
   });
 })();
@@ -2566,12 +2648,13 @@ follows:
   <li class="span4" data-color="gray">
     <div class="thumbnail">
       <div class="thumbnail-image">
-        <img src="http://placekitten.com/g/300/200" />
+        <img src="/images/dinosaurs/Stegosaurus_BW.jpg" />
       </div>
       <div class="caption">
-        <h3>Kitten 1</h3>
-        <p>Cras justo odio, dapibus ac facilisis in, egestas eget quam. Donec id elit non mi porta gravida at eget metus.</p>
-        <p><a href="#" class="btn btn-primary">Action</a> <a href="#" class="btn">Action</a></p>
+        <h3>Stegosaurus armatus</h3>
+        <p>State: Colorado</p>
+        <p>Year: 1982</p>
+        <p><a href="http://en.wikipedia.org/wiki/Stegosaurus" class="btn btn-primary">View</a> <a href="#" class="btn">View</a></p>
       </div>
     </div>
   </li>
