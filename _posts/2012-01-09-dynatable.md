@@ -4,7 +4,7 @@ title: jQuery Dynatable Plugin
 heading: Dyna<span>table</span>
 tagline: HTML5+JSON interactive table plugin.
 description: Dynatable is a funner, semantic, interactive table plugin
-  using jQuery, HTML5, and JSON.
+  using jQuery, HTML5, and JSON. And it's not just for tables.
 download:
   title: Download
   href: http://jspkg.com/packages/dynatable
