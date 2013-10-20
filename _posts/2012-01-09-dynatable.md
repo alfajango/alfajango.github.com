@@ -2401,6 +2401,17 @@ indicator to the table to let users know something is happening. We can
 style this indicator however we want. By default, it's just the word
 "Processing..." overlaid in the center of the table.
 
+We can customize the html content of the processing indicator (including
+images or gifs), using the <code>inputs.processingText</code>
+configuration.
+
+We can also style the processing indicator overlay and inner block, by
+attaching styles to the
+<code>dynatable-processing</code> class and the <code>.dynatable-processing span</code>
+CSS selector, respectively.
+
+<div class="row-fluid">
+<div class="span6">
 <div class="dynatable-demo">
 <table id="processing-indicator-example" class="table table-bordered">
   <thead>
@@ -2449,13 +2460,9 @@ style this indicator however we want. By default, it's just the word
 })();
 </script>
 
-To show or hide the processing indicator, we can call the
-<code>dynatable.processingIndicator.show()</code> and
-<code>dynatable.processingIndicator.hide()</code> functions.
-
 <a href="#" class="btn primary"
 id="processing-indicator-example-button">Show Standard Processing
-Indicator for 3 seconds</a>
+Indicator</a>
 
 <script>
 (function() {
@@ -2469,31 +2476,9 @@ Indicator for 3 seconds</a>
   });
 })();
 </script>
+</div>
 
-We can customize the html content of the processing indicator (including
-images or gifs), using the <code>inputs.processingText</code>
-configuration.
-
-We can also style the processing indicator overlay and inner block, by
-attaching styles to the
-<code>dynatable-processing</code> class and the <code>.dynatable-processing span</code>
-CSS selector, respectively.
-
-{% highlight js %}
-$('#processing-indicator-nice-example').dynatable({
-  features: {
-    paginate: false,
-    search: false,
-    recordCount: false,
-    pushState: false,
-    sort: false
-  },
-  inputs: {
-    processingText: 'Loading <img src="/images/loading.gif" />'
-  }
-});
-{% endhighlight %}
-
+<div class="span6">
 <div class="dynatable-demo">
 <table id="processing-indicator-nice-example" class="table table-bordered">
   <thead>
@@ -2547,6 +2532,45 @@ $('#processing-indicator-nice-example').dynatable({
   });
 })();
 </script>
+
+</div>
+</div>
+
+To show or hide the processing indicator above, we can call the
+<code>dynatable.processingIndicator.show()</code> and
+<code>dynatable.processingIndicator.hide()</code> functions.
+
+For the nicer example, we just add our own custom markup for the
+processing indicator, along with some custom CSS.
+
+{% highlight js %}
+$('#processing-indicator-nice-example').dynatable({
+  inputs: {
+    processingText: 'Loading <img src="/images/loading.gif" />'
+  }
+});
+{% endhighlight %}
+
+{% highlight css %}
+.dynatable-processing {
+  background: #000;
+  opacity: 0.6;
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  border-radius: 4px;
+}
+.dynatable-processing span {
+  background: #FFF;
+  border: solid 2px #57A957;
+  color: #333;
+  padding: 25px;
+  font-size: 2em;
+  box-shadow: 0px 0px 15px rgba(0,0,0,0.5);
+}
+.dynatable-processing span img {
+  vertical-align: middle;
+}
+{% endhighlight %}
 
 ## Rendering
 
