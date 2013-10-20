@@ -1793,61 +1793,12 @@ If we have a column we don't want to be sortable, we just add the
 
 #### Custom Sort Functions
 
-We can also use our own custom sort function. We just need to add our
-sort function to the `sorts.functions` object. For example, sorting by
-the "color" column below will sort the images from greenish to bluish to
+We can also use our own custom sort function. This demo sorts
+the "color" column by the average color content in the images, from greenish to bluish to
 reddish (using javascript and canvas in our sorting function to evaluate
 the color content of each image):
 
 <div class="row-fluid">
-<div class="span6">
-
-{% highlight js %}
-$(window).load(function() {
-  $('#sorting-function-example')
-    .bind('dynatable:init', function(e, dynatable) {
-      dynatable.sorts.functions["rgb"] = function(a, b, attr, direction) {
-        var aColorValue = a.dec,
-            bColorValue = b.dec,
-            comparison = aColorValue - bColorValue;
-        return direction > 0 ? comparison : -comparison;
-      };
-    })
-    .dynatable({
-      features: {
-        paginate: false,
-        search: false,
-        recordCount: false
-      },
-      dataset: {
-        sortTypes: {
-          color: 'rgb'
-        }
-      },
-      readers: {
-        color: function(cell, record) {
-          // Inspect the source of this example
-          // to see the getAverageRGB function.
-          var $cell = $(cell),
-              rgb = getAverageRGB($cell.find('img').get(0)),
-              dec = ( rgb.r << 16 ) + ( rgb.g << 8 ) + rgb.b;
-          record['dec'] = dec;
-          record['name'] = $cell.text();
-          return $cell.html();
-        }
-      },
-      writers: {
-        _cellWriter: function(html) {
-          return $('<td></td>', {
-            html: html
-          });
-        }
-      }
-    });
-})
-{% endhighlight %}
-
-</div>
 
 <div class="span6">
 
@@ -1855,7 +1806,7 @@ $(window).load(function() {
 <table id="sorting-function-example" class="table table-bordered">
   <thead>
     <tr>
-      <th data-dynatable-column="color">Sort by Color</th>
+      <th data-dynatable-column="color" data-dynatable-sorts="dec">Sort by Color</th>
     </tr>
   </thead>
   <tbody>
@@ -1889,16 +1840,6 @@ $(window).load(function() {
 * Images from List of North American dinosaurs from <a target="_blank" href="http://en.wikipedia.org/wiki/List_of_North_American_dinosaurs">Wikipedia</a>
 </i>
 </cite>
-
-We may also sort programmatically with the dynatable API. For example,
-let's add a button below which sorts our above table of colors in
-alphabetical order:
-
-<a href="#" class="btn primary" id="sorting-function-example-button">Sort A-Z</a>
-<a href="#" class="btn" id="sorting-function-example-clear-button">Clear Sorts</a>
-</div>
-</div>
-
 
 <script>
 (function() {
@@ -1953,24 +1894,11 @@ alphabetical order:
 
   $(window).load(function() {
     $('#sorting-function-example')
-      .bind('dynatable:init', function(e, dynatable) {
-        dynatable.sorts.functions["rgb"] = function(a, b, attr, direction) {
-          var aColorValue = a.dec,
-              bColorValue = b.dec,
-              comparison = aColorValue - bColorValue;
-          return direction > 0 ? comparison : -comparison;
-        };
-      })
       .dynatable({
         features: {
           paginate: false,
           search: false,
           recordCount: false
-        },
-        dataset: {
-          sortTypes: {
-            color: 'rgb'
-          }
         },
         readers: {
           color: function(cell, record) {
@@ -1981,38 +1909,30 @@ alphabetical order:
             record['name'] = $cell.text();
             return $cell.html();
           }
-        },
-        writers: {
-          _cellWriter: function(html) {
-            return $('<td></td>', {
-              html: html
-            });
-          }
         }
       });
   })
 })();
 </script>
+</div>
+
+<div class="span6">
+<p>
+We may also sort programmatically with the dynatable API. For example,
+let's add a button which sorts our table by dinosaur names, and a button
+that clears all our sorts, putting the records back in their original
+order:
+</p>
+
+<p>
+<a href="#" class="btn primary" id="sorting-function-example-button">Sort A-Z</a>
+<a href="#" class="btn" id="sorting-function-example-clear-button">Clear Sorts</a>
+</p>
 
 <script>
 (function() {
   $('#sorting-function-example').bind('dynatable:init', function(e, dynatable) {
 
-    // Option 1
-    // Create a new sort function to run from the sort we add below on
-    // button click.
-    dynatable.sorts.functions['color-text-sort'] = function(a, b, attr, direction) {
-      return a.color === b.color ? 0 : a.name > b.name;
-    };
-    // Tell dynatable to use our custom sort function for the 'color-alpha' sort.
-    dynatable.settings.dataset.sortTypes['name'] = 'color-text-sort';
-
-    // Option 2
-    // Tell dynatable that our custom sort function should just use the built-in 'string' sort function,
-    // for the 'name' attribute we created from the plain text of the color cell.
-    //dynatable.settings.dataset.sortTypes['name'] = 'string';
-
-    // Sort by our new 'color-alpha' sort when clicked.
     $('#sorting-function-example-button').click( function(e) {
       // Clear any existing sorts
       dynatable.sorts.clear();
@@ -2030,26 +1950,13 @@ alphabetical order:
 })();
 </script>
 
-The code for the buttons above could be done a couple different ways:
+<p>
+The code for the buttons above:
+</p>
 
 {% highlight js %}
 $('#sorting-function-example').bind('dynatable:init', function(e, dynatable) {
 
-  // Option 1
-  // Create a new sort function to run from the sort we add below on
-  // button click.
-  dynatable.sorts.functions['color-text-sort'] = function(a, b, attr, direction) {
-    return a.color === b.color ? 0 : a.name > b.name;
-  };
-  // Tell dynatable to use our custom sort function for the 'color-alpha' sort.
-  dynatable.settings.dataset.sortTypes['name'] = 'color-text-sort';
-
-  // Option 2
-  // Tell dynatable that our custom sort function should just use the built-in 'string' sort function,
-  // for the 'name' attribute we created from the plain text of the color cell.
-  //dynatable.settings.dataset.sortTypes['name'] = 'string';
-
-  // Sort by our new 'color-alpha' sort when clicked.
   $('#sorting-function-example-button').click( function(e) {
     // Clear any existing sorts
     dynatable.sorts.clear();
@@ -2064,6 +1971,161 @@ $('#sorting-function-example').bind('dynatable:init', function(e, dynatable) {
     e.preventDefault()
   });
 });
+{% endhighlight %}
+</div>
+</div>
+
+There are a couple different ways to achieve the custom color sorting above,
+and it's useful to explore each way to gain a better understanding of
+what's possible.
+
+#### Creating a Custom Sort Function
+
+The first way is to create a custom sort function, add it to dynatable's
+list of sort functions in `sorts.functions`, and then tell dynatable to use that function
+when sorting that column.
+
+A sort function takes in the two records being compared (a and b below),
+the attribute column currently being sorted, and the direction (1 for
+ascending, -1 for descending). The function needs to return a positive
+number (if a is higher than b), a negative number (if b is higher than
+a), or 0 (if a and b are tied).
+
+{% highlight js %}
+// Our custom sort function
+function rgbSort(a, b, attr, direction) {
+
+  // Assuming we've created a separate function
+  // to get the average RGB value from an image.
+  // (see source for example above for getAverageRGB function)
+  var aRgb = getAverageRGB(a.img),
+      bRgb = getAverageRGB(b.img),
+      aDec = ( aRgb.r << 16 ) + ( aRgb.g << 8 ) + aRgb.b,
+      bDec = ( bRgb.r << 16 ) + ( bRgb.g << 8 ) + bRgb.b,
+      comparison = aDec - bDec;
+
+  return direction > 0 ? comparison : -comparison;
+};
+
+// Wait until images are loaded
+$(window).load(function() {
+  $('#sorting-function-example')
+
+    // Add our custom sort function to dynatable
+    .bind('dynatable:init', function(e, dynatable) {
+      dynatable.sorts.functions["rgb"] = rgbSort;
+    })
+
+    // Initialize dynatable
+    .dynatable({
+      features: {
+        paginate: false,
+        search: false,
+        recordCount: false
+      },
+      dataset: {
+        // When we sort on the color column,
+        // use our custom sort added above.
+        sortTypes: {
+          color: 'rgbSort'
+        }
+      },
+      readers: {
+        color: function(cell, record) {
+          var $cell = $(cell);
+
+          // Store the average RGB image color value
+          // as a decimal in "dec" attribute.
+          record['img'] = $cell.find('img').get(0);
+
+          // Return the HTML of the cell to be stored
+          // as the "color" attribute.
+          return $cell.html();
+        }
+      }
+    });
+})
+{% endhighlight %}
+
+The sort function gets run between each pair of records to determine
+which comes first. This means it gets run `n!` times (where n is the
+number of records), or `n-1` times for each record.
+
+So, the average RGB
+values in this example are being re-computed multiple times for each
+record. This kills the efficiency.
+
+#### Creating a Custom Attribute to Sort On
+
+Instead, it's much more efficient to compute values only once for each
+record and store them as record attributes. We were already storing the
+image file above for each record, so why not go ahead and store the RGB
+values too?
+
+Furthermore, notice that in our custom `rgbSort` function above, after it
+calculates the RGB value for each record, it's just doing a standard
+number comparison (by subtracting one value from the other). Dynatable
+has built-in "number" sorting.
+
+{% highlight js %}
+$(window).load(function() {
+  $('#sorting-function-example')
+
+    // Initialize dynatable
+    .dynatable({
+      features: {
+        paginate: false,
+        search: false,
+        recordCount: false
+      },
+
+      // We have one column, but it contains multiple types of info.
+      // So let's define a custom reader for that column to grab
+      // all the extra info and store it in our normalized records.
+      readers: {
+        color: function(cell, record) {
+
+          // Inspect the source of this example
+          // to see the getAverageRGB function.
+          var $cell = $(cell),
+              rgb = getAverageRGB($cell.find('img').get(0)),
+              dec = ( rgb.r << 16 ) + ( rgb.g << 8 ) + rgb.b;
+
+          // Store the average RGB image color value
+          // as a decimal in "dec" attribute.
+          record['dec'] = dec;
+
+          // Grab the dinosaur name.
+          record['name'] = $cell.text();
+
+          // Return the HTML of the cell to be stored
+          // as the "color" attribute.
+          return $cell.html();
+        }
+      }
+    });
+})
+{% endhighlight %}
+
+We could now create a custom sort function for the "color" column, to make
+sure it sorts based on the "dec" attribute instead. Or, we could just tell
+dynatable to sort the "color" column based on the "name" attribute
+directly in our table with `data-dynatable-sorts`:
+
+{% highlight html %}
+<table>
+  <thead>
+    <tr>
+      <th data-dynatable-column="color" data-dynatable-sorts="dec">Sort by Color</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><img src="/images/dinosaurs/cerasinops.jpg" /> Cerasinops</td>
+    </tr>
+    <!-- ... -->
+  </tbody>
+</table>
 {% endhighlight %}
 
 ### Querying
