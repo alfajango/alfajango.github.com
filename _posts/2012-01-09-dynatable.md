@@ -1190,27 +1190,74 @@ $('#my-table').dynatable();
 
 Dynatable does three things:
 
-1. Normalize: It normalizes an HTML table into an array of JSON
-objects, where each JSON object (or record) corresponds to a row in the
+<div class="row-fluid">
+<div class="span5">
+<img id="how-it-works" src="/images/dynatable-how-it-works-thin.png" />
+</div>
+<div class="span7">
+<ol>
+<li>
+<h4>Read / Normalize</h4>
+<p>
+The HTML table is scanned and normalized into an array of JSON
+objects (or collection) where each JSON object (or record) corresponds to a row in the
 table.
+</p>
+</li>
+<li>
+<h4>Operate</h4>
+<p>
+The JSON collection can be sorted, searched/filtered, and
+paginated/sliced.
+</p>
+</li>
+<li>
+<h4>Write / Render</h4>
+<p>
+The results of the Operate step are rendered back to the DOM in the body
+of the table.
+</p>
+</li>
+</ol>
 
-2. Operations: It sorts, filters, and paginates the JSON collection.
-
-3. Rendering: It renders the resulting collection from the operations back
-to the table.
-
+<p>
 This 3-step approach has several advantages:
+</p>
 
-* Since the logic and operations occur on the JSON collection, we group
-  DOM operations (reading and writing/drawing) together, making
+<ul>
+<li>
+<h4>Efficient reading/operating/writing</h4>
+<p>
+Since the logic and operations occur on the JSON collection, the
+DOM operations (reading and writing/drawing) are grouped together, making
 interactions quick and efficient.
+</p>
+</li>
+<li>
+<h4>Operations are simple JavaScript</h4>
+<p>
+An operation is simply a function that acts on the normalized JSON collection; sorting, filtering, and
+paginating are straight forward in JavaScript.
+</p>
+<p>
+The built-in functions are easy to augment with your
+own custom sorting and querying functions.
+</p>
+</li>
+<li>
+<h4>Steps can be customized, swapped or skipped</h4>
+<p>
+Since the normalization, operation, and rendering modules are separated,
+each can easily be customized, replaced, or skipped.
+</p>
+<p>
+Already have a JSON API to work with? Skip the Read step. Want to add
+paginating, filtering, and sorting to a chart? Customize the Render step.
+</li>
+</ul>
+</div>
+</div>
 
-* Once data has been normalized into JSON, sorting, filtering, and
-  paginating become easy to do in JavaScript.
-
-* Since the normalization and rendering modules are separated, they can
-  easily be configured or replaced with custom normalization and rendering
-modules.
 
 ## Normalization
 
