@@ -3198,6 +3198,30 @@ The confiuration options (with default values) for dynatable are:
 }
 {% endhighlight %}
 
+### Data Attributes
+
+In addition to the configuration options directly available above, some
+properties apply specifically to certain columns or elements. Those can
+be set using HTML5 data attributes.
+
+<div class="alert alert-block">
+Documentation on each data-attribute and what it does coming soon.
+</div>
+
+#### On table column headers
+
+<code>data-dynatable-column</code>
+
+<code>data-dynatable-sorts</code>
+
+<code>data-dynatable-no-sort</code>
+
+#### On query inputs
+
+<code>data-dynatable-query-event</code>
+
+<code>data-dynatable-query</code>
+
 ## Event Hooks
 
 <table class="table table-bordered responsive-table">
