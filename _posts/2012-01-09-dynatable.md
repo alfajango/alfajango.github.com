@@ -1191,10 +1191,10 @@ $('#my-table').dynatable();
 Dynatable does three things:
 
 <div class="row-fluid">
-<div class="span5">
+<div class="span5 how-it-works-col">
 <img id="how-it-works" src="/images/dynatable-how-it-works-thin.png" />
 </div>
-<div class="span7">
+<div class="span7 how-it-works-col">
 <ol>
 <li>
 <h4>Read / Normalize</h4>

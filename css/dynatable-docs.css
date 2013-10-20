@@ -308,6 +308,11 @@ th {
     float: none;
     text-align: center;
   }
+  .row-fluid .how-it-works-col {
+    width: 100%;
+    margin: 0;
+    float: none;
+  }
 }
 @media (max-width: 480px) {
   #title {
