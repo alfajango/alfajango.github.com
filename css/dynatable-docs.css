@@ -60,6 +60,7 @@ ul {
   position: relative;
 }
 #plugin-graphic {
+  margin-top: 30px;
   width: 500px;
 }
 .splash-left,
@@ -213,6 +214,35 @@ ul {
   max-width: 960px;
 }
 
+#post h2 {
+  margin-top: 35px;
+  padding-top: 20px;
+  border-top: solid 1px #ddd;
+}
+#post h2.first-heading {
+  margin-top: 10px;
+  border-top: none;
+  padding-top: 0;
+}
+
+#post h3 {
+  margin-top: 25px;
+}
+
+#post .row-fluid {
+  margin: 20px 0;
+}
+
+#post pre {
+  margin: 20px 0;
+}
+
+#toc ul {
+  margin: 10px 0;
+}
+#toc li {
+  padding: 1px 5px;
+}
 #toc .toc-active {
   background: #006a72;
   border-color: #006a72;
@@ -286,6 +316,7 @@ th {
     text-align: center;
   }
   #plugin-graphic {
+    margin-top: 20px;
     width: 250px;
   }
   #download-group, #github-group {

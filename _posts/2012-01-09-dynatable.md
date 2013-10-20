@@ -23,11 +23,7 @@ stylesheets:
   - jquery.dynatable.css
 ---
 
-## Demo
-
-{% highlight js %}
-$('#my-table').dynatable();
-{% endhighlight %}
+<h2 class="first-heading">Demo</h2>
 
 <div class="dynatable-demo">
 
@@ -1184,7 +1180,12 @@ $('#my-table').dynatable();
   });
 </script>
 
-<hr />
+To get started, simply install jquery.dynatable.js (along with jQuery),
+and add the following in the `document.ready` or after the table:
+
+{% highlight js %}
+$('#my-table').dynatable();
+{% endhighlight %}
 
 ## How it works
 
@@ -1543,7 +1544,7 @@ $('#my-ajax-table').dynatable({
 {% endhighlight %}
 
 <p>
-<a href="/dynatable-ajax.json">View AJAX data</a>
+<a href="/dynatable-ajax.json"><i class="icon-share"></i> View AJAX data</a>
 </p>
 
 </div>
@@ -1679,6 +1680,8 @@ of a record (such as an `img` tag, it will automatically sort and search
 based on the text-equivalent value of the cell, so sorting won't be
 affected by HTML tags or attributes). 
 
+#### Basic Sorting
+
 Click the header rows below to sort by each column. Click a header once
 for ascending, again for descending, and again to stop sorting by that
 column.
@@ -1755,6 +1758,8 @@ In the example above, we run the "Price" column values through an
 the comma seperator. Likewise, we then run it through a rendering "writer" 
 which re-inserts the comma when rendering the number back to the DOM.
 
+#### Sort by Another Value
+
 Sometimes, we need one column to sort based on some other attribute.
 For example, maybe we have a column which needs to sort on another
 hidden column. We can use the `data-dynatable-sorts` attribute on the
@@ -1785,6 +1790,8 @@ the "Year" column based on the attribute in the last column.
 
 If we have a column we don't want to be sortable, we just add the
 `data-dynatable-no-sort` attribute.
+
+#### Custom Sort Functions
 
 We can also use our own custom sort function. We just need to add our
 sort function to the `sorts.functions` object. For example, sorting by
@@ -1848,7 +1855,7 @@ $(window).load(function() {
 <table id="sorting-function-example" class="table table-bordered">
   <thead>
     <tr>
-      <th>Color</th>
+      <th data-dynatable-column="color">Sort by Color</th>
     </tr>
   </thead>
   <tbody>
@@ -2067,6 +2074,8 @@ term or value. By default, dynatable includes a search box which
 matches from the plain-text values (case-insensitive) across all attributes of the records.
 Try it in the demo at the top of this page, by typing in the search box
 above the table and hitting "Enter" or "Tab".
+
+#### Custom Query Functions
 
 Queries can also be added programmatically via JavaScript to be
 processed by dynatable. We simply add a query key-value to the
