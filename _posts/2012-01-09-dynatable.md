@@ -2095,6 +2095,12 @@ additionally include our own "Year" filter.
   <option>2013</option>
 </select>
 {% endhighlight %}
+
+<div class="alert alert-block">
+NOTE: This JS is the long version, to show how customizable queries
+are. See below for the easier, built-in way to add your own query
+controls. &#8594;
+</div>
 </div>
 
 <div class="side-by-side right">
@@ -2851,11 +2857,14 @@ to skip it entirely and to just do everything in the `writers._rowWriter`.
 (function() {
   var $table = $('#chart-example'), $chart = $('#chart-example-chart'), chart;
 
+  // Create a button to toggle our table's visibility.
+  // We could just hide it completely if we don't need it.
   $('#toggle-chart-table').click(function(e) {
     e.preventDefault();
     $table.toggle();
   });
 
+  // Set up our Highcharts chart
   chart = new Highcharts.Chart({
     chart: {
       type: 'column',
@@ -2876,6 +2885,8 @@ to skip it entirely and to just do everything in the `writers._rowWriter`.
     }]
   });
 
+  // Create a function to update the chart with the current working set
+  // of records from dynatable, after all operations have been run.
   function updateChart() {
     var dynatable = $table.data('dynatable'), categories = [], values = [];
     $.each(dynatable.settings.dataset.records, function() {
@@ -2887,6 +2898,8 @@ to skip it entirely and to just do everything in the `writers._rowWriter`.
     chart.series[0].setData(values);
   };
 
+  // Attach dynatable to our table,
+  // and trigger our update function whenever we interact with it.
   $table
     .dynatable({
       inputs: {
@@ -2906,9 +2919,12 @@ to skip it entirely and to just do everything in the `writers._rowWriter`.
     .hide()
     .bind('dynatable:afterProcess', updateChart);
 
+  // Run our updateChart function for the first time.
   updateChart();
 })();
 </script>
+
+Our initial data:
 
 {% highlight html %}
 <div id="chart-example-chart"></div>
@@ -2940,15 +2956,20 @@ to skip it entirely and to just do everything in the `writers._rowWriter`.
 </table>
 {% endhighlight %}
 
+The JS:
+
 {% highlight js %}
 (function() {
   var $table = $('#chart-example'), $chart = $('#chart-example-chart'), chart;
 
+  // Create a button to toggle our table's visibility.
+  // We could just hide it completely if we don't need it.
   $('#toggle-chart-table').click(function(e) {
     e.preventDefault();
     $table.toggle();
   });
 
+  // Set up our Highcharts chart
   chart = new Highcharts.Chart({
     chart: {
       type: 'column',
@@ -2969,6 +2990,8 @@ to skip it entirely and to just do everything in the `writers._rowWriter`.
     }]
   });
 
+  // Create a function to update the chart with the current working set
+  // of records from dynatable, after all operations have been run.
   function updateChart() {
     var dynatable = $table.data('dynatable'), categories = [], values = [];
     $.each(dynatable.settings.dataset.records, function() {
@@ -2980,6 +3003,8 @@ to skip it entirely and to just do everything in the `writers._rowWriter`.
     chart.series[0].setData(values);
   };
 
+  // Attach dynatable to our table, hide the table,
+  // and trigger our update function whenever we interact with it.
   $table
     .dynatable({
       inputs: {
@@ -2999,6 +3024,7 @@ to skip it entirely and to just do everything in the `writers._rowWriter`.
     .hide()
     .bind('dynatable:afterProcess', updateChart);
 
+  // Run our updateChart function for the first time.
   updateChart();
 })();
 {% endhighlight %}
