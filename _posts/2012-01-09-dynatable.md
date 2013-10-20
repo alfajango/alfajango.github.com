@@ -1328,13 +1328,25 @@ Results in this JSON collection:
 
 <br class="clear" />
 
-By default, dynatable converts headings to `camelCase`
-(`favoriteMusic`) for the JSON
-record attributes, as is common in JavaScript. However, we can configure
-it to convert to `trimDash` (`Favorite-Music`), `dashed`
-(`favorite-music`), `underscore` (`favorite_music`), or `lowercase`
-(`favorite music`).
+#### Converting attribute names
 
+By default, dynatable converts headings to JSON attribute names using:
+
+<div class="row-fluid">
+<div class="span6">
+<table class="table table-bordered">
+<tr>
+<th>Style</th><th>Example</th>
+</tr>
+<tr><td><code>camelCase</code> (default)</td><td><code>favoriteMusic</code></td><tr>
+<tr><td><code>trimDash</code></td><td><code>Favorite-Music</code></td></tr>
+<tr><td><code>dashed</code></td><td><code>favorite-music</code></td></tr>
+<tr><td><code>underscore</code></td><td><code>favorite_music</code></td></tr>
+<tr><td><code>lowercase</code></td><td><code>favorite music</code></td></tr>
+</table>
+</div>
+
+<div class="span6">
 {% highlight js %}
 $('#my-table').dynatable({
   table: {
@@ -1342,6 +1354,8 @@ $('#my-table').dynatable({
   }
 });
 {% endhighlight %}
+</div>
+</div>
 
 We could also define our own column-name transformation function:
 
@@ -1578,7 +1592,7 @@ to that in the Render section.*
 
 <div class="side-by-side left">
 <p>
-The following:
+The following HTML:
 </p>
 
 {% highlight html %}
@@ -1595,6 +1609,10 @@ The following:
   </li>
 </ul>
 {% endhighlight %}
+
+<p>
+And JavaScript:
+</p>
 
 {% highlight js %}
 $('#my-list').dynatable({
@@ -2822,11 +2840,31 @@ to skip it entirely and to just do everything in the `writers._rowWriter`.
 
 <script>
 (function() {
-  var $table = $('#chart-example'), $chart = $('#chart-example-chart');
+  var $table = $('#chart-example'), $chart = $('#chart-example-chart'), chart;
 
   $('#toggle-chart-table').click(function(e) {
     e.preventDefault();
-    $table.slideToggle();
+    $table.toggle();
+  });
+
+  chart = new Highcharts.Chart({
+    chart: {
+      type: 'column',
+      renderTo: 'chart-example-chart'
+    },
+    title: {
+      text: 'World\'s largest cities per 2008'
+    },
+    yAxis: {
+      min: 0,
+      title: {
+        text: 'Population (millions)'
+      }
+    },
+    series: [{
+      name: 'Population',
+      color: '#006A72'
+    }]
   });
 
   function updateChart() {
@@ -2835,28 +2873,9 @@ to skip it entirely and to just do everything in the `writers._rowWriter`.
       categories.push(this.city);
       values.push(parseFloat(this.population));
     });
-    $chart.highcharts({
-      chart: {
-        type: 'column'
-      },
-      title: {
-        text: 'World\'s largest cities per 2008'
-      },
-      xAxis: {
-        categories: categories
-      },
-      yAxis: {
-        min: 0,
-        title: {
-          text: 'Population (millions)'
-        }
-      },
-      series: [{
-        name: 'Population',
-        color: '#006A72',
-        data: values
-      }]
-    });
+
+    chart.xAxis[0].setCategories(categories);
+    chart.series[0].setData(values);
   };
 
   $table
@@ -2914,11 +2933,31 @@ to skip it entirely and to just do everything in the `writers._rowWriter`.
 
 {% highlight js %}
 (function() {
-  var $table = $('#chart-example'), $chart = $('#chart-example-chart');
+  var $table = $('#chart-example'), $chart = $('#chart-example-chart'), chart;
 
   $('#toggle-chart-table').click(function(e) {
     e.preventDefault();
-    $table.slideToggle();
+    $table.toggle();
+  });
+
+  chart = new Highcharts.Chart({
+    chart: {
+      type: 'column',
+      renderTo: 'chart-example-chart'
+    },
+    title: {
+      text: 'World\'s largest cities per 2008'
+    },
+    yAxis: {
+      min: 0,
+      title: {
+        text: 'Population (millions)'
+      }
+    },
+    series: [{
+      name: 'Population',
+      color: '#006A72'
+    }]
   });
 
   function updateChart() {
@@ -2927,28 +2966,9 @@ to skip it entirely and to just do everything in the `writers._rowWriter`.
       categories.push(this.city);
       values.push(parseFloat(this.population));
     });
-    $chart.highcharts({
-      chart: {
-        type: 'column'
-      },
-      title: {
-        text: 'World\'s largest cities per 2008'
-      },
-      xAxis: {
-        categories: categories
-      },
-      yAxis: {
-        min: 0,
-        title: {
-          text: 'Population (millions)'
-        }
-      },
-      series: [{
-        name: 'Population',
-        color: '#006A72',
-        data: values
-      }]
-    });
+
+    chart.xAxis[0].setCategories(categories);
+    chart.series[0].setData(values);
   };
 
   $table
