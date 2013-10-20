@@ -1783,8 +1783,9 @@ $(window).load(function() {
     .bind('dynatable:init', function(e, dynatable) {
       dynatable.sorts.functions["rgb"] = function(a, b, attr, direction) {
         var aColorValue = a.dec,
-            bColorValue = b.dec;
-        return direction > 0 ? aColorValue - bColorValue : bColorValue - aColorValue;
+            bColorValue = b.dec,
+            comparison = aColorValue - bColorValue;
+        return direction > 0 ? comparison : -comparison;
       };
     })
     .dynatable({
@@ -1800,11 +1801,12 @@ $(window).load(function() {
       },
       readers: {
         color: function(cell, record) {
-          // Inspect the source of this example to see the getAverageRGB function.
+          // Inspect the source of this example
+          // to see the getAverageRGB function.
           var $cell = $(cell),
-              rgb = getAverageRGB($cell.find('img').get(0));
-          record['rgb'] = rgb;
-          record['dec'] = ( rgb.r << 16 ) + ( rgb.g << 8 ) + rgb.b;
+              rgb = getAverageRGB($cell.find('img').get(0)),
+              dec = ( rgb.r << 16 ) + ( rgb.g << 8 ) + rgb.b;
+          record['dec'] = dec;
           record['name'] = $cell.text();
           return $cell.html();
         }
@@ -1929,8 +1931,9 @@ alphabetical order:
       .bind('dynatable:init', function(e, dynatable) {
         dynatable.sorts.functions["rgb"] = function(a, b, attr, direction) {
           var aColorValue = a.dec,
-              bColorValue = b.dec;
-          return direction > 0 ? aColorValue - bColorValue : bColorValue - aColorValue;
+              bColorValue = b.dec,
+              comparison = aColorValue - bColorValue;
+          return direction > 0 ? comparison : -comparison;
         };
       })
       .dynatable({
@@ -1947,9 +1950,9 @@ alphabetical order:
         readers: {
           color: function(cell, record) {
             var $cell = $(cell),
-                rgb = getAverageRGB($cell.find('img').get(0));
-            record['rgb'] = rgb;
-            record['dec'] = ( rgb.r << 16 ) + ( rgb.g << 8 ) + rgb.b;
+                rgb = getAverageRGB($cell.find('img').get(0)),
+                dec = ( rgb.r << 16 ) + ( rgb.g << 8 ) + rgb.b;
+            record['dec'] = dec;
             record['name'] = $cell.text();
             return $cell.html();
           }
