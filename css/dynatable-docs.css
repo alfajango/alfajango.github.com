@@ -237,6 +237,10 @@ ul {
   margin: 20px 0;
 }
 
+#post .no-margin-pre pre {
+  margin: 0;
+}
+
 #toc ul {
   margin: 10px 0;
 }

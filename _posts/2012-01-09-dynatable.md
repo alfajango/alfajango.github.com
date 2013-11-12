@@ -1347,14 +1347,35 @@ By default, dynatable converts headings to JSON attribute names using:
 </table>
 </div>
 
-<div class="span6">
+<div class="span6 no-margin-pre">
 {% highlight js %}
 $('#my-table').dynatable({
+  table: {
+    defaultColumnIdStyle: 'trimDash'
+  }
+});
+{% endhighlight %}
+</div>
+</div>
+
+<div class="row-fluid">
+<div class="span4 no-margin-pre">
+{% highlight js %}
+$.dynatableSetup({
   table: {
     defaultColumnIdStyle: 'underscore'
   }
 });
 {% endhighlight %}
+</div>
+
+<div class="span8">
+<div class="alert alert-block">
+PROTIP: When using dynatable in a Rails application, set the global
+style to <code>underscore</code>, matching the Rails parameter and input
+field naming conventions. This is useful when getting the JSON data via
+AJAX from Rails, or when connecting dynatable events with form inputs on the page).
+</div>
 </div>
 </div>
 
