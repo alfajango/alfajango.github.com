@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>{{ page.title }}</title>
+    <meta name="viewport" content="width=device-width">
+    <link rel="stylesheet" media="all" href="/css/reset.css" />
+    <link rel="stylesheet" media="all" href="/css/bootstrap.min.css" />
+    <link rel="stylesheet" media="all" href="/css/application.css" />
+    <link rel="stylesheet" media="all" href="/css/project.css" />
+    <link rel="stylesheet" media="all" href="/css/pygments.css" />
+    <link rel="stylesheet" media="all" href="/css/share.css" />
+    <link href='http://fonts.googleapis.com/css?family=Nunito:300' rel='stylesheet' type='text/css'>
+    <link href="http://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" media="all" href="/css/dynatable-docs.css" />
+    <script type='text/javascript' src='/js/jquery-1.9.1.min.js'></script>
+    <script type='text/javascript' src='/js/jquery.scrollTo.js'></script>
+    <script type='text/javascript' src='/js/jquery.toc.min.js'></script>
+    <script type='text/javascript' src='/js/jquery.sharrre-1.2.0.min.js'></script>
+
+
+    <!-- resources for project demos //-->
+    {% for css in page.stylesheets %}
+    <link rel="stylesheet" media="all" href="/css/{{ css }}" />
+    {% endfor %}
+    {% for js in page.javascripts %}
+    <script type='text/javascript' src='/js/{{ js }}'></script>
+    {% endfor %}
+
+    <script>
+      $.dynatableSetup({features: {pushState: false}});
+
+      function getRandomInt (min, max) {
+        return Math.floor(Math.random() * (max - min + 1)) + min;
+      }
+
+      var $toc,
+          $tagbar,
+          $content,
+          $downloadBar,
+          tocWidth,
+          tocTop,
+          tagbarHeight,
+          tagbarTop,
+          contentTop,
+          downloadBarTop,
+          scrollRatio;
+
+      $(document).ready( function() {
+        $toc = $('#toc-container'),
+        $tagbar = $('#tagbar'),
+        $content = $('#content'),
+        $downloadBar = $('#download-and-share-container'),
+        tocWidth = $toc.outerWidth(),
+        tocTop = $toc.offset().top,
+        tagbarHeight = $tagbar.outerHeight(),
+        tagbarTop = $tagbar.offset().top,
+        contentTop = $content.offset().top,
+        //downloadBarTop = $downloadBar.offset().top,
+        scrollRatio = tocWidth / tagbarHeight;
+
+        $('#toc').toc({
+          selectors: '#post > h2, #post > h3, #footer > h2',
+          anchorName: function(i, heading, prefix) {
+            return $(heading).text().replace(/^\s+|\s+$/g, "").replace(/\s+/g, "-").replace(/([A-Z])/g, function($1){return $1.toLowerCase();});
+          }
+        });
+      })
+        .delegate('#plugin-graphic', 'click', function() {
+          $('#splashbar .mountain').remove();
+          loadMountains();
+        });
+
+      function loadMountains() {
+        var mountains = [],
+            $splash = $('#splashbar'),
+            splashWidth = $splash.width() - 100,
+            splashHeight = $splash.height(),
+            spacing = parseFloat(splashWidth)/7;
+        for (var i=0; i < 7; i++) {
+          var dim = getRandomInt(200, 500),
+              pos = (i * spacing) + getRandomInt(-100,100),
+              bottom = splashHeight - dim/4; 
+          mountains.push('<i class="mountain" style="display: none; left: ' + pos + 'px; width: ' + dim + 'px; height: ' + dim + 'px; top: ' + bottom + 'px;"></i>');
+        }
+        $splash.append(mountains.join('')).find('.mountain').fadeIn();
+      }
+
+      $(window)
+        .scroll(function(e){
+          var scrollTop = $(this).scrollTop();
+
+          // TOC sidebar animation and pinning
+          if (scrollTop > tocTop && $toc.css('position') != 'fixed'){
+            $toc.css({'position': 'fixed', 'top': '0px'});
+          }
+          if (scrollTop < contentTop && $toc.css('position') != 'absolute'){
+            $toc.css({'position': 'absolute', 'top': 'auto'});
+          }
+          if (scrollTop > tagbarTop) {
+            var leftOffset = tocWidth - (scrollTop - tagbarTop) * scrollRatio;
+            if (scrollTop < (tagbarTop + tagbarHeight)) {
+              $toc.offset({'left': -(leftOffset)});
+            } else if ($toc.offset().left < 0) {
+              $toc.offset({'left': 0});
+            }
+          } else if (scrollTop < tagbarTop) {
+            $toc.offset({'left': -tocWidth});
+          }
+
+          // Download pinning
+          //if (scrollTop > downloadBarTop && $downloadBar.css('position') != 'fixed'){
+          //  $downloadBar.css({'position': 'fixed', 'top': '0px'});
+          //}
+          //if (scrollTop < downloadBarTop && $downloadBar.css('position') != 'static'){
+          //  $downloadBar.css({'position': 'static', 'top': 'auto'});
+          //}
+        })
+        .load(function() {
+          loadMountains();
+        });
+    </script>
+    {% include get_downloads.html %}
+    {% include analytics.html %}
+    {% include share.html %}
+  </head>
+  <body>
+    <div id='topbar'>
+      <div id='topbar-contained'>
+        <a id='supported-by' href="http://www.alfajango.com">
+          <span>built and supported by</span>
+          <img src='/images/alfa-jango-logo.png' id='supported-by-aj-logo' />
+        </a>
+        <ul id='right-nav'>
+          <li><a href="/">Open Source Projects</a></li>
+          <li><a href="http://www.alfajango.com/blog">Blog</a></li>
+        </ul>
+      </div>
+    </div>
+    <div id='splashbar'>
+      <div class=''>
+        <div class="splash-left">
+          <img id="plugin-graphic" src="/images/dynatable.png" />
+        </div>
+        <div class="splash-right">
+          <h1 id="title">{{ page.heading }}</h1>
+          {% if page.tagline %}
+            <div id="tagline">{{ page.tagline }}</div>
+          {% endif %}
+          {% if page.second_heading %}
+            <h2>{{ page.second_heading }}</h2>
+          {% endif %}
+          {% if page.description %}
+            <p id="description">{{ page.description }}</p>
+          {% endif %}
+        </div>
+        <div class="splash-right splash-download">
+          <div id="download">
+            {% if page.download %}
+            <div id="download-group">
+              <a class='btn btn-success large-button' id='download-button' href='{{ page.download.href }}'><img src='/images/wooden-box.png' /> {{page.download.title}}</a>
+              <div id="download-count" data-{{ page.download.type }}="{{ page.download.data }}"></div>
+            </div>
+            {% endif %}
+            {% if page.github %}
+            <div id="github-group">
+              <a class='btn large-button' id='github-button' href='{{ page.github.href }}'><img src='/images/github-icon.png' /> {{page.github.title}}</a>
+              <iframe class="github-button" src="http://ghbtns.com/github-btn.html?user=JangoSteve&repo=jquery-dynatable&type=watch&count=true" allowtransparency="true" frameborder="0" scrolling="0" width="110" height="20"></iframe>
+              <iframe class="github-button" src="http://ghbtns.com/github-btn.html?user=JangoSteve&repo=jquery-dynatable&type=fork&count=true" allowtransparency="true" frameborder="0" scrolling="0" width="110" height="20"></iframe>
+            </div>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+    <div id='tagbar' {% if page.url == '/index.html' %} class='homepage' {% endif %}>
+      <div class='contained'>
+        <div id='share-container'>
+          <div id="shareme" data-url="http://os.alfajango.com{{ page.url }}" data-text="{{ page.title }}" data-title="<span>share this:</span> <img src='/images/dynatable-share-white.png' />"></div>
+        </div>
+      </div>
+    </div>
+    <div id='content' class='contained'>
+
+      <div id='toc-container'>
+        <div id='toc'>
+        </div>
+      </div>
+
+      <div id='post'>
+        {{ content }}
+
+        <div id='footer'>
+          <p>
+          Congratulations, you've reached the end of the documentation!
+          </p>
+          <p>
+          {% if page.links || page.articles %}
+          Take these links. They will help you in your journey:
+          {% endif %}
+          </p>
+
+          {% if page.links %}
+            <h2> Project Resources</h2>
+            <ul class='footer-list' id='resources'>
+              {% for link in page.links %}
+              <li><a href="{{ link.href }}">{{ link.title }}</a></li>
+              {% endfor %}
+            </ul>
+          {% endif %}
+
+          {% if page.articles %}
+          <h2>Related Articles</h2>
+          <ul class='footer-list' id='articles'>
+            {% for article in page.articles %}
+            <li><a href="{{ article.href }}">{{ article.title }}</a></li>
+            {% endfor %}
+          </ul>
+          {% endif %}
+        </div>
+      </div>
+
+    </div>
+  </body>
+</html>

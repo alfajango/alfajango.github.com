@@ -613,16 +613,6 @@ img.styled {
   vertical-align: middle;
 }
 
-#ul-example li {
-  display: block;
-  height: 100px;
-  background: #eee;
-  margin-bottom: 10px;
-  padding: 5px 8px;
-  border: solid 1px rgba(0,0,0,0.35);
-  box-sizing: border-box;;
-}
-
 cite {
   display: block;
   margin: 10px 0;

@@ -1,30 +1,29 @@
 ---
-layout: project
+layout: dynatable
 title: jQuery Dynatable Plugin
-heading: Dynatable
+heading: Dyna<span>table</span>
 tagline: HTML5+JSON interactive table plugin.
 description: Dynatable is a funner, semantic, interactive table plugin
-  using jQuery, HTML5, and JSON.
+  using jQuery, HTML5, and JSON. And it's not just for tables.
 download:
   title: Download
   href: http://jspkg.com/packages/dynatable
+  data: dynatable
+  type: jspkg
 github:
-  title: Fork on Github
+  title: View Source
   href: https://github.com/JangoSteve/jquery-dynatable
 links:
   - title: Report bug or request feature
     href: https://github.com/JangoSteve/jquery-dynatable/issues
 javascripts:
   - jquery.dynatable.js
+  - highcharts.js
 stylesheets:
   - jquery.dynatable.css
 ---
 
-## Demo
-
-{% highlight js %}
-$('#my-table').dynatable();
-{% endhighlight %}
+<h2 class="first-heading">Demo</h2>
 
 <div class="dynatable-demo">
 
@@ -1165,12 +1164,15 @@ $('#my-table').dynatable();
 
 <script type="text/javascript">
   $('#example-table').dynatable({
-    unfilters: {
+    features: {
+      pushState: true
+    },
+    readers: {
       'us-$': function(el, record) {
         return Number(el.innerHTML.replace(/,/g, ''));
       }
     },
-    filters: {
+    writers: {
       'us-$': function(record) {
         return record['us-$'].toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
       }
@@ -1178,33 +1180,85 @@ $('#my-table').dynatable();
   });
 </script>
 
-<hr />
+To get started, simply install jquery.dynatable.js (along with jQuery),
+and add the following in the `document.ready` or after the table:
+
+{% highlight js %}
+$('#my-table').dynatable();
+{% endhighlight %}
 
 ## How it works
 
 Dynatable does three things:
 
-1. Normalize: It normalizes an HTML table into an array of JSON
-objects, where each JSON object (or record) corresponds to a row in the
+<div class="row-fluid">
+<div class="span5 how-it-works-col">
+<img id="how-it-works" src="/images/dynatable-how-it-works-thin.png" />
+</div>
+<div class="span7 how-it-works-col">
+<ol>
+<li>
+<h4>Read / Normalize</h4>
+<p>
+The HTML table is scanned and normalized into an array of JSON
+objects (or collection) where each JSON object (or record) corresponds to a row in the
 table.
+</p>
+</li>
+<li>
+<h4>Operate</h4>
+<p>
+The JSON collection can be sorted, searched/filtered, and
+paginated/sliced.
+</p>
+</li>
+<li>
+<h4>Write / Render</h4>
+<p>
+The results of the Operate step are rendered back to the DOM in the body
+of the table.
+</p>
+</li>
+</ol>
 
-2. Operations: It sorts, filters, and paginates the JSON collection.
-
-3. Rendering: It renders the resulting collection from the operations back
-to the table.
-
+<p>
 This 3-step approach has several advantages:
+</p>
 
-* Since the logic and operations occur on the JSON collection, we group
-  DOM operations (reading and writing/drawing) together, making
+<ul>
+<li>
+<h4>Efficient reading/operating/writing</h4>
+<p>
+Since the logic and operations occur on the JSON collection, the
+DOM operations (reading and writing/drawing) are grouped together, making
 interactions quick and efficient.
+</p>
+</li>
+<li>
+<h4>Operations are simple JavaScript</h4>
+<p>
+An operation is simply a function that acts on the normalized JSON collection; sorting, filtering, and
+paginating are straight forward in JavaScript.
+</p>
+<p>
+The built-in functions are easy to augment with your
+own custom sorting and querying functions.
+</p>
+</li>
+<li>
+<h4>Steps can be customized, swapped or skipped</h4>
+<p>
+Since the normalization, operation, and rendering modules are separated,
+each can easily be customized, replaced, or skipped.
+</p>
+<p>
+Already have a JSON API to work with? Skip the Read step. Want to add
+paginating, filtering, and sorting to a chart? Customize the Render step.
+</li>
+</ul>
+</div>
+</div>
 
-* Once data has been normalized into JSON, sorting, filtering, and
-  paginating become easy to do in JavaScript.
-
-* Since the normalization and rendering modules are separated, they can
-  easily be configured or replaced with custom normalization and rendering
-modules.
 
 ## Normalization
 
@@ -1212,7 +1266,10 @@ The first module normalizes an HTML table into a JSON collection.
 Dynatable names the attributes of each record according to the table
 heading, so that the JSON collection is human-readable and easy to work with.
 
+<div class="side-by-side left">
+<p>
 The following table:
+</p>
 
 {% highlight html %}
 <table>
@@ -1242,8 +1299,12 @@ The following table:
   </tbody>
 </table>
 {% endhighlight %}
+</div>
 
+<div class="side-by-side right">
+<p>
 Results in this JSON collection:
+</p>
 
 {% highlight js %}
 [
@@ -1264,20 +1325,59 @@ Results in this JSON collection:
   }
 ]
 {% endhighlight %}
+</div>
 
-By default, dynatable converts headings to `camelCase` for the JSON
-record attributes, as is common in JavaScript. However, we can configure
-it to convert to `trimDash` (`Favorite-Music`), `dashed`
-(`favorite-music`), `underscore` (`favorite_music`), or `lowercase`
-(`favorite music`).
+<br class="clear" />
 
+#### Converting attribute names
+
+By default, dynatable converts headings to JSON attribute names using:
+
+<div class="row-fluid">
+<div class="span6">
+<table class="table table-bordered">
+<tr>
+<th>Style</th><th>Example</th>
+</tr>
+<tr><td><code>camelCase</code> (default)</td><td><code>favoriteMusic</code></td><tr>
+<tr><td><code>trimDash</code></td><td><code>Favorite-Music</code></td></tr>
+<tr><td><code>dashed</code></td><td><code>favorite-music</code></td></tr>
+<tr><td><code>underscore</code></td><td><code>favorite_music</code></td></tr>
+<tr><td><code>lowercase</code></td><td><code>favorite music</code></td></tr>
+</table>
+</div>
+
+<div class="span6 no-margin-pre">
 {% highlight js %}
 $('#my-table').dynatable({
+  table: {
+    defaultColumnIdStyle: 'trimDash'
+  }
+});
+{% endhighlight %}
+</div>
+</div>
+
+<div class="row-fluid">
+<div class="span4 no-margin-pre">
+{% highlight js %}
+$.dynatableSetup({
   table: {
     defaultColumnIdStyle: 'underscore'
   }
 });
 {% endhighlight %}
+</div>
+
+<div class="span8">
+<div class="alert alert-block">
+PROTIP: When using dynatable in a Rails application, set the global
+style to <code>underscore</code>, matching the Rails parameter and input
+field naming conventions. This is useful when getting the JSON data via
+AJAX from Rails, or when connecting dynatable events with form inputs on the page).
+</div>
+</div>
+</div>
 
 We could also define our own column-name transformation function:
 
@@ -1298,7 +1398,12 @@ $('#my-table')
 
 Sometimes, we need columns with labels different than the record
 attribute name. If a column heading contains the `data-dynatable-column`
-attribute, the associated record attribute will be named by that value:
+attribute, the associated record attribute will be named by that value.
+
+<div class="side-by-side left">
+<p>
+So this:
+</p>
 
 {% highlight html %}
 <table id="my-final-table">
@@ -1311,8 +1416,12 @@ attribute, the associated record attribute will be named by that value:
   </tbody>
 </table>
 {% endhighlight %}
+</div>
 
+<div class="side-by-side right">
+<p>
 Would result in:
+</p>
 
 {% highlight js %}
 [
@@ -1326,7 +1435,9 @@ Would result in:
   }
 ]
 {% endhighlight %}
+</div>
 
+<br class="clear" />
 
 The default behavior makes it easy to make an existing HTML table
 dynamic. But we're not limited to reading tables.
@@ -1336,6 +1447,12 @@ dynamic. But we're not limited to reading tables.
 Perhaps we already have our data in JSON format. We can
 skip the initial record normalization by setting up an empty table for
 rendering and directly passing our data into dynatable:
+
+<div class="side-by-side left">
+
+<p>
+HTML table to render records:
+</p>
 
 {% highlight html %}
 <table id="my-final-table">
@@ -1348,8 +1465,22 @@ rendering and directly passing our data into dynatable:
 </table>
 {% endhighlight %}
 
-{% highlight js %}
-var myRecords = [
+<div class="alert alert-block">
+Of course we could just code the json data directly in our JavaScript on
+the right, but what's the fun in that?
+As a bonus, edit the JSON data to the right and watch the data in the table
+update in real-time. &#8594;
+</div>
+
+</div>
+
+<div class="side-by-side right">
+<p>
+This is a <code>pre#json-records</code> element:
+</p>
+
+<pre id="json-records" contenteditable>
+[
   {
     "band": "Weezer",
     "song": "El Scorcho"
@@ -1358,20 +1489,60 @@ var myRecords = [
     "band": "Chevelle",
     "song": "Family System"
   }
-];
+]
+</pre>
+{% highlight js %}
+var $records = $('#json-records'),
+    myRecords = JSON.parse($records.text());
 $('#my-final-table').dynatable({
   dataset: {
     records: myRecords
   }
 });
 {% endhighlight %}
+</div>
+<br class="clear" />
+
+<table id="my-final-table" class="table table-bordered">
+  <thead>
+    <th>Band</th>
+    <th>Song</th>
+  </thead>
+  <tbody>
+  </tbody>
+</table>
+
+<script>
+(function() {
+  var $records = $('#json-records'),
+      myRecords = JSON.parse($records.text());
+  var dynatable = $('#my-final-table').dynatable({
+    dataset: {
+      records: myRecords
+    }
+  }).data('dynatable');
+
+  $records.bind('input', function() {
+    try {
+      var json = JSON.parse($(this).text());
+      $records.removeClass('error');
+
+      dynatable.settings.dataset.originalRecords = json;
+      dynatable.process();
+    } catch(e) {
+      $records.addClass('error');
+    }
+  });
+})();
+</script>
 
 ### JSON from AJAX
 
 Or maybe, we want to fetch the data via AJAX:
 
+<div class="side-by-side left">
 {% highlight html %}
-<table id="my-final-table">
+<table id="my-ajax-table">
   <thead>
     <th>Some Attribute</th>
     <th>Some Other Attribute</th>
@@ -1380,20 +1551,71 @@ Or maybe, we want to fetch the data via AJAX:
   </tbody>
 </table>
 {% endhighlight %}
+</div>
 
+<div class="side-by-side right">
 {% highlight js %}
-$('#my-final-table').dynatable({
+$('#my-ajax-table').dynatable({
   dataset: {
     ajax: true,
-    ajaxUrl: '/my_data.json'
+    ajaxUrl: '/dynatable-ajax.json',
+    records: []
   }
 });
 {% endhighlight %}
+
+<p>
+<a href="/dynatable-ajax.json"><i class="icon-share"></i> View AJAX data</a>
+</p>
+
+</div>
+<br class="clear" />
+
+<table id="my-ajax-table" class="table table-bordered">
+  <thead>
+    <th>Some Attribute</th>
+    <th>Some Other Attribute</th>
+  </thead>
+  <tbody>
+  </tbody>
+</table>
+
+<script>
+$('#my-ajax-table').dynatable({
+  dataset: {
+    ajax: true,
+    ajaxUrl: '/dynatable-ajax.json',
+    records: []
+  }
+});
+</script>
 
 ### Lists and non-Tables
 
 Or maybe we do need the normalization step, but we want to read the
 data from an unordered list instead of a table:
+
+We can use the `table`
+settings to configure such awesomeness. We'll use the
+`table.bodyRowSelector` setting to tell dynatable to use `li` elements
+as record rows instead of the default `tr` elements, and we'll use the
+`writers._rowWriter` setting to tell dynatable how to process each `li`
+into a JSON record object.
+
+Dynatable will call the `readers._rowReader`
+function once for each record in the `table.bodyRowSelector` collection,
+and pass it the current count index, the DOM element, and the JSON
+record. This allows full control over which data in the DOM maps to
+which data in the JSON:
+
+*NOTE: We'll also need a `readers._rowReader` function to tell
+dynatable how to write the JSON records back to the page, but we'll get
+to that in the Render section.*
+
+<div class="side-by-side left">
+<p>
+The following HTML:
+</p>
 
 {% highlight html %}
 <ul id="my-list">
@@ -1410,38 +1632,15 @@ data from an unordered list instead of a table:
 </ul>
 {% endhighlight %}
 
-We can use the `table`
-settings to configure such awesomeness. We'll use the
-`table.bodyRowSelector` setting to tell dynatable to use `li` elements
-as record rows instead of the default `tr` elements, and we'll use the
-`table.rowFilter` setting to tell dynatable how to process each `li`
-into a JSON record object.
-
-Dynatable will call the `table.rowUnfilter`
-function once for each record in the `table.bodyRowSelector` collection,
-and pass it the current count index, the DOM element, and the JSON
-record. This allows full control over which data in the DOM maps to
-which data in the JSON:
-
-*NOTE: We'll also need a `table.rowUnfilter` function to tell
-dynatable how to write the JSON records back to the page, but we'll get
-to that in the Render section.*
-
-<div class="alert-message block-message">
-In the parlance of dynatable, "filtering" refers to the transformation
-of data during the rendering step. I.e. the JSON data is filtered into
-DOM text. The initial normalization step from the DOM into JSON data is
-therefore called "unfiltering". This may be confusing, as the
-terminology depends on our perspective. We may change these functions in
-a future version to "normalizations" vs. "renderers" instead of
-"unfilters" vs. "filters".
-</div>
+<p>
+And JavaScript:
+</p>
 
 {% highlight js %}
 $('#my-list').dynatable({
   table: {
     bodyRowSelector: 'li',
-    rowUnfilter: function(index, li, record) {
+    rowReader: function(index, li, record) {
       var $li = $(li);
       record.name = $li.find('.name').text();
       record.type = $li.find('.type').text();
@@ -1450,8 +1649,12 @@ $('#my-list').dynatable({
   }
 });
 {% endhighlight %}
+</div>
 
-This will result in the following JSON:
+<div class="side-by-side right">
+<p>
+Will result in the following JSON:
+</p>
 
 {% highlight js %}
 [
@@ -1467,6 +1670,8 @@ This will result in the following JSON:
   }
 ]
 {% endhighlight %}
+</div>
+<br class="clear" />
 
 ## Operations
 
@@ -1495,6 +1700,8 @@ before 2). By default, if dynatable detects HTML code within the value
 of a record (such as an `img` tag, it will automatically sort and search
 based on the text-equivalent value of the cell, so sorting won't be
 affected by HTML tags or attributes). 
+
+#### Basic Sorting
 
 Click the header rows below to sort by each column. Click a header once
 for ascending, again for descending, and again to stop sorting by that
@@ -1554,12 +1761,12 @@ Hold shift and click a second row to add secondary sorting, and so on.
       search: false,
       recordCount: false
     },
-    unfilters: {
+    readers: {
       'price': function(el, record) {
         return Number(el.innerHTML.replace(/,/g, ''));
       }
     },
-    filters: {
+    writers: {
       'price': function(record) {
         return record.price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
       }
@@ -1568,9 +1775,11 @@ Hold shift and click a second row to add secondary sorting, and so on.
 </script>
 
 In the example above, we run the "Price" column values through an
-"unfilter" function which returns a JavaScript `Number` and parses out
-the comma seperator. Likewise, we then run it through a rendering filter
+"reader" function which returns a JavaScript `Number` and parses out
+the comma seperator. Likewise, we then run it through a rendering "writer" 
 which re-inserts the comma when rendering the number back to the DOM.
+
+#### Sort by Another Value
 
 Sometimes, we need one column to sort based on some other attribute.
 For example, maybe we have a column which needs to sort on another
@@ -1603,145 +1812,176 @@ the "Year" column based on the attribute in the last column.
 If we have a column we don't want to be sortable, we just add the
 `data-dynatable-no-sort` attribute.
 
-We can also use our own custom sort function. We just need to add our
-sort function to the `sorts.functions` object. For example, let's say we
-want to sort our table records by red, then green, then blue:
+#### Custom Sort Functions
 
-{% highlight js %}
-$('#sorting-function-example')
-  .bind('dynatable:init', function(e, dynatable) {
-    // Our custom "rgb" sort function, to sort red, then green, then blue
-    dynatable.sorts.functions["rgb"] = function(a, b, attr, direction) {
-      var colors = { Red: 1, Green: 2, Blue: 3},
-          aColorValue = colors[a[attr]],
-          bColorValue = colors[b[attr]];
-      return direction > 0 ? aColorValue - bColorValue : bColorValue - aColorValue;
-    };
-  })
-  .dynatable({
-    // Turn off the features we don't need
-    features: {
-      paginate: false,
-      search: false,
-      recordCount: false
-    },
-    // Tell dynatable to use the 'rgb' sort function for the 'color' column
-    dataset: {
-      sortTypes: {
-        color: 'rgb'
-      }
-    },
-    // Just a little extra flair for styling the table
-    table: {
-      cellFilter: function(html) {
-        return $('<td></td>', {
-          html: html,
-          style: "color: " + html
-        });
-      }
-    }
-  });
-{% endhighlight %}
+We can also use our own custom sort function. This demo sorts
+the "color" column by the average color content in the images, from greenish to bluish to
+reddish (using javascript and canvas in our sorting function to evaluate
+the color content of each image):
+
+<div class="row-fluid">
+
+<div class="span6">
 
 <div class="dynatable-demo">
 <table id="sorting-function-example" class="table table-bordered">
   <thead>
     <tr>
-      <th>Color</th>
+      <th data-dynatable-column="color" data-dynatable-sorts="dec">Sort by Color</th>
     </tr>
   </thead>
   <tbody>
     <tr>
-      <td style="color: blue;">Blue</td>
+      <td><img src="/images/dinosaurs/150px-Cerasinops_BW.jpg" /> Cerasinops</td>
     </tr>
     <tr>
-      <td style="color: green">Green</td>
+      <td><img src="/images/dinosaurs/150px-Ceratosaurus_sketch2.jpg" /> Ceratosaurus</td>
     </tr>
     <tr>
-      <td style="color: blue;">Blue</td>
+      <td><img src="/images/dinosaurs/150px-Allosaurus_BW.jpg" /> Allosaurus</td>
     </tr>
     <tr>
-      <td style="color: red;">Red</td>
+      <td><img src="/images/dinosaurs/150px-Tyrannosaurus_BW.jpg" /> Tyrannosaurus</td>
     </tr>
     <tr>
-      <td style="color: green;">Green</td>
+      <td><img src="/images/dinosaurs/150px-Brachylophosaurus-v4.jpg" /> Brachylophosaurus</td>
     </tr>
     <tr>
-      <td style="color: red;">Red</td>
+      <td><img src="/images/dinosaurs/Albertaceratops_BW.jpg" /> Albertaceratops</td>
+    </tr>
+    <tr>
+      <td><img src="/images/dinosaurs/Utahraptor_BW.jpg" /> Utahraptor</td>
     </tr>
   </tbody>
 </table>
 </div>
 
+<cite>
+<i>
+* Images from List of North American dinosaurs from <a target="_blank" href="http://en.wikipedia.org/wiki/List_of_North_American_dinosaurs">Wikipedia</a>
+</i>
+</cite>
+
 <script>
 (function() {
-  $('#sorting-function-example')
-    .bind('dynatable:init', function(e, dynatable) {
-      dynatable.sorts.functions["rgb"] = function(a, b, attr, direction) {
-        var colors = { Red: 1, Green: 2, Blue: 3},
-            aColorValue = colors[a[attr]],
-            bColorValue = colors[b[attr]];
-        return direction > 0 ? aColorValue - bColorValue : bColorValue - aColorValue;
-      };
-    })
-    .dynatable({
-      features: {
-        paginate: false,
-        search: false,
-        recordCount: false
-      },
-      dataset: {
-        sortTypes: {
-          color: 'rgb'
-        }
-      },
-      table: {
-        cellFilter: function(html) {
-          return $('<td></td>', {
-            html: html,
-            style: "color: " + html
-          });
-        }
+  function getAverageRGB(imgEl) {
+
+    var blockSize = 5, // only visit every 5 pixels
+        defaultRGB = {r:0,g:0,b:0}, // for non-supporting envs
+        canvas = document.createElement('canvas'),
+        context = canvas.getContext && canvas.getContext('2d'),
+        data, width, height,
+        i = -4,
+        length,
+        rgb = {r:0,g:0,b:0},
+        count = 0;
+
+    if (!context) {
+      return defaultRGB;
+    }
+
+    height = canvas.height = imgEl.naturalHeight || imgEl.offsetHeight || imgEl.height;
+    width = canvas.width = imgEl.naturalWidth || imgEl.offsetWidth || imgEl.width;
+
+    context.drawImage(imgEl, 0, 0);
+
+    try {
+      data = context.getImageData(0, 0, width, height);
+    } catch(e) {
+      /* security error, img on diff domain */
+      return defaultRGB;
+    }
+
+    length = data.data.length;
+
+    while ( (i += blockSize * 4) < length ) {
+      // Ignore grayish values
+      if ( Math.abs(data.data[i] - data.data[i+1]) > 25 && Math.abs(data.data[i+1] - data.data[i+3]) > 25 ) {
+        ++count;
+        rgb.r += data.data[i];
+        rgb.g += data.data[i+1];
+        rgb.b += data.data[i+2];
       }
+    }
+
+    // ~~ used to floor values
+    rgb.r = ~~(rgb.r/count);
+    rgb.g = ~~(rgb.g/count);
+    rgb.b = ~~(rgb.b/count);
+
+    return rgb;
+
+  }
+
+  $(window).load(function() {
+    $('#sorting-function-example')
+      .dynatable({
+        features: {
+          paginate: false,
+          search: false,
+          recordCount: false
+        },
+        readers: {
+          color: function(cell, record) {
+            var $cell = $(cell),
+                rgb = getAverageRGB($cell.find('img').get(0)),
+                dec = ( rgb.r << 16 ) + ( rgb.g << 8 ) + rgb.b;
+            record['dec'] = dec;
+            record['name'] = $cell.text();
+            return $cell.html();
+          }
+        }
+      });
+  })
+})();
+</script>
+</div>
+
+<div class="span6">
+<p>
+We may also sort programmatically with the dynatable API. For example,
+let's add a button which sorts our table by dinosaur names, and a button
+that clears all our sorts, putting the records back in their original
+order:
+</p>
+
+<p>
+<a href="#" class="btn primary" id="sorting-function-example-button">Sort A-Z</a>
+<a href="#" class="btn" id="sorting-function-example-clear-button">Clear Sorts</a>
+</p>
+
+<script>
+(function() {
+  $('#sorting-function-example').bind('dynatable:init', function(e, dynatable) {
+
+    $('#sorting-function-example-button').click( function(e) {
+      // Clear any existing sorts
+      dynatable.sorts.clear();
+      dynatable.sorts.add('name', 1) // 1=ASCENDING, -1=DESCENDING
+      dynatable.process();
+      e.preventDefault();
     });
+
+    $('#sorting-function-example-clear-button').click( function(e) {
+      dynatable.sorts.clear();
+      dynatable.process();
+      e.preventDefault()
+    });
+  });
 })();
 </script>
 
-We may also sort programmatically with the dynatable API. For example,
-let's add a button below which sorts our above table of colors in
-alphabetical order:
+<p>
+The code for the buttons above:
+</p>
 
-<a href="#" class="btn primary" id="sorting-function-example-button">Sort A-Z</a>
-<a href="#" class="btn" id="sorting-function-example-clear-button">Clear Sorts</a>
+{% highlight js %}
+$('#sorting-function-example').bind('dynatable:init', function(e, dynatable) {
 
-<script>
-(function() {
-  var dynatable = $('#sorting-function-example').data('dynatable');
-
-  // Option 1
-  // Create a new sort function to run from the sort we add below on
-  // button click.
-  dynatable.sorts.functions['color-alpha-sort'] = function(a, b, attr, direction) {
-    return a.color === b.color ? 0 : a.color > b.color;
-  };
-  // Tell dynatable to use our custom sort function for the 'color-alpha' sort.
-  dynatable.settings.dataset.sortTypes['color-alpha'] = 'color-alpha-sort';
-
-  // Option 2
-  // Create a 'color-alpha' property for each record so that we can use
-  // the built-in 'string' sort function which just sorts based on the
-  // property matching the sort type name.
-  //$.map(dynatable.settings.dataset.originalRecords, function(record) {
-  //  record['color-alpha'] = record.color;
-  //});
-  // Tell dynatable that our custom sort function should just use the built-in 'string' sort function.
-  //dynatable.settings.dataset.sortTypes['color-alpha'] = 'string';
-
-  // Sort by our new 'color-alpha' sort when clicked.
   $('#sorting-function-example-button').click( function(e) {
     // Clear any existing sorts
     dynatable.sorts.clear();
-    dynatable.sorts.add('color-alpha', 1) // 1=ASCENDING, -1=DESCENDING
+    dynatable.sorts.add('name', 1) // 1=ASCENDING, -1=DESCENDING
     dynatable.process();
     e.preventDefault();
   });
@@ -1751,47 +1991,162 @@ alphabetical order:
     dynatable.process();
     e.preventDefault()
   });
-})();
-</script>
+});
+{% endhighlight %}
+</div>
+</div>
 
-The code for the buttons above could be done a couple different ways:
+There are a couple different ways to achieve the custom color sorting above,
+and it's useful to explore each way to gain a better understanding of
+what's possible.
+
+#### Creating a Custom Sort Function
+
+The first way is to create a custom sort function, add it to dynatable's
+list of sort functions in `sorts.functions`, and then tell dynatable to use that function
+when sorting that column.
+
+A sort function takes in the two records being compared (a and b below),
+the attribute column currently being sorted, and the direction (1 for
+ascending, -1 for descending). The function needs to return a positive
+number (if a is higher than b), a negative number (if b is higher than
+a), or 0 (if a and b are tied).
 
 {% highlight js %}
-var dynatable = $('#sorting-function-example').data('dynatable');
+// Our custom sort function
+function rgbSort(a, b, attr, direction) {
 
-// Option 1
-// Create a new sort function to run from the sort we add below on
-// button click.
-dynatable.sorts.functions['color-alpha-sort'] = function(a, b, attr, direction) {
-  return a.color === b.color ? 0 : a.color > b.color;
+  // Assuming we've created a separate function
+  // to get the average RGB value from an image.
+  // (see source for example above for getAverageRGB function)
+  var aRgb = getAverageRGB(a.img),
+      bRgb = getAverageRGB(b.img),
+      aDec = ( aRgb.r << 16 ) + ( aRgb.g << 8 ) + aRgb.b,
+      bDec = ( bRgb.r << 16 ) + ( bRgb.g << 8 ) + bRgb.b,
+      comparison = aDec - bDec;
+
+  return direction > 0 ? comparison : -comparison;
 };
-// Tell dynatable to use our custom sort function for the 'color-alpha' sort.
-dynatable.settings.dataset.sortTypes['color-alpha'] = 'color-alpha-sort';
 
-// Option 2
-// Create a 'color-alpha' property for each record so that we can use
-// the built-in 'string' sort function which just sorts based on the
-// property matching the sort type name.
-//$.map(dynatable.settings.dataset.originalRecords, function(record) {
-//  record['color-alpha'] = record.color;
-//});
-// Tell dynatable that our custom sort function should just use the built-in 'string' sort function.
-//dynatable.settings.dataset.sortTypes['color-alpha'] = 'string';
+// Wait until images are loaded
+$(window).load(function() {
+  $('#sorting-function-example')
 
-// Sort by our new 'color-alpha' sort when clicked.
-$('#sorting-function-example-button').click( function(e) {
-  // Clear any existing sorts
-  dynatable.sorts.clear();
-  dynatable.sorts.add('color-alpha', 1) // 1=ASCENDING, -1=DESCENDING
-  dynatable.process();
-  e.preventDefault();
-});
+    // Add our custom sort function to dynatable
+    .bind('dynatable:init', function(e, dynatable) {
+      dynatable.sorts.functions["rgb"] = rgbSort;
+    })
 
-$('#sorting-function-example-clear-button').click( function(e) {
-  dynatable.sorts.clear();
-  dynatable.process();
-  e.preventDefault()
-});
+    // Initialize dynatable
+    .dynatable({
+      features: {
+        paginate: false,
+        search: false,
+        recordCount: false
+      },
+      dataset: {
+        // When we sort on the color column,
+        // use our custom sort added above.
+        sortTypes: {
+          color: 'rgbSort'
+        }
+      },
+      readers: {
+        color: function(cell, record) {
+          var $cell = $(cell);
+
+          // Store the average RGB image color value
+          // as a decimal in "dec" attribute.
+          record['img'] = $cell.find('img').get(0);
+
+          // Return the HTML of the cell to be stored
+          // as the "color" attribute.
+          return $cell.html();
+        }
+      }
+    });
+})
+{% endhighlight %}
+
+The sort function gets run between each pair of records to determine
+which comes first. This means it gets run `n!` times (where n is the
+number of records), or `n-1` times for each record.
+
+So, the average RGB
+values in this example are being re-computed multiple times for each
+record. This kills the efficiency.
+
+#### Creating a Custom Attribute to Sort On
+
+Instead, it's much more efficient to compute values only once for each
+record and store them as record attributes. We were already storing the
+image file above for each record, so why not go ahead and store the RGB
+values too?
+
+Furthermore, notice that in our custom `rgbSort` function above, after it
+calculates the RGB value for each record, it's just doing a standard
+number comparison (by subtracting one value from the other). Dynatable
+has built-in "number" sorting.
+
+{% highlight js %}
+$(window).load(function() {
+  $('#sorting-function-example')
+
+    // Initialize dynatable
+    .dynatable({
+      features: {
+        paginate: false,
+        search: false,
+        recordCount: false
+      },
+
+      // We have one column, but it contains multiple types of info.
+      // So let's define a custom reader for that column to grab
+      // all the extra info and store it in our normalized records.
+      readers: {
+        color: function(cell, record) {
+
+          // Inspect the source of this example
+          // to see the getAverageRGB function.
+          var $cell = $(cell),
+              rgb = getAverageRGB($cell.find('img').get(0)),
+              dec = ( rgb.r << 16 ) + ( rgb.g << 8 ) + rgb.b;
+
+          // Store the average RGB image color value
+          // as a decimal in "dec" attribute.
+          record['dec'] = dec;
+
+          // Grab the dinosaur name.
+          record['name'] = $cell.text();
+
+          // Return the HTML of the cell to be stored
+          // as the "color" attribute.
+          return $cell.html();
+        }
+      }
+    });
+})
+{% endhighlight %}
+
+We could now create a custom sort function for the "color" column, to make
+sure it sorts based on the "dec" attribute instead. Or, we could just tell
+dynatable to sort the "color" column based on the "name" attribute
+directly in our table with `data-dynatable-sorts`:
+
+{% highlight html %}
+<table>
+  <thead>
+    <tr>
+      <th data-dynatable-column="color" data-dynatable-sorts="dec">Sort by Color</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><img src="/images/dinosaurs/cerasinops.jpg" /> Cerasinops</td>
+    </tr>
+    <!-- ... -->
+  </tbody>
+</table>
 {% endhighlight %}
 
 ### Querying
@@ -1803,6 +2158,8 @@ matches from the plain-text values (case-insensitive) across all attributes of t
 Try it in the demo at the top of this page, by typing in the search box
 above the table and hitting "Enter" or "Tab".
 
+#### Custom Query Functions
+
 Queries can also be added programmatically via JavaScript to be
 processed by dynatable. We simply add a query key-value to the
 `dataset.queries` array, where the key matches the JSON record attribute
@@ -1811,6 +2168,7 @@ you'd like to match, and the value is what we're matching.
 Below, we'll include the default text search, and
 additionally include our own "Year" filter.
 
+<div class="side-by-side left">
 {% highlight html %}
 <select id="search-year" name="year">
   <option></option>
@@ -1821,6 +2179,14 @@ additionally include our own "Year" filter.
 </select>
 {% endhighlight %}
 
+<div class="alert alert-block">
+NOTE: This JS is the long version, to show how customizable queries
+are. See below for the easier, built-in way to add your own query
+controls. &#8594;
+</div>
+</div>
+
+<div class="side-by-side right">
 {% highlight js %}
 var dynatable = $('#search-example').dynatable({
   features: {
@@ -1840,6 +2206,8 @@ $('#search-year').change( function() {
   dynatable.process();
 });
 {% endhighlight %}
+</div>
+<br class="clear" />
 
 <div class="dynatable-demo">
 <div id="search-example-year-filter" style="float: left;">
@@ -2133,7 +2501,7 @@ If the resulting dataset for a given operation is too large for the
 pushState cache, then dynatable will automatically fallback to
 re-running the operations or re-sending the AJAX request to the server.
 
-<div class="alert-message block-message">
+<div class="alert alert-block">
   PushState works in <a href="http://caniuse.com/#search=pushstate"
 target=_blank>all modern browsers that support it</a>. For other
 browsers (IE9 or earlier), a pushState polyfill such as
@@ -2149,10 +2517,17 @@ indicator to the table to let users know something is happening. We can
 style this indicator however we want. By default, it's just the word
 "Processing..." overlaid in the center of the table.
 
-Below, we've created a custom sort function with a blocking alert the
-first time it runs, so
-that you can see the processing indicator in action.
+We can customize the html content of the processing indicator (including
+images or gifs), using the <code>inputs.processingText</code>
+configuration.
 
+We can also style the processing indicator overlay and inner block, by
+attaching styles to the
+<code>dynatable-processing</code> class and the <code>.dynatable-processing span</code>
+CSS selector, respectively.
+
+<div class="row-fluid">
+<div class="span6">
 <div class="dynatable-demo">
 <table id="processing-indicator-example" class="table table-bordered">
   <thead>
@@ -2176,13 +2551,11 @@ that you can see the processing indicator in action.
 
 <script>
 (function() {
-  var shown = false;
   $('#processing-indicator-example')
     .bind('dynatable:init', function(e, dynatable) {
       dynatable.sorts.functions['long-sort'] = function(a, b, attr, ascending) {
-        if (!shown) {
-          alert('Do you see the processing indicator?');
-          shown = true;
+        for (var i=0; i < 10000; i++) {
+          // Woo!
         }
         return dynatable.sorts.functions.string(a, b, attr, ascending);
       };
@@ -2203,51 +2576,25 @@ that you can see the processing indicator in action.
 })();
 </script>
 
-Of course, we could have also just invoked the processing indicator
-manually (but then we wouldn't have had an excuse to include another
-example of a custom sort function).
-
-To show or hide the processing indicator, we can call the
-<code>dynatable.processingIndicator.show()</code> and
-<code>dynatable.processingIndicator.hide()</code> functions.
-
-<a href="#" class="btn primary" id="processing-indicator-example-button">Show Standard Processing Indicator</a>
+<a href="#" class="btn primary"
+id="processing-indicator-example-button">Show Standard Processing
+Indicator</a>
 
 <script>
 (function() {
   var dynatable = $('#processing-indicator-example').data('dynatable');
   $('#processing-indicator-example-button').click( function(e) {
     dynatable.processingIndicator.show();
-    setTimeout(dynatable.processingIndicator.hide, 3000);
+    setTimeout(function() {
+      dynatable.processingIndicator.hide();
+    }, 3000);
     e.preventDefault();
   });
 })();
 </script>
+</div>
 
-We can configure the html content of the processing indicator (including
-images or gifs), using the <code>inputs.processingText</code>
-configuration.
-
-We can also style the processing indicator overlay and inner block, by
-attaching styles to the
-<code>dynatable-processing</code> class and the <code>.dynatable-processing span</code>
-CSS selector, respectively.
-
-{% highlight js %}
-$('#processing-indicator-nice-example').dynatable({
-  features: {
-    paginate: false,
-    search: false,
-    recordCount: false,
-    pushState: false,
-    sort: false
-  },
-  inputs: {
-    processingText: 'Loading <img src="/images/loading.gif" />'
-  }
-});
-{% endhighlight %}
-
+<div class="span6">
 <div class="dynatable-demo">
 <table id="processing-indicator-nice-example" class="table table-bordered">
   <thead>
@@ -2292,18 +2639,60 @@ $('#processing-indicator-nice-example').dynatable({
 (function() {
   var dynatable = $('#processing-indicator-nice-example').data('dynatable');
   $('#processing-indicator-nice-example-button').click( function(e) {
+    dynatable.processingIndicator.hide();
     dynatable.processingIndicator.show();
-    setTimeout(dynatable.processingIndicator.hide, 3000);
+    setTimeout(function() {
+      dynatable.processingIndicator.hide();
+    }, 3000);
     e.preventDefault();
   });
 })();
 </script>
 
+</div>
+</div>
+
+To show or hide the processing indicator above, we can call the
+<code>dynatable.processingIndicator.show()</code> and
+<code>dynatable.processingIndicator.hide()</code> functions.
+
+For the nicer example, we just add our own custom markup for the
+processing indicator, along with some custom CSS.
+
+{% highlight js %}
+$('#processing-indicator-nice-example').dynatable({
+  inputs: {
+    processingText: 'Loading <img src="/images/loading.gif" />'
+  }
+});
+{% endhighlight %}
+
+{% highlight css %}
+.dynatable-processing {
+  background: #000;
+  opacity: 0.6;
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  border-radius: 4px;
+}
+.dynatable-processing span {
+  background: #FFF;
+  border: solid 2px #57A957;
+  color: #333;
+  padding: 25px;
+  font-size: 2em;
+  box-shadow: 0px 0px 15px rgba(0,0,0,0.5);
+}
+.dynatable-processing span img {
+  vertical-align: middle;
+}
+{% endhighlight %}
+
 ## Rendering
 
 When rendering JSON data to the page, dynatable passes data through
-filters (you may notice that this is the opposite of the normalization step
-which runs the DOM elements through "unfilters").
+"writers" (you may notice that this is the opposite of the normalization step
+which runs the DOM elements through "readers").
 
 When rendering (and normalizing), dynatable assumes that our container element (on which
 we called dynatable) contains elements matching
@@ -2312,99 +2701,433 @@ dynatable assumes we're rendering to an HTML table, so our
 `table.bodyRowSelector` is `'tbody tr'`.
 
 To render our records, dynatable will loop through our records, running
-`table.rowFilter` on each record to create a collection of DOM elements.
-The default `table.rowFilter` creates a table `tr` element and loops
+`writers._rowWriter` on each record to create a collection of DOM elements.
+The default `writers._rowWriter` creates a table `tr` element and loops
 through the element attributes (matching our columns) to call
-`table.cellFilter` on each.
+`writers._cellWriter` on each.
 
-If our container element is a `ul`, we could customize our rowFilter as
-follows:
+### A Stylized List
 
-{% highlight html %}
-<ul id="ul-example">
-  <li><span>First thing: </span><a href="#thing1">click 1</a></li>
-  <li><span>Second thing: </span><a href="#thing2">click 2</a></li>
-  <li><span>Third thing: </span><a href="#thing3">click 3</a></li>
-  ...
-</ul>
-{% endhighlight %}
-
-{% highlight js %}
-$('#ul-example').dynatable({
-  table: {
-    bodyRowSelector: 'li',
-    // Function that renders the list items from our records
-    rowFilter: function(rowIndex, record, columns, cellFilter) {
-      var $li = $('<li></li>');
-      $li.addClass('my-row').html('<span>' + record.name + '</span><a href="' + record.url + '">' + record.label + '</a>');
-      return $li;
-    },
-    // Function that creates our records from the DOM when the page is loaded
-    rowUnfilter: function(index, li, record) {
-      var $li = $(li),
-          $a = $li.find('a');
-      record.name = $li.find('span').text();
-      record.label = $a.text();
-      record.url = $a.attr('href');
-    }
-  },
-  dataset: {
-    perPageDefault: 5,
-    perPageOptions: [1, 5, 10]
-  }
-});
-{% endhighlight %}
-
-We could have defined our own `table.cellFilter` as well, defining a
-custom function for rendering each attribute within the row, but we opted
-to skip it entirely and to just do everything in the `table.rowFilter`.
 
 <div class="dynatable-demo">
-<ul id="ul-example" class="row">
-  <li class="span4"><span>First thing: </span><a href="#thing1">click 1</a></li>
-  <li class="span4"><span>Second thing: </span><a href="#thing2">click 2</a></li>
-  <li class="span4"><span>Third thing: </span><a href="#thing3">click 3</a></li>
-  <li class="span4"><span>Fourth thing: </span><a href="#thing4">click 4</a></li>
-  <li class="span4"><span>Fifth thing: </span><a href="#thing5">click 5</a></li>
-  <li class="span4"><span>Sixth thing: </span><a href="#thing6">click 6</a></li>
-  <li class="span4"><span>Seventh thing: </span><a href="#thing7">click 7</a></li>
-  <li class="span4"><span>Eighth thing: </span><a href="#thing8">click 8</a></li>
-  <li class="span4"><span>Ninth thing: </span><a href="#thing9">click 9</a></li>
-  <li class="span4"><span>Tenth thing: </span><a href="#thing10">click 10</a></li>
-  <li class="span4"><span>Eleventh thing: </span><a href="#thing11">click 1`</a></li>
-  <li class="span4"><span>Twelfth thing: </span><a href="#thing12">click 12</a></li>
-</ul>
+  <ul id="ul-example" class="row-fluid">
+    <li class="span4" data-color="gray">
+      <div class="thumbnail">
+        <div class="thumbnail-image">
+          <img src="/images/dinosaurs/Stegosaurus_BW.jpg" />
+        </div>
+        <div class="caption">
+          <h3>Stegosaurus armatus</h3>
+          <p>State: Colorado</p>
+          <p>Year: 1982</p>
+          <p><a target="_blank" href="http://en.wikipedia.org/wiki/Stegosaurus" class="btn btn-primary">View</a> <a href="#" class="btn">Action</a></p>
+        </div>
+      </div>
+    </li>
+    <li class="span4" data-color="color">
+      <div class="thumbnail">
+        <div class="thumbnail-image">
+          <img src="/images/dinosaurs/300px-Astrodon1DB.jpg" />
+        </div>
+        <div class="caption">
+          <h3>Astrodon johnstoni</h3>
+          <p>State: Maryland</p>
+          <p>Year: 1998</p>
+          <p><a target="_blank" href="http://en.wikipedia.org/wiki/Astrodon_johnstoni" class="btn btn-primary">View</a> <a href="#" class="btn">Action</a></p>
+        </div>
+      </div>
+    </li>
+    <li class="span4" data-color="gray">
+      <div class="thumbnail">
+        <div class="thumbnail-image">
+          <img src="/images/dinosaurs/300px-Hypsibema_missouriensis_Bollinger_County_Museum_of_Natural_History.jpg" />
+        </div>
+        <div class="caption">
+          <h3>Hypsibema missouriensis</h3>
+          <p>State: Missouri</p>
+          <p>Year: 2004</p>
+          <p><a target="_blank" href="http://en.wikipedia.org/wiki/Hypsibema_missouriensis" class="btn btn-primary">View</a> <a href="#" class="btn">Action</a></p>
+        </div>
+      </div>
+    </li>
+    <li class="span4" data-color="color">
+      <div class="thumbnail">
+        <div class="thumbnail-image">
+          <img src="/images/dinosaurs/Knight_hadrosaurs.jpg" />
+        </div>
+        <div class="caption">
+          <h3>Hadrosaurus foulkii</h3>
+          <p>State: New Jersey</p>
+          <p>Year: 1991</p>
+          <p><a target="_blank" href="http://en.wikipedia.org/wiki/Hadrosaurus" class="btn btn-primary">View</a> <a href="#" class="btn">Action</a></p>
+        </div>
+      </div>
+    </li>
+    <li class="span4" data-color="gray">
+      <div class="thumbnail">
+        <div class="thumbnail-image">
+          <img src="/images/dinosaurs/300px-Sauroposeidon_dinosaur.svg.png" />
+        </div>
+        <div class="caption">
+          <h3>Paluxysaurus jonesi</h3>
+          <p>State: Texas</p>
+          <p>Year: 2009</p>
+          <p><a target="_blank" href="http://en.wikipedia.org/wiki/Paluxysaurus" class="btn btn-primary">View</a> <a href="#" class="btn">Action</a></p>
+        </div>
+      </div>
+    </li>
+    <li class="span4" data-color="color">
+      <div class="thumbnail">
+        <div class="thumbnail-image">
+          <img src="/images/dinosaurs/300px-Triceratops_BW.jpg" />
+        </div>
+        <div class="caption">
+          <h3>Triceratops</h3>
+          <p>State: Wyoming</p>
+          <p>Year: 1994</p>
+          <p><a target="_blank" href="http://en.wikipedia.org/wiki/Triceratops" class="btn btn-primary">View</a> <a href="#" class="btn">Action</a></p>
+        </div>
+      </div>
+    </li>
+  </ul>
 </div>
+
+<cite>
+<i>
+* List of U.S. state dinosaurs from <a target="_blank" href="http://en.wikipedia.org/wiki/List_of_U.S._state_dinosaurs">Wikipedia</a>
+</i>
+</cite>
 
 <script>
 (function() {
+  // Function that renders the list items from our records
+  function ulWriter(rowIndex, record, columns, cellWriter) {
+    var cssClass = "span4", li;
+    if (rowIndex % 3 === 0) { cssClass += ' first'; }
+    li = '<li class="' + cssClass + '"><div class="thumbnail"><div class="thumbnail-image">' + record.thumbnail + '</div><div class="caption">' + record.caption + '</div></div></li>';
+    return li;
+  }
+
+  // Function that creates our records from the DOM when the page is loaded
+  function ulReader(index, li, record) {
+    var $li = $(li),
+        $caption = $li.find('.caption');
+    record.thumbnail = $li.find('.thumbnail-image').html();
+    record.caption = $caption.html();
+    record.label = $caption.find('h3').text();
+    record.description = $caption.find('p').text();
+    record.color = $li.data('color');
+  }
+
   $('#ul-example').dynatable({
     table: {
-      bodyRowSelector: 'li',
-      // Function that renders the list items from our records
-      rowFilter: function(rowIndex, record, columns, cellFilter) {
-        var $li = $('<li></li>');
-        $li.addClass('span4').html('<span>' + record.name + '</span><a href="' + record.url + '">' + record.label + '</a>');
-        return $li;
-      },
-      // Function that creates our records from the DOM when the page is loaded
-      rowUnfilter: function(index, li, record) {
-        var $li = $(li),
-            $a = $li.find('a');
-        record.name = $li.find('span').text();
-        record.label = $a.text();
-        record.url = $a.attr('href');
-      }
+      bodyRowSelector: 'li'
     },
     dataset: {
-      perPageDefault: 4,
-      perPageOptions: [2, 4, 8, 12]
+      perPageDefault: 3,
+      perPageOptions: [3, 6]
+    },
+    writers: {
+      _rowWriter: ulWriter
+    },
+    readers: {
+      _rowReader: ulReader
+    },
+    params: {
+      records: 'dinosaurs'
     }
   });
 })();
 </script>
 
+If our container element is a `ul`, like above, we could customize our rowWriter as
+follows:
+
+{% highlight html %}
+<ul id="ul-example" class="row-fluid">
+  <li class="span4" data-color="gray">
+    <div class="thumbnail">
+      <div class="thumbnail-image">
+        <img src="/images/dinosaurs/Stegosaurus_BW.jpg" />
+      </div>
+      <div class="caption">
+        <h3>Stegosaurus armatus</h3>
+        <p>State: Colorado</p>
+        <p>Year: 1982</p>
+        <p><a href="http://en.wikipedia.org/wiki/Stegosaurus" class="btn btn-primary">View</a> <a href="#" class="btn">View</a></p>
+      </div>
+    </div>
+  </li>
+  <!-- ... //-->
+</ul>
+{% endhighlight %}
+
+{% highlight js %}
+// Function that renders the list items from our records
+function ulWriter(rowIndex, record, columns, cellWriter) {
+  var cssClass = "span4", li;
+  if (rowIndex % 3 === 0) { cssClass += ' first'; }
+  li = '<li class="' + cssClass + '"><div class="thumbnail"><div class="thumbnail-image">' + record.thumbnail + '</div><div class="caption">' + record.caption + '</div></div></li>';
+  return li;
+}
+
+// Function that creates our records from the DOM when the page is loaded
+function ulReader(index, li, record) {
+  var $li = $(li),
+      $caption = $li.find('.caption');
+  record.thumbnail = $li.find('.thumbnail-image').html();
+  record.caption = $caption.html();
+  record.label = $caption.find('h3').text();
+  record.description = $caption.find('p').text();
+  record.color = $li.data('color');
+}
+
+$('#ul-example').dynatable({
+  table: {
+    bodyRowSelector: 'li'
+  },
+  dataset: {
+    perPageDefault: 3,
+    perPageOptions: [3, 6]
+  },
+  writers: {
+    _rowWriter: ulWriter
+  },
+  readers: {
+    _rowReader: ulReader
+  },
+  params: {
+    records: 'kittens'
+  }
+});
+{% endhighlight %}
+
+We could have defined our own `writers._cellWriter` as well, defining a
+custom function for rendering each attribute within the row, but we opted
+to skip it entirely and to just do everything in the `writers._rowWriter`.
+
+### An Interactive Chart
+
+<div id="chart-example-chart"></div>
+<a class="btn primary" id="toggle-chart-table">Show Table to Sort the Chart Series</a>
+<table id="chart-example" class="table table-bordered">
+  <thead><tr><th>City</th><th>Population</th></tr></thead>
+  <tbody>
+    <tr><td>Tokyo</td><td>34.4</td></tr>
+    <tr><td>Jakarta</td><td>21.8</td></tr>
+    <tr><td>New York</td><td>20.1</td></tr>
+    <tr><td>Seoul</td><td>20</td></tr>
+    <tr><td>Manila</td><td>19.6</td></tr>
+    <tr><td>Mumbai</td><td>19.5</td></tr>
+    <tr><td>Sao Paulo</td><td>19.1</td></tr>
+    <tr><td>Mexico City</td><td>18.4</td></tr>
+    <tr><td>Dehli</td><td>18</td></tr>
+    <tr><td>Osaka</td><td>17.3</td></tr>
+    <tr><td>Cairo</td><td>16.8</td></tr>
+    <tr><td>Kolkata</td><td>15</td></tr>
+    <tr><td>Los Angeles</td><td>14.7</td></tr>
+    <tr><td>Shanghai</td><td>14.5</td></tr>
+    <tr><td>Moscow</td><td>13.3</td></tr>
+    <tr><td>Beijing</td><td>12.8</td></tr>
+    <tr><td>Buenos Aires</td><td>12.4</td></tr>
+    <tr><td>Guangzhou</td><td>11.8</td></tr>
+    <tr><td>Shenzhen</td><td>11.7</td></tr>
+    <tr><td>Istanbul</td><td>11.2</td></tr>
+  </tbody>
+</table>
+
+<script>
+(function() {
+  var $table = $('#chart-example'), $chart = $('#chart-example-chart'), chart;
+
+  // Create a button to toggle our table's visibility.
+  // We could just hide it completely if we don't need it.
+  $('#toggle-chart-table').click(function(e) {
+    e.preventDefault();
+    $table.toggle();
+  });
+
+  // Set up our Highcharts chart
+  chart = new Highcharts.Chart({
+    chart: {
+      type: 'column',
+      renderTo: 'chart-example-chart'
+    },
+    title: {
+      text: 'World\'s largest cities per 2008'
+    },
+    yAxis: {
+      min: 0,
+      title: {
+        text: 'Population (millions)'
+      }
+    },
+    series: [{
+      name: 'Population',
+      color: '#006A72'
+    }]
+  });
+
+  // Create a function to update the chart with the current working set
+  // of records from dynatable, after all operations have been run.
+  function updateChart() {
+    var dynatable = $table.data('dynatable'), categories = [], values = [];
+    $.each(dynatable.settings.dataset.records, function() {
+      categories.push(this.city);
+      values.push(parseFloat(this.population));
+    });
+
+    chart.xAxis[0].setCategories(categories);
+    chart.series[0].setData(values);
+  };
+
+  // Attach dynatable to our table,
+  // and trigger our update function whenever we interact with it.
+  $table
+    .dynatable({
+      inputs: {
+        queryEvent: 'blur change keyup',
+        recordCountTarget: $chart,
+        paginationLinkTarget: $chart,
+        searchTarget: $chart,
+        perPageTarget: $chart
+      },
+      dataset: {
+        perPageOptions: [5, 10, 20],
+        sortTypes: {
+          'population': 'number'
+        }
+      }
+    })
+    .hide()
+    .bind('dynatable:afterProcess', updateChart);
+
+  // Run our updateChart function for the first time.
+  updateChart();
+})();
+</script>
+
+Our initial data:
+
+{% highlight html %}
+<div id="chart-example-chart"></div>
+<a class="btn primary" id="toggle-chart-table">Show Table to Sort the Chart Series</a>
+<table id="chart-example" class="table table-bordered">
+  <thead><tr><th>City</th><th>Population</th></tr></thead>
+  <tbody>
+    <tr><td>Tokyo</td><td>34.4</td></tr>
+    <tr><td>Jakarta</td><td>21.8</td></tr>
+    <tr><td>New York</td><td>20.1</td></tr>
+    <tr><td>Seoul</td><td>20</td></tr>
+    <tr><td>Manila</td><td>19.6</td></tr>
+    <tr><td>Mumbai</td><td>19.5</td></tr>
+    <tr><td>Sao Paulo</td><td>19.1</td></tr>
+    <tr><td>Mexico City</td><td>18.4</td></tr>
+    <tr><td>Dehli</td><td>18</td></tr>
+    <tr><td>Osaka</td><td>17.3</td></tr>
+    <tr><td>Cairo</td><td>16.8</td></tr>
+    <tr><td>Kolkata</td><td>15</td></tr>
+    <tr><td>Los Angeles</td><td>14.7</td></tr>
+    <tr><td>Shanghai</td><td>14.5</td></tr>
+    <tr><td>Moscow</td><td>13.3</td></tr>
+    <tr><td>Beijing</td><td>12.8</td></tr>
+    <tr><td>Buenos Aires</td><td>12.4</td></tr>
+    <tr><td>Guangzhou</td><td>11.8</td></tr>
+    <tr><td>Shenzhen</td><td>11.7</td></tr>
+    <tr><td>Istanbul</td><td>11.2</td></tr>
+  </tbody>
+</table>
+{% endhighlight %}
+
+The JS:
+
+{% highlight js %}
+(function() {
+  var $table = $('#chart-example'), $chart = $('#chart-example-chart'), chart;
+
+  // Create a button to toggle our table's visibility.
+  // We could just hide it completely if we don't need it.
+  $('#toggle-chart-table').click(function(e) {
+    e.preventDefault();
+    $table.toggle();
+  });
+
+  // Set up our Highcharts chart
+  chart = new Highcharts.Chart({
+    chart: {
+      type: 'column',
+      renderTo: 'chart-example-chart'
+    },
+    title: {
+      text: 'World\'s largest cities per 2008'
+    },
+    yAxis: {
+      min: 0,
+      title: {
+        text: 'Population (millions)'
+      }
+    },
+    series: [{
+      name: 'Population',
+      color: '#006A72'
+    }]
+  });
+
+  // Create a function to update the chart with the current working set
+  // of records from dynatable, after all operations have been run.
+  function updateChart() {
+    var dynatable = $table.data('dynatable'), categories = [], values = [];
+    $.each(dynatable.settings.dataset.records, function() {
+      categories.push(this.city);
+      values.push(parseFloat(this.population));
+    });
+
+    chart.xAxis[0].setCategories(categories);
+    chart.series[0].setData(values);
+  };
+
+  // Attach dynatable to our table, hide the table,
+  // and trigger our update function whenever we interact with it.
+  $table
+    .dynatable({
+      inputs: {
+        queryEvent: 'blur change keyup',
+        recordCountTarget: $chart,
+        paginationLinkTarget: $chart,
+        searchTarget: $chart,
+        perPageTarget: $chart
+      },
+      dataset: {
+        perPageOptions: [5, 10, 20],
+        sortTypes: {
+          'population': 'number'
+        }
+      }
+    })
+    .hide()
+    .bind('dynatable:afterProcess', updateChart);
+
+  // Run our updateChart function for the first time.
+  updateChart();
+})();
+{% endhighlight %}
+
 ## Configuration
+
+If you want to change any of the following default configuration options
+globally (for all instances of dynatable within your application), you
+can call the `$.dynatableSetup()` function to do so:
+
+{% highlight js %}
+$.dynatableSetup({
+  // your global default options here
+});
+{% endhighlight %}
+
+For example, this documentation page has `features: { pushState: false}`
+so as not to fill your browser's pushState queue as you click around
+through made-up data in the examples (except for the first example,
+which re-enables it for demo purposes).
 
 The confiuration options (with default values) for dynatable are:
 
@@ -2423,31 +3146,7 @@ The confiuration options (with default values) for dynatable are:
     columns: null,
     headRowSelector: 'thead tr', // or e.g. tr:first-child
     bodyRowSelector: 'tbody tr',
-    headRowClass: null,
-    rowFilter: function(rowIndex, record, columns, cellFilter) {
-      var $tr = $('<tr></tr>');
-
-      // grab the record's attribute for each column
-      $.each(columns, function(colIndex, column) {
-        var html = column.dataFilter(record),
-        $td = cellFilter(html);
-
-        if (column.hidden) {
-          $td.hide();
-        }
-        if (column.textAlign) {
-          $td.css('text-align', column.textAlign);
-        }
-        $tr.append($td);
-      });
-
-      return $tr;
-    },
-    cellFilter: function(html) {
-      return $('<td></td>', {
-        html: html
-      });
-    }
+    headRowClass: null
   },
   inputs: {
     queries: null,
@@ -2488,8 +3187,23 @@ The confiuration options (with default values) for dynatable are:
     sortTypes: {},
     records: null
   },
-  filters: {},
-  unfilters: {},
+  // Built-in writer functions,
+  // can be overwritten, any additional functions
+  // provided in writers will be merged with
+  // this default object.
+  writers: {
+    _rowWriter: defaultRowWriter,
+    _cellWriter: defaultCellWriter,
+    _attributeWriter: defaultAttributeWriter
+  },
+  // Built-in reader functions,
+  // can be overwritten, any additional functions
+  // provided in readers will be merged with
+  // this default object.
+  readers: {
+    _rowReader: null,
+    _attributeReader: defaultAttributeReader
+  },
   params: {
     dynatable: 'dynatable',
     queries: 'queries',
@@ -2504,3 +3218,233 @@ The confiuration options (with default values) for dynatable are:
   }
 }
 {% endhighlight %}
+
+### Data Attributes
+
+In addition to the configuration options directly available above, some
+properties apply specifically to certain columns or elements. Those can
+be set using HTML5 data attributes.
+
+<div class="alert alert-block">
+Documentation on each data-attribute and what it does coming soon.
+</div>
+
+#### On table column headers
+
+<code>data-dynatable-column</code>
+
+<code>data-dynatable-sorts</code>
+
+<code>data-dynatable-no-sort</code>
+
+#### On query inputs
+
+<code>data-dynatable-query-event</code>
+
+<code>data-dynatable-query</code>
+
+## Event Hooks
+
+<table class="table table-bordered responsive-table">
+  <thead>
+    <tr>
+      <th>Event</th>
+      <th>Description</th>
+      <th>Parameters</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td data-title="Event"><code>dynatable:init</cod></td>
+      <td data-title="Description">Run after dynatable is initialized and setup, right before the initial <code>process()</code> is run.</td>
+      <td data-title="Parameters"><code>dynatable</code> (attached dynatable instance object)</td>
+    </tr>
+    <tr>
+      <td data-title="Event"><code>dynatable:beforeProcess</cod></td>
+      <td data-title="Description">Run at the beginning of <code>process()</code>.</td>
+      <td data-title="Parameters"><code>data</code> (the data object containing the settings and records for the <code>process()</code> function)</td>
+    </tr>
+    <tr>
+      <td data-title="Event"><code>dynatable:ajax:success</cod></td>
+      <td data-title="Description">Run only if the dynatable instance has <code>dataset.ajax=true</code>, when the AJAX request returns successfully during the <code>process()</code> function.</td>
+      <td data-title="Parameters"><code>response</code> (the jqXhr response object)</td>
+    </tr>
+    <tr>
+      <td data-title="Event"><code>dynatable:afterProcess</cod></td>
+      <td data-title="Description">Run at the end of the <code>process()</code> function.</td>
+      <td data-title="Parameters"><code>data</code> (the data object containing the settings and records for the <code>process()</code> function)</td>
+    </tr>
+    <tr>
+      <td data-title="Event"><code>dynatable:beforeUpdate</cod></td>
+      <td data-title="Description">Run right before the DOM is updated with the current record set.</td>
+      <td data-title="Parameters"><code>$rows</code> (the set of DOM rows about to be written to the DOM)</td>
+    </tr>
+    <tr>
+      <td data-title="Event"><code>dynatable:afterUpdate</cod></td>
+      <td data-title="Description">Run right after the DOM is updated with the current record set.</td>
+      <td data-title="Parameters"><code>$rows</code> (the set of DOM rows just written to the DOM)</td>
+    </tr>
+    <tr>
+      <td data-title="Event"><code>dynatable:push</cod></td>
+      <td data-title="Description">Run when pushState data is pushed to the window.</td>
+      <td data-title="Parameters"><code>data</code> (the data object containing the settings and records to be cached in the pushState cache)</td>
+    </tr>
+  </tbody>
+</table>
+
+
+## API
+
+You can interface directly with the dynatable API for finer grained
+control and greater customization. The internal API is divided into
+namespaces. To use the API, just call the namespaced function on the
+dynatable object (stored in the `data['dynatable']` attribute of the
+element on which dynatable was called).
+
+{% highlight js %}
+var dynatable = $('#my-table').data('dynatable');
+{% endhighlight %}
+
+For example, to update the dom with the current record set:
+
+{% highlight js %}
+dynatable.dom.update();
+{% endhighlight %}
+
+<div class="alert alert-block">
+Since dynatable is still pre-version-one, the API is still in flux and
+may change. Below is a list of the current API functions and arguments
+(if any).
+</div>
+
+### dom
+
+update
+
+### domColumns
+
+getFromTable
+
+add [$column, position, skipAppend, skipUpdate]
+
+remove [columnIndexOrId]
+
+removeFromTable [columnId]
+
+removeFromArray [index]
+
+generate [$cell]
+
+attachGeneratedAttributes
+
+### records
+
+updateFromJson [data]
+
+sort
+
+paginate
+
+resetOriginal
+
+pageBounds
+
+getFromTable
+
+count
+
+### recordsCount
+
+create
+
+attach
+
+### processingIndicator
+
+create
+
+position
+
+attach
+
+show
+
+hide
+
+### state
+
+push [data]
+
+pop [event]
+
+### sorts
+
+add [attr, direction]
+
+remove [attr]
+
+clear
+
+guessType [a, b, attr]
+
+functions (object)
+
+### sortsHeaders
+
+create [cell]
+
+attach
+
+attachOne [cell]
+
+appendArrowUp [$link]
+
+appendArrorDown [$link]
+
+removeArrow [$link]
+
+removeAllArrows
+
+toggleSort [event, $link, column]
+
+sortedByColumn [$link, column]
+
+sortedByColumnValue [column]
+
+### queries
+
+add [name, value]
+
+remove [name]
+
+run
+
+runSearch [query]
+
+setupInputs
+
+functions (object)
+
+### inputSearch
+
+create
+
+attach
+
+### paginationPage
+
+set [page]
+
+### paginationPerPage
+
+create
+
+attach
+
+set [number]
+
+### paginationLinks
+
+create
+
+attach
