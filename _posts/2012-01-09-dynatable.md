@@ -1168,11 +1168,17 @@ stylesheets:
       pushState: true
     },
     readers: {
+      'rank': function(el, record) {
+        return Number(el.innerHTML) || 0;
+      }, 
       'us-$': function(el, record) {
         return Number(el.innerHTML.replace(/,/g, ''));
       }
     },
     writers: {
+      'rank': function(record) {
+        return record['rank'] ? record['rank'].toString() : '-';
+      }, 
       'us-$': function(record) {
         return record['us-$'].toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
       }
@@ -1559,6 +1565,7 @@ $('#my-ajax-table').dynatable({
   dataset: {
     ajax: true,
     ajaxUrl: '/dynatable-ajax.json',
+    ajaxOnLoad: true,
     records: []
   }
 });
@@ -1571,6 +1578,13 @@ $('#my-ajax-table').dynatable({
 </div>
 <br class="clear" />
 
+<div class="alert alert-block">
+NOTE: When using AJAX to load data, operations such as sorting,
+searching, and paginating are performed on the server before building
+the returned JSON. This example has these features disabled since,
+we're just loading a static JSON file for the purposes of documentation.
+</div>
+
 <table id="my-ajax-table" class="table table-bordered">
   <thead>
     <th>Some Attribute</th>
@@ -1582,9 +1596,16 @@ $('#my-ajax-table').dynatable({
 
 <script>
 $('#my-ajax-table').dynatable({
+  features: {
+    paginate: false,
+    sort: false,
+    search: false,
+    perPageSelect: false
+  },
   dataset: {
     ajax: true,
     ajaxUrl: '/dynatable-ajax.json',
+    ajaxOnLoad: true,
     records: []
   }
 });
