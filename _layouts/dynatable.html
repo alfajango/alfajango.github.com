@@ -148,77 +148,15 @@
           {% if page.tagline %}
             <div id="tagline">{{ page.tagline }}</div>
           {% endif %}
-          {% if page.second_heading %}
-            <h2>{{ page.second_heading }}</h2>
-          {% endif %}
-          {% if page.description %}
-            <p id="description">{{ page.description }}</p>
-          {% endif %}
-        </div>
-        <div class="splash-right splash-download">
-          <div id="download">
-            {% if page.download %}
-            <div id="download-group">
-              <a class='btn btn-success large-button' id='download-button' href='{{ page.download.href }}'><img src='/images/wooden-box.png' /> {{page.download.title}}</a>
-              <div id="download-count" data-{{ page.download.type }}="{{ page.download.data }}"></div>
-            </div>
-            {% endif %}
-            {% if page.github %}
-            <div id="github-group">
-              <a class='btn large-button' id='github-button' href='{{ page.github.href }}'><img src='/images/github-icon.png' /> {{page.github.title}}</a>
-              <iframe class="github-button" src="http://ghbtns.com/github-btn.html?user=JangoSteve&repo=jquery-dynatable&type=watch&count=true" allowtransparency="true" frameborder="0" scrolling="0" width="110" height="20"></iframe>
-              <iframe class="github-button" src="http://ghbtns.com/github-btn.html?user=JangoSteve&repo=jquery-dynatable&type=fork&count=true" allowtransparency="true" frameborder="0" scrolling="0" width="110" height="20"></iframe>
-            </div>
-            {% endif %}
-          </div>
         </div>
       </div>
     </div>
     <div id='tagbar' {% if page.url == '/index.html' %} class='homepage' {% endif %}>
-      <div class='contained'>
-        <div id='share-container'>
-          <div id="shareme" data-url="http://os.alfajango.com{{ page.url }}" data-text="{{ page.title }}" data-title="<span>share this:</span> <img src='/images/dynatable-share-white.png' />"></div>
-        </div>
-      </div>
     </div>
     <div id='content' class='contained'>
 
-      <div id='toc-container'>
-        <div id='toc'>
-        </div>
-      </div>
-
       <div id='post'>
         {{ content }}
-
-        <div id='footer'>
-          <p>
-          Congratulations, you've reached the end of the documentation!
-          </p>
-          <p>
-          {% if page.links || page.articles %}
-          Take these links. They will help you in your journey:
-          {% endif %}
-          </p>
-
-          {% if page.links %}
-            <h2> Project Resources</h2>
-            <ul class='footer-list' id='resources'>
-              {% for link in page.links %}
-              <li><a href="{{ link.href }}">{{ link.title }}</a></li>
-              {% endfor %}
-            </ul>
-          {% endif %}
-
-          {% if page.articles %}
-          <h2>Related Articles</h2>
-          <ul class='footer-list' id='articles'>
-            {% for article in page.articles %}
-            <li><a href="{{ article.href }}">{{ article.title }}</a></li>
-            {% endfor %}
-          </ul>
-          {% endif %}
-        </div>
       </div>
 
     </div>

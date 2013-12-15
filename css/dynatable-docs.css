@@ -1,3 +1,6 @@
+body {
+  background: #00A290;
+}
 a {
   color: #00a290;
 }
@@ -189,6 +192,7 @@ ul {
   padding-bottom: 0;
   min-height: 85px;
   min-width: inherit;
+  border-bottom: none;
 }
 #download-group,
 #github-group {
