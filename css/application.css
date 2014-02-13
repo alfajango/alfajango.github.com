@@ -64,6 +64,10 @@ p {
   margin-bottom: 14px;
 }
 
+ol {
+  list-style: decimal;
+}
+
 .double-underline {
   position: relative;
   border-bottom: solid 1px #ccc;
