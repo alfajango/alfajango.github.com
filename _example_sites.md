@@ -18,6 +18,7 @@ Project pages:
   - **<http://www.zurb.com/playground/jquery-raptorize>**
   - **<http://jquery.malsup.com/cycle/>**
   - **<http://foundation.zurb.com/>**
+  - **<https://www.raptor-editor.com/>**
   - http://loopj.com/jquery-tokeninput/
   - http://masonry.desandro.com/
   - http://facedetection.jaysalvat.com/
