@@ -34,6 +34,7 @@ Project pages:
   - http://ricostacruz.com/jquery.transit/
   - http://sailsjs.org/
   - http://simplefocus.com/flowtype/
+  - http://duckling-lib.org/
 
 Blogs:
 
