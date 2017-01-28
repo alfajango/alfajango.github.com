@@ -33,6 +33,7 @@ articles:
     href: http://www.alfajango.com/blog/rails-3-ajax-file-uploads-with-remotipart/
 ---
 
+The content on this page is out of date. Please refer latest document on GitHub repos.
 
 For an introduction explaining how and why Remotipart works, check out [AJAX File Uploads with the iFrame Method](http://www.alfajango.com/blog/ajax-file-uploads-with-the-iframe-method/) and [Rails 3 AJAX File Uploads with Remotipart](http://www.alfajango.com/blog/rails-3-ajax-file-uploads-with-remotipart/).
 
